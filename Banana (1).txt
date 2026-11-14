@@ -8544,30 +8544,85 @@ StatusKatakuri = SectionStatus.CreateLabel({ Title = "Summon Katakuri" })
 Statusspy = SectionStatus.CreateLabel({ Title = "Status SPY" })
 StatusMirage = SectionStatus.CreateLabel({ Title = "Mirage" })
 StatusNormalStock = SectionStatus.CreateLabel({ Title = "Normal Fruit Stock" })
+StatusMirageStock = SectionStatus.CreateLabel({ Title = "Mirage Fruit Stock" })
+StatusTotalFruitValue = SectionStatus.CreateLabel({ Title = "Total Fruit Stock Value" })
 StatusPrehistoricIsland = SectionStatus.CreateLabel({ Title = "Prehistoric Island" })
 StatusFrozenDimension = SectionStatus.CreateLabel({ Title = "Frozen Dimension" })
 StatusMoon = SectionStatus.CreateLabel({ Title = "Moon" })
 StatusGear = SectionStatus.CreateLabel({ Title = "Acient One Status" })
 
--- Normal fruit stock checker (same GetFruits(false) source used by file 2).
+-- Normal and Mirage fruit stock checkers. Sort by price: cheapest first, most expensive last.
 task.spawn(function()
     local CommF = game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("CommF_")
-    while task.wait(30) do
-        pcall(function()
-            local stock = CommF:InvokeServer("GetFruits", false)
-            local names = {}
-            if type(stock) == "table" then
-                for _, fruit in pairs(stock) do
-                    if type(fruit) == "table" and fruit.OnSale == true and type(fruit.Name) == "string" then
-                        names[#names + 1] = fruit.Name
-                    end
+
+    local function FormatPrice(value)
+        local number = tonumber(value)
+        if not number then
+            return tostring(value or "?")
+        end
+        local formatted = tostring(math.floor(number))
+        while true do
+            local replaced, count = formatted:gsub("^(-?%d+)(%d%d%d)", "%1,%2")
+            formatted = replaced
+            if count == 0 then break end
+        end
+        return formatted
+    end
+
+    local function BuildStockText(stock)
+        local fruits = {}
+        if type(stock) == "table" then
+            for _, fruit in pairs(stock) do
+                if type(fruit) == "table" and fruit.OnSale == true and type(fruit.Name) == "string" then
+                    fruits[#fruits + 1] = {
+                        Name = fruit.Name,
+                        Price = tonumber(fruit.Price) or math.huge
+                    }
                 end
             end
-            table.sort(names)
-            -- Show each fruit on its own row, underneath the stock heading.
-            StatusNormalStock.SetText("Normal Fruit Stock:\n" ..
-                (#names > 0 and table.concat(names, "\n") or "No fruits available / unavailable"))
+        end
+        table.sort(fruits, function(a, b)
+            if a.Price == b.Price then
+                return a.Name < b.Name
+            end
+            return a.Price < b.Price
         end)
+
+        local lines = {}
+        local totalValue = 0
+        local pricedCount = 0
+        for _, fruit in ipairs(fruits) do
+            local price = fruit.Price == math.huge and "?" or FormatPrice(fruit.Price)
+            lines[#lines + 1] = fruit.Name .. " - $" .. price
+            if fruit.Price ~= math.huge then
+                totalValue = totalValue + fruit.Price
+                pricedCount = pricedCount + 1
+            end
+        end
+        return #lines > 0 and table.concat(lines, "\n") or "No fruits available / unavailable", totalValue, pricedCount, #fruits
+    end
+
+    while true do
+        pcall(function()
+            local normalStock = CommF:InvokeServer("GetFruits", false)
+            local normalText, normalValue, normalPriced, normalCount = BuildStockText(normalStock)
+            StatusNormalStock.SetText("Normal Fruit Stock:\n" .. normalText)
+
+            local mirageStock = CommF:InvokeServer("GetFruits", true)
+            local mirageText, mirageValue, miragePriced, mirageCount = BuildStockText(mirageStock)
+            StatusMirageStock.SetText("Mirage Fruit Stock:\n" .. mirageText)
+
+            local totalValue = normalValue + mirageValue
+            local totalCount = normalCount + mirageCount
+            local pricedTotal = normalPriced + miragePriced
+            StatusTotalFruitValue.SetText(
+                "Total Fruit Stock Value: $" .. FormatPrice(totalValue)
+                .. "\nNormal: $" .. FormatPrice(normalValue)
+                .. " | Mirage: $" .. FormatPrice(mirageValue)
+                .. "\nFruits: " .. tostring(totalCount) .. " (priced: " .. tostring(pricedTotal) .. ")"
+            )
+        end)
+        task.wait(30)
     end
 end)
 
@@ -35735,6 +35790,93 @@ FullyVolcanoSection.CreateToggle(
 )
 ESPTab = Main.CreatePage({ Page_Name = "ESP", Page_Title = "ESP Tab" })
 ESPSection = ESPTab.CreateSection("ESP")
+-- Font changer transferred from Anime Mod Hub, adapted for this UI framework.
+ESPFontSection = ESPTab.CreateSection("Đổi Font Chữ")
+local CurrentESPFont = Enum.Font.Arial
+local function ApplyESPGlobalFont(fontEnum)
+    CurrentESPFont = fontEnum
+    local Players = game:GetService("Players")
+    local LocalPlayer = Players.LocalPlayer
+    local function ApplyTo(root)
+        if not root then return end
+        for _, obj in ipairs(root:GetDescendants()) do
+            if obj:IsA("TextLabel") or obj:IsA("TextButton") or obj:IsA("TextBox") then
+                pcall(function() obj.Font = fontEnum end)
+            end
+        end
+    end
+    ApplyTo(LocalPlayer:FindFirstChildOfClass("PlayerGui"))
+    pcall(function() ApplyTo(game:GetService("CoreGui")) end)
+end
+
+-- Apply the selected font to UI objects created later as well.
+local ESPFontConnection = game:GetService("Players").LocalPlayer:WaitForChild("PlayerGui").DescendantAdded:Connect(function(obj)
+    if obj:IsA("TextLabel") or obj:IsA("TextButton") or obj:IsA("TextBox") then
+        pcall(function() obj.Font = CurrentESPFont end)
+    end
+end)
+
+ESPFontSection.CreateButton({ Title = "Font: Amatic SC" }, function()
+    ApplyESPGlobalFont(Enum.Font.AmaticSC)
+end)
+
+ESPFontSection.CreateButton({ Title = "Font: Antique" }, function()
+    ApplyESPGlobalFont(Enum.Font.Antique)
+end)
+
+ESPFontSection.CreateButton({ Title = "Font: Arcade" }, function()
+    ApplyESPGlobalFont(Enum.Font.Arcade)
+end)
+
+ESPFontSection.CreateButton({ Title = "Font: Arial" }, function()
+    ApplyESPGlobalFont(Enum.Font.Arial)
+end)
+
+ESPFontSection.CreateButton({ Title = "Font: Arial Bold" }, function()
+    ApplyESPGlobalFont(Enum.Font.ArialBold)
+end)
+
+ESPFontSection.CreateButton({ Title = "Font: Bangers" }, function()
+    ApplyESPGlobalFont(Enum.Font.Bangers)
+end)
+
+ESPFontSection.CreateButton({ Title = "Font: Bodoni" }, function()
+    ApplyESPGlobalFont(Enum.Font.Bodoni)
+end)
+
+ESPFontSection.CreateButton({ Title = "Font: Cartoon" }, function()
+    ApplyESPGlobalFont(Enum.Font.Cartoon)
+end)
+
+ESPFontSection.CreateButton({ Title = "Font: Code" }, function()
+    ApplyESPGlobalFont(Enum.Font.Code)
+end)
+
+ESPFontSection.CreateButton({ Title = "Font: Creepster" }, function()
+    ApplyESPGlobalFont(Enum.Font.Creepster)
+end)
+
+ESPFontSection.CreateButton({ Title = "Font: Denk One" }, function()
+    ApplyESPGlobalFont(Enum.Font.DenkOne)
+end)
+
+ESPFontSection.CreateButton({ Title = "Font: Fondamento" }, function()
+    ApplyESPGlobalFont(Enum.Font.Fondamento)
+end)
+
+ESPFontSection.CreateButton({ Title = "Font: Fredoka One" }, function()
+    ApplyESPGlobalFont(Enum.Font.FredokaOne)
+end)
+
+ESPFontSection.CreateButton({ Title = "Font: Garamond" }, function()
+    ApplyESPGlobalFont(Enum.Font.Garamond)
+end)
+
+ESPFontSection.CreateButton({ Title = "Font: Gotham" }, function()
+    ApplyESPGlobalFont(Enum.Font.Gotham)
+end)
+
+
 function EspSpawnBerry()
 	local b, s = DetectBerryESP()
 	if b then
