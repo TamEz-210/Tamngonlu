@@ -15098,8 +15098,7 @@ do
 end
 FarmMain = Main.CreatePage({ Page_Name = "Farming", Page_Title = "Farming" })
 EventBloxFruitMain = Main.CreatePage({ Page_Name = "Event Blox Fruit", Page_Title = "Event Blox Fruit" })
-SkEggMain = Main.CreatePage({ Page_Name = "Sk Egg", Page_Title = "Sk Egg" })
-SkEggSection = SkEggMain.CreateSection("Easter 2026")
+SkEggSection = EventBloxFruitMain.CreateSection("Event Egg")
 
 SkEggSection.CreateButton({ Title = "Open Easter Shop" }, function()
     v_2(game.ReplicatedStorage.Controllers.UI.EventShop):Open("Easter2026")
@@ -15153,7 +15152,7 @@ end)
 
 
 -- Sk Nha Cho: chi them toggle Auto Farm Dog Event
-SkEggDogSection = SkEggMain.CreateSection("Sk Nha Cho")
+SkEggDogSection = EventBloxFruitMain.CreateSection("Event dog")
 SkEggDogSection.CreateToggle({
     Title = "Auto Farm Dog Event [Beta 3]",
     Desc = "",
