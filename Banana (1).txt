@@ -42,7 +42,7 @@ pcall(function()
 	panel.Name = "LoadingPanel"
 	panel.AnchorPoint = Vector2.new(0.5, 0.5)
 	panel.Position = UDim2.fromScale(0.5, 0.5)
-	panel.Size = UDim2.new(0.88, 0, 0, 276)
+	panel.Size = UDim2.new(0.90, 0, 0, 340)
 	panel.BackgroundColor3 = Color3.fromRGB(5, 6, 11)
 	panel.BorderSizePixel = 0
 	panel.Parent = shade
@@ -55,8 +55,8 @@ pcall(function()
 	panelStroke.Parent = panel
 
 	local sizeLimit = Instance.new("UISizeConstraint")
-	sizeLimit.MaxSize = Vector2.new(430, 276)
-	sizeLimit.MinSize = Vector2.new(280, 276)
+	sizeLimit.MaxSize = Vector2.new(520, 340)
+	sizeLimit.MinSize = Vector2.new(300, 340)
 	sizeLimit.Parent = panel
 
 	local header = Instance.new("Frame")
@@ -89,7 +89,7 @@ pcall(function()
 	title.Font = Enum.Font.GothamBold
 	title.Text = "Day"
 	title.TextColor3 = Color3.fromRGB(245, 245, 249)
-	title.TextSize = 14
+	title.TextSize = 16
 	title.TextXAlignment = Enum.TextXAlignment.Left
 	title.Parent = header
 
@@ -98,9 +98,9 @@ pcall(function()
 	subtitle.Position = UDim2.new(0, 45, 0, 21)
 	subtitle.Size = UDim2.new(1, -150, 0, 15)
 	subtitle.Font = Enum.Font.Gotham
-	subtitle.Text = "FAST WHITELIST / V5.0"
+	subtitle.Text = "Load để xài"
 	subtitle.TextColor3 = Color3.fromRGB(112, 116, 130)
-	subtitle.TextSize = 8
+	subtitle.TextSize = 9
 	subtitle.TextXAlignment = Enum.TextXAlignment.Left
 	subtitle.Parent = header
 
@@ -147,7 +147,7 @@ pcall(function()
 	status.Font = Enum.Font.GothamMedium
 	status.Text = "Verifying credentials"
 	status.TextColor3 = Color3.fromRGB(226, 226, 233)
-	status.TextSize = 10
+	status.TextSize = 12
 	status.TextXAlignment = Enum.TextXAlignment.Left
 	status.Parent = panel
 	__BF_LoadingStatus = status
@@ -160,14 +160,14 @@ pcall(function()
 	percent.Font = Enum.Font.GothamBold
 	percent.Text = "1%"
 	percent.TextColor3 = Color3.fromRGB(255, 194, 112)
-	percent.TextSize = 10
+	percent.TextSize = 12
 	percent.TextXAlignment = Enum.TextXAlignment.Right
 	percent.Parent = panel
 	__BF_LoadingPercent = percent
 
 	local track = Instance.new("Frame")
 	track.Position = UDim2.new(0, 20, 0, 104)
-	track.Size = UDim2.new(1, -40, 0, 5)
+	track.Size = UDim2.new(1, -40, 0, 7)
 	track.BackgroundColor3 = Color3.fromRGB(38, 39, 48)
 	track.BorderSizePixel = 0
 	track.Parent = panel
@@ -183,7 +183,7 @@ pcall(function()
 
 	local activity = Instance.new("Frame")
 	activity.Position = UDim2.new(0, 18, 0, 124)
-	activity.Size = UDim2.new(1, -36, 0, 112)
+	activity.Size = UDim2.new(1, -36, 0, 176)
 	activity.BackgroundColor3 = Color3.fromRGB(8, 9, 16)
 	activity.BorderSizePixel = 0
 	activity.Parent = panel
@@ -202,7 +202,7 @@ pcall(function()
 	activityTitle.Font = Enum.Font.GothamMedium
 	activityTitle.Text = "LIVE ACTIVITY"
 	activityTitle.TextColor3 = Color3.fromRGB(117, 122, 139)
-	activityTitle.TextSize = 7
+	activityTitle.TextSize = 8
 	activityTitle.TextXAlignment = Enum.TextXAlignment.Left
 	activityTitle.Parent = activity
 
@@ -213,7 +213,7 @@ pcall(function()
 	log.Font = Enum.Font.Code
 	log.Text = "●  Initializing hub...\\n\\n●  Preparing interface..."
 	log.TextColor3 = Color3.fromRGB(168, 174, 190)
-	log.TextSize = 8
+	log.TextSize = 10
 	log.TextXAlignment = Enum.TextXAlignment.Left
 	log.TextYAlignment = Enum.TextYAlignment.Bottom
 	log.Parent = activity
@@ -234,7 +234,7 @@ pcall(function()
 	footer.Font = Enum.Font.Gotham
 	footer.Text = "Encrypted connection active"
 	footer.TextColor3 = Color3.fromRGB(94, 100, 117)
-	footer.TextSize = 7
+	footer.TextSize = 8
 	footer.TextXAlignment = Enum.TextXAlignment.Left
 	footer.Parent = panel
 end)
@@ -7331,7 +7331,7 @@ local uiOk, uiErr = pcall(function()
 	end
 	t3.CreateNoti({
 		Title = "Notification",
-		Desc = "The UI automatically hides once executed.\nPress the button at the bottom-left of the screen to show the GUI.",
+		Desc = "🇻🇳Xin chào ae tui là Người VN🇻🇳",
 		ShowTime = 10
 	}, true)
 	
