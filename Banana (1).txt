@@ -8096,6 +8096,444 @@ do
 	local lp = Players.LocalPlayer
 	local env = getgenv()
 
+	local UI_KEY = "Show TopiHub Status UI"
+	local PURPLE = Color3.fromRGB(150, 90, 255)
+	local BG = Color3.fromRGB(18, 12, 30)
+
+	local function tr(s)
+		local T = getgenv().TopiTranslator
+		if T and T.Translate then
+			local ok, r = pcall(T.Translate, s)
+			if ok and type(r) == "string" then
+				return r
+			end
+		end
+		return s
+	end
+	local function fmt(key, arg)
+		return (tr(key):gsub("{}", function()
+			return tostring(arg)
+		end))
+	end
+	local function actLabel(act)
+		local head, rest = act:match("^(Start Farm) : (.+)$")
+		if not head then
+			head, rest = act:match("^(Farm Material) : (.+)$")
+		end
+		if head then
+			return tr(head) .. " : " .. tr(rest)
+		end
+		return tr(act)
+	end
+
+	local CHAIN = {
+		"Auto New World",
+		"Collect Chest When Server Spawn God's Chalice or Fist of Darkness",
+		"Auto Third World", "Attack Darkbeard", "Summon Darkbeard",
+		"Attack Rip Indra", "Auto Touch Pad Haki", "Auto Summon Rip Indra",
+		"Attack Soul Reaper", "Summon Soul Reaper", "Attack Dough King", "Summon Dough King",
+		"Auto Elite Hunter", "Auto Factory", "Auto Pirate Raid", "Teleport To Fruit",
+		"Auto Quest Dojo Trainer",
+	}
+	local GATED_OTHER = {
+		"Auto Secret Quest", "Auto Fishing", "Auto Accept Quest Fishing",
+		"Auto Attack All Mob and Boss", "Auto Chest", "Kill Mob",
+	}
+	local INDEPENDENT = {
+		"Auto Quest Dragon Hunter", "Auto Collect Berry", "Auto Chest Hop",
+		"Auto Buy Chip and Attack Law", "Auto UP Observation V2", "Farm Observation",
+		"Farm Observation [ Hop Server ]", "Kill Boss", "Kill All Boss",
+		"Auto Raid", "Auto Multi Raid", "Auto Awake Fruit", "Auto Join Dungeon", "Auto Attack Dungeon",
+		"Auto Sea Event", "Auto Sea Event With Friend", "Auto Find Mirage", "Auto Spawn Kitsune Island",
+		"Auto Summon Soul Ember", "Auto Collect Soul Ember", "Auto Trade Azure Ember",
+		"Auto Find Leviathan", "Multi Find Leviathan", "Auto Start Leviathan", "Auto Attack Leviathan",
+		"Auto Destroy IDK", "Auto Upgrade Race V2-V3", "Auto Upgrade Race V2-V3 Draco",
+		"Auto Trial", "Auto Trial Draco", "Multi Trial", "Auto Pull Lever",
+		"Auto Get Fully Cyborg", "Auto Get Cyborg", "Auto Get Ghoul",
+		"Auto Finish Train Quest", "Auto Finish Train Draco Quest",
+		"Auto Trade Bone", "Auto Get Rainbow Haki", "Auto Soul Guitar", "Auto CDK", "Auto Yama",
+		"Auto Tushita", "Auto TTK", "Auto Saber", "Auto Craft Item Shark Anchor", "Auto Yoru Mini",
+		"Auto Farm Mastery 600 Melees", "Auto Farm Mastery 600 Sword In Inventory",
+		"Auto Upgrade Sword Inventory", "Auto Upgrade Gun Inventory",
+		"Auto Crafting Volcanic Magnet", "Auto Find Prehistoric Island", "Auto Event Prehistoric Island",
+		"Auto Collect Bone", "Auto Collect Egg",
+	}
+
+	local owner
+	function env.BananaOwner(name)
+		owner = name
+	end
+	BananaOwner = env.BananaOwner
+
+	local override, overrideUntil = nil, 0
+	function env.SetBananaStatus(text, ttl)
+		override = text and tostring(text) or nil
+		overrideUntil = tick() + (ttl or 4)
+	end
+
+	local hopDepth, teleportUntil = 0, 0
+	pcall(function()
+		lp.OnTeleport:Connect(function()
+			teleportUntil = tick() + 8
+		end)
+	end)
+	local wrapped = {}
+	local function hookHop()
+		for _, name in ipairs({ "HopServer", "HopLessAll" }) do
+			local cur = env[name]
+			if type(cur) == "function" and wrapped[name] ~= cur then
+				local orig = cur
+				local new = function(...)
+					hopDepth = hopDepth + 1
+					local r = table.pack(pcall(orig, ...))
+					hopDepth = math.max(0, hopDepth - 1)
+					if not r[1] then
+						error(r[2], 0)
+					end
+					return table.unpack(r, 2, r.n)
+				end
+				wrapped[name] = new
+				env[name] = new
+			end
+		end
+	end
+
+	local lastMoveCF, lastMoveT = nil, 0
+	local lastBoatCF, lastBoatT = nil, 0
+	local lastMob, lastMobT = nil, 0
+	local lastFind, lastFindT = nil, 0
+
+	local function mobName(E)
+		if typeof(E) ~= "Instance" then
+			return nil
+		end
+		if E:IsA("Model") then
+			return E.Name
+		end
+		local p = E.Parent
+		if p and p:IsA("Model") then
+			return p.Name
+		end
+		return E.Name
+	end
+	local function onAttack(E)
+		local n = mobName(E)
+		if n then
+			lastMob, lastMobT = n, tick()
+		end
+	end
+	local function onMove(P)
+		if typeof(P) == "CFrame" then
+			lastMoveCF, lastMoveT = P, tick()
+		end
+	end
+	local function onBoat(_, F)
+		if typeof(F) == "CFrame" then
+			lastBoatCF, lastBoatT = F, tick()
+		end
+	end
+	local function onFind(Q)
+		local txt
+		if type(Q) == "string" then
+			txt = Q
+		elseif type(Q) == "table" then
+			local names = {}
+			for i = 1, math.min(#Q, 2) do
+				if type(Q[i]) == "string" then
+					names[#names + 1] = Q[i]
+				end
+			end
+			if #names > 0 then
+				txt = table.concat(names, "/")
+			end
+		end
+		if txt then
+			lastFind, lastFindT = txt, tick()
+		end
+	end
+
+	local function wrap(orig, pre)
+		return function(...)
+			pcall(pre, ...)
+			return orig(...)
+		end
+	end
+
+	local wTo, wBackup, wSize, wClick, wShoot, wDetect, wBoat
+	local function hookMovement()
+		if type(toTarget) == "function" and toTarget ~= wTo then
+			wTo = wrap(toTarget, onMove)
+			toTarget = wTo
+		end
+		if type(env.BackupTween) == "function" and env.BackupTween ~= wBackup then
+			wBackup = wrap(env.BackupTween, onMove)
+			env.BackupTween = wBackup
+		end
+		if type(sizepart) == "function" and sizepart ~= wSize then
+			wSize = wrap(sizepart, onAttack)
+			sizepart = wSize
+		end
+		if type(env.ClickM1) == "function" and env.ClickM1 ~= wClick then
+			wClick = wrap(env.ClickM1, onAttack)
+			env.ClickM1 = wClick
+		end
+		if type(ShootM1) == "function" and ShootM1 ~= wShoot then
+			wShoot = wrap(ShootM1, onAttack)
+			ShootM1 = wShoot
+		end
+		if type(DetectMob) == "function" and DetectMob ~= wDetect then
+			wDetect = wrap(DetectMob, onFind)
+			DetectMob = wDetect
+		end
+		if type(manageTween) == "function" and manageTween ~= wBoat then
+			wBoat = wrap(manageTween, onBoat)
+			manageTween = wBoat
+		end
+	end
+
+	local locCache, locT = {}, 0
+	local function placeName(cf)
+		if typeof(cf) ~= "CFrame" then
+			return "?"
+		end
+		if tick() - locT > 5 then
+			locT = tick()
+			locCache = {}
+			pcall(function()
+				for _, p in ipairs(workspace._WorldOrigin.Locations:GetChildren()) do
+					if p:IsA("BasePart") then
+						locCache[#locCache + 1] = { p.Name, p.Position }
+					end
+				end
+			end)
+		end
+		local pos = cf.Position
+		local best, bd = nil, math.huge
+		for _, e in ipairs(locCache) do
+			local dx, dz = e[2].X - pos.X, e[2].Z - pos.Z
+			local d = math.sqrt(dx * dx + dz * dz)
+			if d < bd then
+				best, bd = e[1], d
+			end
+		end
+		if best and bd < 1500 then
+			return best
+		end
+		return string.format("%d, %d, %d", math.floor(pos.X), math.floor(pos.Y), math.floor(pos.Z))
+	end
+
+	local function on(k)
+		return Settings[k] == true
+	end
+
+	local function computeActive()
+		local out = {}
+		local stackFarm = StackFarm ~= false
+		local stackOther = StackFarmOther ~= false
+
+		if not stackFarm or not stackOther then
+			local name = owner
+			if not (name and on(name)) then
+				name = nil
+				for _, k in ipairs(CHAIN) do
+					if on(k) then
+						name = k
+						break
+					end
+				end
+			end
+			if name then
+				out[#out + 1] = name
+			end
+		end
+
+		if stackFarm and on("Start Farm") then
+			if on("Farm Material") then
+				out[#out + 1] = "Farm Material : " .. tostring(Settings["Select Material"] or "?")
+			else
+				out[#out + 1] = "Start Farm : " .. tostring(Settings["Select Method Farm"] or "Level Farm")
+			end
+			if on("Farm Mastery") then
+				out[#out + 1] = "Farm Mastery"
+			end
+		end
+
+		if stackOther then
+			for _, k in ipairs(GATED_OTHER) do
+				if on(k) then
+					out[#out + 1] = k
+				end
+			end
+		end
+
+		for _, k in ipairs(INDEPENDENT) do
+			if on(k) then
+				out[#out + 1] = k
+			end
+		end
+		return out
+	end
+
+	local function autoStatus(active)
+		if hopDepth > 0 then
+			return tr("Hopping server...")
+		end
+		if tick() < teleportUntil then
+			return tr("Teleporting...")
+		end
+		local char = lp.Character
+		local hum = char and char:FindFirstChildOfClass("Humanoid")
+		if not hum or hum.Health <= 0 then
+			return tr("Waiting for respawn...")
+		end
+
+		local now = tick()
+		local act = active[1]
+		local suffix = act and (" | " .. actLabel(act)) or ""
+
+		if lastMob and now - lastMobT < 1.5 then
+			return fmt("Fighting {}", tr(lastMob)) .. suffix
+		end
+		if lastBoatCF and now - lastBoatT < 1.5 then
+			return fmt("Sailing boat to {}", tr(placeName(lastBoatCF))) .. suffix
+		end
+		if lastMoveCF and now - lastMoveT < 1.0 then
+			local find = (lastFind and now - lastFindT < 2) and (" (" .. fmt("find {}", tr(lastFind)) .. ")") or ""
+			return fmt("Traveling to {}", tr(placeName(lastMoveCF))) .. find .. suffix
+		end
+
+		if not act then
+			return tr("Idle")
+		end
+		if string.sub(act, 1, 10) == "Start Farm" then
+			local okQ, quest = pcall(GetQuestTitle)
+			if okQ and quest then
+				return actLabel(act) .. " | " .. fmt("waiting mob : {}", string.sub(tostring(quest), 1, 50))
+			end
+			return actLabel(act) .. " | " .. tr("taking quest...")
+		end
+		return fmt("Running : {}", actLabel(act))
+	end
+
+	local function getParent()
+		if gethui then
+			local ok, ui = pcall(gethui)
+			if ok and ui then
+				return ui
+			end
+		end
+		local ok, core = pcall(function()
+			return game:GetService("CoreGui")
+		end)
+		if ok and core then
+			return core
+		end
+		return lp:WaitForChild("PlayerGui")
+	end
+
+	local parent = getParent()
+	for _, n in ipairs({ "BananaCatStatusUI", "TopiHubStatusUI" }) do
+		local old = parent:FindFirstChild(n)
+		if old then
+			old:Destroy()
+		end
+	end
+
+	local gui = Instance.new("ScreenGui")
+	gui.Name = "TopiHubStatusUI"
+	gui.ResetOnSpawn = false
+	gui.IgnoreGuiInset = true
+	gui.DisplayOrder = 999
+	gui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+	gui.Enabled = Settings[UI_KEY] == true
+	gui.Parent = parent
+
+	local frame = Instance.new("Frame")
+	frame.Name = "Main"
+	frame.AnchorPoint = Vector2.new(0.5, 0)
+	frame.Position = UDim2.new(0.5, 0, 0, 12)
+	frame.Size = UDim2.new(0.9, 0, 0, 0)
+	frame.AutomaticSize = Enum.AutomaticSize.Y
+	frame.BackgroundColor3 = BG
+	frame.BackgroundTransparency = 0.05
+	frame.BorderSizePixel = 0
+	frame.Parent = gui
+
+	local sizeLimit = Instance.new("UISizeConstraint")
+	sizeLimit.MaxSize = Vector2.new(480, math.huge)
+	sizeLimit.Parent = frame
+	local corner = Instance.new("UICorner")
+	corner.CornerRadius = UDim.new(0, 16)
+	corner.Parent = frame
+	local stroke = Instance.new("UIStroke")
+	stroke.Color = PURPLE
+	stroke.Thickness = 2
+	stroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+	stroke.Parent = frame
+	local padding = Instance.new("UIPadding")
+	padding.PaddingLeft = UDim.new(0, 22)
+	padding.PaddingRight = UDim.new(0, 22)
+	padding.PaddingTop = UDim.new(0, 14)
+	padding.PaddingBottom = UDim.new(0, 14)
+	padding.Parent = frame
+	local list = Instance.new("UIListLayout")
+	list.SortOrder = Enum.SortOrder.LayoutOrder
+	list.Padding = UDim.new(0, 6)
+	list.Parent = frame
+
+	local function makeLabel(text, color, size, order)
+		local l = Instance.new("TextLabel")
+		l.BackgroundTransparency = 1
+		l.Size = UDim2.new(1, 0, 0, 0)
+		l.AutomaticSize = Enum.AutomaticSize.Y
+		l.Font = Enum.Font.GothamBold
+		l.Text = text
+		l.TextColor3 = color
+		l.TextSize = size
+		l.TextWrapped = true
+		l.TextXAlignment = Enum.TextXAlignment.Left
+		l.LayoutOrder = order
+		l.Parent = frame
+		return l
+	end
+
+	local titleLabel = makeLabel(tr("TopiHub Status"), PURPLE, 20, 1)
+	local statusLabel = makeLabel("Status : ...", Color3.fromRGB(255, 255, 255), 18, 2)
+
+	local lastStatus
+	local function refresh()
+		local active = computeActive()
+		local text = (override and tick() < overrideUntil) and tr(override) or autoStatus(active)
+		local st = tr("Status") .. " : " .. text
+		local title = tr("TopiHub Status")
+		if titleLabel.Text ~= title then
+			titleLabel.Text = title
+		end
+		if st ~= lastStatus then
+			lastStatus = st
+			statusLabel.Text = st
+		end
+	end
+
+	task.spawn(function()
+		while gui.Parent do
+			pcall(hookHop)
+			pcall(hookMovement)
+			pcall(refresh)
+			task.wait(0.3)
+		end
+	end)
+
+	local SectionStatusUI = PageStatusAndServer.CreateSection("TopiHub Status UI")
+	SectionStatusUI.CreateToggle({
+		Title = "Show TopiHub Status UI",
+		Desc = "Show what the script is doing at the top of the screen",
+		Default = Settings[UI_KEY] == true,
+	}, function(v)
+		SaveSettings(UI_KEY, v)
+		gui.Enabled = v
+	end)
+end
 SectionStatus = PageStatusAndServer.CreateSection("Status")
 TimerLabel = SectionStatus.CreateLabel({ Title = "Timer" })
 TimerServerLabel = SectionStatus.CreateLabel({ Title = "Timer Server" })
@@ -14660,7 +15098,7 @@ do
 end
 FarmMain = Main.CreatePage({ Page_Name = "Farming", Page_Title = "Farming" })
 EventBloxFruitMain = Main.CreatePage({ Page_Name = "Event Blox Fruit", Page_Title = "Event Blox Fruit" })
-SkEggSection = EventBloxFruitMain.CreateSection("Event Egg")
+SkEggSection = EventBloxFruitMain.CreateSection("Sk Egg")
 
 SkEggSection.CreateButton({ Title = "Open Easter Shop" }, function()
     v_2(game.ReplicatedStorage.Controllers.UI.EventShop):Open("Easter2026")
@@ -14714,7 +15152,7 @@ end)
 
 
 -- Sk Nha Cho: chi them toggle Auto Farm Dog Event
-SkEggDogSection = EventBloxFruitMain.CreateSection("Event dog")
+SkEggDogSection = EventBloxFruitMain.CreateSection("Sk Nhà Chó")
 SkEggDogSection.CreateToggle({
     Title = "Auto Farm Dog Event [Beta 3]",
     Desc = "",
@@ -14883,6 +15321,7 @@ do
 	end
 
 	local HW_CLICK_DELAY = 0.3 -- delay giữa mỗi lần click (giây)
+	local lastPumpkinClick, lastPatchClick = 0, 0
 	-- click y hệt logic phá mây (VirtualInputManager)
 	local CLICK_UDIM = UDim2.new(0.15, 0, 0.15, 0)
 	local function doClick()
@@ -14982,6 +15421,12 @@ do
 					toTarget(hrp.CFrame)
 				end)
 				getgenv().__PumpkinAttackAt = tick()
+				-- Pumpkin là object trong map, không phải mob có Humanoid để ClickM1 đánh.
+				-- Click trực tiếp vào vị trí quả bí theo nhịp, đồng thời giữ đòn M1.
+				if tick() - lastPumpkinClick >= HW_CLICK_DELAY then
+					lastPumpkinClick = tick()
+					pcall(clickAtWorld, cf.Position)
+				end
 				pcall(AttackFunction, 30)
 			else
 				-- chưa tới: fly tới điểm đứng
@@ -15121,6 +15566,11 @@ do
 					toTarget(hrp.CFrame)
 				end)
 				getgenv().__PumpkinAttackAt = tick()
+				-- Click vào PumpkinPatch để kích hoạt đòn đánh/thu thập.
+				if tick() - lastPatchClick >= HW_CLICK_DELAY then
+					lastPatchClick = tick()
+					pcall(clickAtWorld, cf.Position)
+				end
 				pcall(AttackFunction, 30)
 			else
 				-- chưa tới: fly tới điểm đứng
