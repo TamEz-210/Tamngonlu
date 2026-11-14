@@ -15098,7 +15098,7 @@ do
 end
 FarmMain = Main.CreatePage({ Page_Name = "Farming", Page_Title = "Farming" })
 EventBloxFruitMain = Main.CreatePage({ Page_Name = "Event Blox Fruit", Page_Title = "Event Blox Fruit" })
-SkEggSection = EventBloxFruitMain.CreateSection("Sk Egg")
+SkEggSection = EventBloxFruitMain.CreateSection("Event Easter")
 
 SkEggSection.CreateButton({ Title = "Open Easter Shop" }, function()
     v_2(game.ReplicatedStorage.Controllers.UI.EventShop):Open("Easter2026")
@@ -15152,7 +15152,7 @@ end)
 
 
 -- Sk Nha Cho: chi them toggle Auto Farm Dog Event
-SkEggDogSection = EventBloxFruitMain.CreateSection("Sk Nhà Chó")
+SkEggDogSection = EventBloxFruitMain.CreateSection(" Event dog")
 SkEggDogSection.CreateToggle({
     Title = "Auto Farm Dog Event [Beta 3]",
     Desc = "",
@@ -15161,6 +15161,132 @@ SkEggDogSection.CreateToggle({
     _G.StartQuest = Value
     SaveSettings("Auto Farm Dog Event [Beta 3]", Value)
 end)
+
+-- ===== Valentine Event (ported from redz beta skira-1) =====
+ValentineSection = EventBloxFruitMain.CreateSection("Valentine Event")
+
+do
+    local Players = game:GetService("Players")
+    local ReplicatedStorage = game:GetService("ReplicatedStorage")
+    local player = Players.LocalPlayer
+    local playerGui = player:WaitForChild("PlayerGui")
+    local commF = ReplicatedStorage:WaitForChild("Remotes"):WaitForChild("CommF_")
+    local VALENTINE_FARM_KEY = "Auto Farm Mobs Rip son [Valentine]"
+
+    -- Kiểm tra tiêu đề quest Valentine hiện tại.
+    local function CheckGetQuest()
+        local mainGui = playerGui:FindFirstChild("Main")
+        local questGui = mainGui and mainGui:FindFirstChild("Quest")
+        if questGui and questGui.Visible then
+            local container = questGui:FindFirstChild("Container")
+            local questTitle = container and container:FindFirstChild("QuestTitle")
+            local title = questTitle and questTitle:FindFirstChild("Title")
+            return title and title.Text or nil
+        end
+        return nil
+    end
+
+    -- Bắt đầu quest Valentine theo Sea đang ở.
+    local function StartValentineQuest()
+        -- Dừng một số chế độ farm xung đột giống logic trong file nguồn.
+        _G.AutoFarmNear = false
+        _G.AutoEctoplasm = false
+        _G.AutoFarmChest = false
+        _G.SeaBeast1 = false
+        _G.AutoCollectFruit = false
+
+        local worldArg = "Sea1"
+        local npcPosition
+
+        if game.PlaceId == 4442272183 then
+            worldArg = "Sea2"
+            npcPosition = CFrame.new(-400, 73, 1800)
+        elseif game.PlaceId == 7449423635 or game.PlaceId == 2753915549 then
+            if game.PlaceId == 7449423635 then
+                worldArg = "Sea3"
+                npcPosition = CFrame.new(-712, 98, 5711)
+            else
+                npcPosition = CFrame.new(1000, 27, 1500)
+            end
+        else
+            npcPosition = CFrame.new(1000, 27, 1500)
+        end
+
+        if npcPosition then
+            toTarget(npcPosition)
+            task.wait(1.5)
+            pcall(function()
+                commF:InvokeServer("StartNextValentineQuest", worldArg)
+            end)
+        end
+    end
+
+    -- Nộp vật phẩm cho quest Valentine.
+    local function SubmitQuestItem(itemType, amount)
+        pcall(function()
+            commF:InvokeServer("SubmitValentineQuest", itemType, amount)
+        end)
+    end
+
+    -- Giữ các hàm trong môi trường để có thể gọi/debug từ executor.
+    getgenv().CheckGetQuest = CheckGetQuest
+    getgenv().StartValentineQuest = StartValentineQuest
+    getgenv().SubmitQuestItem = SubmitQuestItem
+
+    ValentineSection.CreateButton({ Title = "Start Valentine Quest" }, function()
+        StartValentineQuest()
+    end)
+
+    ValentineSection.CreateToggle({
+        Title = "Auto Farm Mobs Rip son [nên bật khi làm Valentine]",
+        Desc = "Đánh các quái đang có trong workspace.Enemies",
+        Default = Settings[VALENTINE_FARM_KEY] or false,
+    }, function(Value)
+        _G.AutoFarmNear = Value
+        SaveSettings(VALENTINE_FARM_KEY, Value)
+    end)
+
+    task.spawn(function()
+        while task.wait(0.2) do
+            if Settings[VALENTINE_FARM_KEY] and _G.AutoFarmNear then
+                pcall(function()
+                    local enemies = workspace:FindFirstChild("Enemies")
+                    if not enemies then
+                        return
+                    end
+
+                    for _, mob in ipairs(enemies:GetChildren()) do
+                        if not (Settings[VALENTINE_FARM_KEY] and _G.AutoFarmNear) then
+                            break
+                        end
+
+                        local humanoid = mob:FindFirstChildOfClass("Humanoid")
+                        local root = mob:FindFirstChild("HumanoidRootPart")
+                        if humanoid and root and humanoid.Health > 0 then
+                            toTarget(root.CFrame * CFrame.new(0, 30, 0))
+                            if type(BringMob) == "function" then
+                                pcall(BringMob, mob)
+                            end
+                            if type(ClickM1) == "function" then
+                                pcall(ClickM1, mob, true)
+                            end
+
+                            repeat
+                                task.wait(0.15)
+                                if not mob.Parent then
+                                    break
+                                end
+                                humanoid = mob:FindFirstChildOfClass("Humanoid")
+                            until not (Settings[VALENTINE_FARM_KEY] and _G.AutoFarmNear)
+                                or not humanoid
+                                or humanoid.Health <= 0
+                        end
+                    end
+                end)
+            end
+        end
+    end)
+end
 
 HalloweenSection = EventBloxFruitMain.CreateSection("Halloween")
 do
