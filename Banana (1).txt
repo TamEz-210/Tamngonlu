@@ -8564,8 +8564,9 @@ task.spawn(function()
                 end
             end
             table.sort(names)
-            StatusNormalStock.SetText("Normal Fruit Stock: " ..
-                (#names > 0 and table.concat(names, ", ") or "No fruits available / unavailable"))
+            -- Show each fruit on its own row, underneath the stock heading.
+            StatusNormalStock.SetText("Normal Fruit Stock:\n" ..
+                (#names > 0 and table.concat(names, "\n") or "No fruits available / unavailable"))
         end)
     end
 end)
