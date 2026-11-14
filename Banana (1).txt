@@ -7331,7 +7331,7 @@ local uiOk, uiErr = pcall(function()
 	end
 	t3.CreateNoti({
 		Title = "Notification",
-		Desc = "🇻🇳xin chào ae nha tui là người vn🇻🇳",
+		Desc = "The UI automatically hides once executed.\nPress the button at the bottom-left of the screen to show the GUI.",
 		ShowTime = 10
 	}, true)
 	
@@ -15098,6 +15098,70 @@ do
 end
 FarmMain = Main.CreatePage({ Page_Name = "Farming", Page_Title = "Farming" })
 EventBloxFruitMain = Main.CreatePage({ Page_Name = "Event Blox Fruit", Page_Title = "Event Blox Fruit" })
+SkEggMain = Main.CreatePage({ Page_Name = "Sk Egg", Page_Title = "Sk Egg" })
+SkEggSection = SkEggMain.CreateSection("Easter 2026")
+
+SkEggSection.CreateButton({ Title = "Open Easter Shop" }, function()
+    v_2(game.ReplicatedStorage.Controllers.UI.EventShop):Open("Easter2026")
+end)
+
+DetectEgg = function()
+    local position = localPlayer.Character.PrimaryPart.Position
+    local huge = math.huge
+    local v_11 = nil
+
+    for _, v_12 in pairs(game:GetService("CollectionService"):GetTagged("EasterEgg26")) do
+        local magnitude = (position - v_12:GetAttribute("CFrame").Position).Magnitude
+
+        if magnitude < huge then
+            huge = magnitude
+            v_11 = v_12
+        end
+    end
+
+    return v_11
+end
+
+SkEggSection.CreateToggle({
+    Title = "Auto Collect Egg Easter",
+    Desc = nil,
+    Default = Settings["Auto Collect Egg Easter"] or false,
+}, function(arg)
+    if arg then
+        spawn(function()
+            while Settings["Auto Collect Egg Easter"] and task.wait() do
+                local ok, result = pcall(function()
+                    if not StackFarmOther then
+                        return
+                    end
+                    local v_11 = DetectEgg()
+
+                    if v_11 then
+                        toTarget(v_11:GetAttribute("CFrame"))
+                    end
+                end)
+
+                if result then
+                    print(result)
+                end
+            end
+        end)
+    end
+
+    SaveSettings("Auto Collect Egg Easter", arg)
+end)
+
+
+-- Sk Nha Cho: chi them toggle Auto Farm Dog Event
+SkEggDogSection = SkEggMain.CreateSection("Sk Nha Cho")
+SkEggDogSection.CreateToggle({
+    Title = "Auto Farm Dog Event [Beta 3]",
+    Desc = "",
+    Default = Settings["Auto Farm Dog Event [Beta 3]"] or false,
+}, function(Value)
+    _G.StartQuest = Value
+    SaveSettings("Auto Farm Dog Event [Beta 3]", Value)
+end)
 
 HalloweenSection = EventBloxFruitMain.CreateSection("Halloween")
 do
