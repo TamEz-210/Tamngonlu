@@ -98,7 +98,7 @@ pcall(function()
 	subtitle.Position = UDim2.new(0, 45, 0, 21)
 	subtitle.Size = UDim2.new(1, -150, 0, 15)
 	subtitle.Font = Enum.Font.Gotham
-	subtitle.Text = "Load để xài"
+	subtitle.Text = "FAST WHITELIST / V5.0"
 	subtitle.TextColor3 = Color3.fromRGB(112, 116, 130)
 	subtitle.TextSize = 9
 	subtitle.TextXAlignment = Enum.TextXAlignment.Left
@@ -7331,7 +7331,7 @@ local uiOk, uiErr = pcall(function()
 	end
 	t3.CreateNoti({
 		Title = "Notification",
-		Desc = "🇻🇳Xin chào ae tui là Người VN🇻🇳",
+		Desc = "The UI automatically hides once executed.\nPress the button at the bottom-left of the screen to show the GUI.",
 		ShowTime = 10
 	}, true)
 	
@@ -9850,6 +9850,62 @@ function EliteHopStep()
 end
 SectionServer.CreateButton({ Title = "Hop Server" }, function()
 	HopServer()
+end)
+
+-- Hop Less Ping Server (ported from Redz beta skira; safe server selection)
+SectionServer.CreateButton({ Title = "Hop Less Ping Server" }, function()
+	task.spawn(function()
+		local HttpService = game:GetService("HttpService")
+		local TeleportService = game:GetService("TeleportService")
+		local StatsService = game:GetService("Stats")
+		local placeId = game.PlaceId
+		local ok, result = pcall(function()
+			local url = string.format(
+				"https://games.roblox.com/v1/games/%d/servers/Public?sortOrder=Asc&limit=100",
+				placeId
+			)
+			local response = HttpService:JSONDecode(game:HttpGet(url))
+			return response and response.data
+		end)
+		if not ok or type(result) ~= "table" then
+			warn("[Hop Less Ping] Could not fetch public servers")
+			return
+		end
+
+		local bestServer
+		for _, server in ipairs(result) do
+			local ping = tonumber(server.ping)
+			local playing = tonumber(server.playing) or math.huge
+			local maxPlayers = tonumber(server.maxPlayers) or 0
+			if server.id and server.id ~= game.JobId and ping and maxPlayers > playing then
+				if not bestServer or ping < bestServer.ping then
+					bestServer = { id = server.id, ping = ping }
+				end
+			end
+		end
+		if not bestServer then
+			warn("[Hop Less Ping] No available server found")
+			return
+		end
+
+		local pingValue
+		pcall(function()
+			local pingText = StatsService.Network.ServerStatsItem["Data Ping"]:GetValueString()
+			pingValue = tonumber(tostring(pingText):match("(%d+)"))
+		end)
+		if pingValue and pingValue < 100 then
+			pcall(function()
+				game:GetService("StarterGui"):SetCore("SendNotification", {
+					Title = "Tam Notification",
+					Text = "Your ping is already below 100 ms",
+					Duration = 4
+				})
+			end)
+			return
+		end
+
+		TeleportService:TeleportToPlaceInstance(placeId, bestServer.id, game:GetService("Players").LocalPlayer)
+	end)
 end)
 function HopLessAll()
 	require(game:GetService("ReplicatedStorage").Notification)
@@ -37145,129 +37201,122 @@ __BF_FinishLoading()
 getgenv().__BF_LOADED = game.JobId
 
 
--- Hop Boss (moved from the source script into the bottom of Status And Server)
+-- Hop Boss (Redz-style auto attack or hop)
 local TamHopBossSection = PageStatusAndServer.CreateSection("Hop Boss")
-local TamBossLists = {
-    First = {
-        "Greybeard", "The Saw", "Saber Expert", "The Gorilla King", "Bobby",
-        "Yeti", "Vice Admiral", "Warden", "Chief Warden", "Swan",
-        "Magma Admiral", "Fishman Lord", "Wysper", "Thunder God", "Cyborg",
-    },
-    Second = {
-        "Darkbeard", "Cursed Captain", "Order", "Don Swan", "Diamond",
-        "Jeremy", "Fajita", "Smoke Admiral", "Awakened Ice Admiral", "Tide Keeper",
-    },
-    Third = {
-        "Dough King", "Cake Prince", "rip_indra True Form", "Soul Reaper", "Stone",
-        "Island Empress", "Kilo Admiral", "Captain Elephant", "Beautiful Pirate",
-        "Cake Queen", "Longma",
-    },
-}
-local TamHopWorld = Settings["Hop Boss World"] or "Third"
-local TamHopBossDropdown
-local TamHopBoss = Settings["Hop Boss " .. TamHopWorld] or TamBossLists[TamHopWorld][1]
 
-TamHopBossSection.CreateDropdown({
-    Title = "Select World",
-    List = { "First", "Second", "Third" },
-    Search = false,
-    Selected = false,
-    Default = TamHopWorld,
-}, function(value)
-    TamHopWorld = value
-    SaveSettings("Hop Boss World", value)
-    TamHopBoss = TamBossLists[value][1]
-    SaveSettings("Hop Boss " .. value, TamHopBoss)
-    if TamHopBossDropdown then
-        pcall(function() TamHopBossDropdown:GetNewList(TamBossLists[value]) end)
-    end
-end)
-
-TamHopBossDropdown = TamHopBossSection.CreateDropdown({
-    Title = "Select Boss",
-    List = TamBossLists[TamHopWorld],
-    Search = true,
-    Selected = false,
-    Default = TamHopBoss,
-}, function(value)
-    TamHopBoss = value
-    SaveSettings("Hop Boss " .. TamHopWorld, value)
-end)
-
-TamHopBossSection.CreateButton({ Title = "Refresh Boss List" }, function()
-    pcall(function()
-        TamHopBossDropdown:GetNewList(TamBossLists[TamHopWorld])
-    end)
-end)
-
-local function TamHopBossFindServer(bossName)
-    local requestFunc = (syn and syn.request) or (http and http.request) or http_request or request
-    if type(requestFunc) ~= "function" then
-        return nil, "Executor does not support HTTP requests"
-    end
-
-    local ok, response = pcall(function()
-        return requestFunc({
-            Url = "https://prvf.onrender.com/data",
-            Method = "GET"
-        })
-    end)
-    if not ok or not response or not response.Body then
-        return nil, "Could not get boss server data"
-    end
-
-    local decodedOk, data = pcall(function()
-        return game:GetService("HttpService"):JSONDecode(response.Body)
-    end)
-    if not decodedOk or type(data) ~= "table" then
-        return nil, "Invalid boss server data"
-    end
-
-    for jobId, bossData in pairs(data) do
-        if type(bossData) == "table" then
-            local found = false
-            for _, name in pairs(bossData) do
-                if tostring(name) == bossName then
-                    found = true
-                    break
+local function TamFindHopBoss(names)
+    local wanted = type(names) == "table" and names or { names }
+    local containers = {
+        game:GetService("Workspace"):FindFirstChild("Enemies"),
+        game:GetService("ReplicatedStorage"),
+    }
+    for _, container in ipairs(containers) do
+        if container then
+            for _, mob in ipairs(container:GetChildren()) do
+                if table.find(wanted, mob.Name) and IsMobAlive(mob) then
+                    return mob
                 end
             end
-            if found and tostring(jobId) ~= game.JobId then
-                return tostring(jobId)
-            end
-        elseif type(bossData) == "string" and string.find(bossData, bossName, 1, true)
-            and tostring(jobId) ~= game.JobId then
-            return tostring(jobId)
         end
     end
-    return nil, "No server with " .. tostring(bossName) .. " found"
+    return nil
 end
 
-TamHopBossSection.CreateButton({ Title = "Hop Boss" }, function()
-    if not TamHopBoss or TamHopBoss == "" then
-        return
-    end
-    task.spawn(function()
-        local jobId, err = TamHopBossFindServer(TamHopBoss)
-        if not jobId then
-            pcall(function()
-                game:GetService("StarterGui"):SetCore("SendNotification", {
-                    Title = "Tam Hub",
-                    Text = tostring(err or "No server found"),
-                    Duration = 5
-                })
-            end)
-            return
+local function TamHopBossAttack(mob, settingKey)
+    repeat
+        task.wait()
+        if not Settings[settingKey] or not IsMobAlive(mob) then
+            break
         end
+        pcall(sizepart, mob)
+        if Settings["Select Weapon"] == "Blox Fruit" then
+            pcall(toTarget, mob.HumanoidRootPart.CFrame * CFrame.new(-7, FruitFarmY(), 0))
+        else
+            pcall(toTarget, mob.HumanoidRootPart.CFrame * CFrame.new(7, BuddhaFarmY(), 0))
+        end
+        pcall(ClickM1, mob)
+        pcall(UsedualFlock)
+    until not Settings[settingKey] or not IsMobAlive(mob)
+end
 
-        pcall(function()
-            game:GetService("StarterGui"):SetCore("SendNotification", {
-                Title = "Tam Hub",
-                Text = "Found " .. tostring(TamHopBoss) .. " server. Teleporting...",
-                Duration = 5
-            })
-        end)
-        task.wait(0.5)
-        game:GetService("TeleportService"):TeleportToPlaceInstance(game.PlaceId, jobId, game:GetService("Players").LocalPlayer)
+local function TamRunBossHop(settingKey, bossNames, eliteMode)
+    task.spawn(function()
+        while Settings[settingKey] do
+            local ok, err = pcall(function()
+                if eliteMode then
+                    local playerGui = game:GetService("Players").LocalPlayer:FindFirstChild("PlayerGui")
+                    local main = playerGui and playerGui:FindFirstChild("Main")
+                    local quest = main and main:FindFirstChild("Quest")
+                    local visible = quest and quest.Visible
+                    local titleObject = visible and quest:FindFirstChild("Container")
+                    titleObject = titleObject and titleObject:FindFirstChild("QuestTitle")
+                    titleObject = titleObject and titleObject:FindFirstChild("Title")
+                    local title = titleObject and titleObject.Text or ""
+                    local hasEliteQuest = visible and (
+                        string.find(title, "Diablo", 1, true)
+                        or string.find(title, "Urban", 1, true)
+                        or string.find(title, "Deandre", 1, true)
+                    )
+                    if hasEliteQuest then
+                        local elite = TamFindHopBoss({ "Diablo", "Urban", "Deandre" })
+                        if elite then
+                            TamHopBossAttack(elite, settingKey)
+                        else
+                            HopServer(5, function()
+                                return not Settings[settingKey] or TamFindHopBoss({ "Diablo", "Urban", "Deandre" }) ~= nil
+                            end)
+                        end
+                    else
+                        HopServer(5, function()
+                            local pg = game:GetService("Players").LocalPlayer:FindFirstChild("PlayerGui")
+                            local m = pg and pg:FindFirstChild("Main")
+                            local q = m and m:FindFirstChild("Quest")
+                            local t = q and q:FindFirstChild("Container")
+                            t = t and t:FindFirstChild("QuestTitle")
+                            t = t and t:FindFirstChild("Title")
+                            local text = t and t.Text or ""
+                            return not Settings[settingKey] or (q and q.Visible and (
+                                string.find(text, "Diablo", 1, true)
+                                or string.find(text, "Urban", 1, true)
+                                or string.find(text, "Deandre", 1, true)
+                            ))
+                        end)
+                    end
+                else
+                    local boss = TamFindHopBoss(bossNames)
+                    if boss then
+                        TamHopBossAttack(boss, settingKey)
+                    else
+                        HopServer(5, function()
+                            return not Settings[settingKey] or TamFindHopBoss(bossNames) ~= nil
+                        end)
+                    end
+                end
+            end)
+            if not ok then
+                warn("[Tam Hop Boss] " .. tostring(err))
+                task.wait(1)
+            end
+            task.wait(0.2)
+        end
     end)
-end)
+end
+
+local function TamAddBossHopToggle(title, settingKey, bossNames, eliteMode)
+    TamHopBossSection.CreateToggle({
+        Title = title,
+        Desc = "Có boss/quest thì tự đánh, không có thì tự hop server",
+        Default = Settings[settingKey] or false,
+    }, function(value)
+        SaveSettings(settingKey, value)
+        if value then
+            TamRunBossHop(settingKey, bossNames, eliteMode)
+        end
+    end)
+end
+
+TamAddBossHopToggle("Auto Attack or Hop Server Rip Indra", "Hop Boss Rip Indra", "rip_indra", false)
+TamAddBossHopToggle("Auto Attack or Hop Server Darkbeard", "Hop Boss Darkbeard", "Darkbeard", false)
+TamAddBossHopToggle("Auto Attack or Hop Server Elites", "Hop Boss Elites", { "Diablo", "Urban", "Deandre" }, true)
+TamAddBossHopToggle("Auto Attack or Hop Server Dough King", "Hop Boss Dough King", "Dough King", false)
+TamAddBossHopToggle("Auto Attack or Hop Server Soul Reaper", "Hop Boss Soul Reaper", "Soul Reaper", false)
