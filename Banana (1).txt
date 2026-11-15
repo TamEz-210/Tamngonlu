@@ -1215,7 +1215,7 @@ local uiOk, uiErr = pcall(function()
 		ImageLabel.ImageColor3 = t1.UIColor["Border Color"]
 		ImageLabel.ImageTransparency = 1
 		ImageLabel.ImageColor3 = t1.UIColor["Title Text Color"]
-		TextLabel.Text = "<font color=\"rgb(" .. (tostring(t4.Getcolor(t1.UIColor["Title Text Color"])[1]) .. "," .. tostring(t4.Getcolor(t1.UIColor["Title Text Color"])[2]) .. "," .. tostring(t4.Getcolor(t1.UIColor["Title Text Color"])[3])) .. ")\">" .. (p5.Title or "Day Hub") .. " </font> " .. (p5.Desc or "- Blox Fruits")
+		TextLabel.Text = "<font color=\"rgb(" .. (tostring(t4.Getcolor(t1.UIColor["Title Text Color"])[1]) .. "," .. tostring(t4.Getcolor(t1.UIColor["Title Text Color"])[2]) .. "," .. tostring(t4.Getcolor(t1.UIColor["Title Text Color"])[3])) .. ")\">" .. (p5.Title or "Day Hub") .. " </font> " .. (p5.Desc or "- Blox Fruits [Freemium]")
 	
 		local ImageLabel3 = Instance.new("ImageLabel")
 	
@@ -1295,7 +1295,7 @@ local uiOk, uiErr = pcall(function()
 		TextLabel.TextWrapped = true
 		TextLabel.TextXAlignment = Enum.TextXAlignment.Center
 		TextLabel.TextColor3 = t1.UIColor["GUI Text Color"]
-		TextLabel.Text = "<font color=\"rgb(" .. (tostring(t4.Getcolor(t1.UIColor["Title Text Color"])[1]) .. "," .. tostring(t4.Getcolor(t1.UIColor["Title Text Color"])[2]) .. "," .. tostring(t4.Getcolor(t1.UIColor["Title Text Color"])[3])) .. ")\">Day Hub </font> - Blox Fruits"
+		TextLabel.Text = "<font color=\"rgb(" .. (tostring(t4.Getcolor(t1.UIColor["Title Text Color"])[1]) .. "," .. tostring(t4.Getcolor(t1.UIColor["Title Text Color"])[2]) .. "," .. tostring(t4.Getcolor(t1.UIColor["Title Text Color"])[3])) .. ")\">Day Hub </font> - Blox Fruits [Freemium]"
 		Frame4.Name = "Background1"
 		Frame4.Parent = Frame7
 		Frame4.Position = UDim2.new(0, 5, 0, 0)
@@ -7205,7 +7205,7 @@ local uiOk, uiErr = pcall(function()
 	end
 	t3.CreateNoti({
 		Title = "Notification",
-		Desc = "The UI automatically hides once executed.\nPress the button at the bottom-left of the screen to show the GUI.",
+		Desc = "Đang cho free mốt bắt getkey",
 		ShowTime = 10
 	}, true)
 	
@@ -7536,7 +7536,7 @@ getgenv().TopiTranslator = (function()
 	return T
 end)()
 
-Main = guardUI(A.CreateMain({ Title = "Blox Fruit", Desc = " - Blox Fruit By wzarii" }), "Main")
+Main = guardUI(A.CreateMain({ Title = "Blox Fruit", Desc = " - Blox Fruit [Freemium]" }), "Main")
 PageShop = Main.CreatePage({ Page_Name = "Shop", Page_Title = "Shop" })
 getgenv().Options = A.Options
 SectionShopMisc = PageShop.CreateSection("Misc Shop")
@@ -37492,6 +37492,65 @@ ESPSection.CreateToggle({ Title = "ESP Player", Desc = nil, Default = Settings["
 	end
 	SaveSettings("ESP Player", b)
 end)
+
+-- ESP FONT OPTIONS (ported from Anime Mob Hub)
+local ESPCurrentFont = Enum.Font.Arial
+
+local function ApplyESPFont(fontEnum)
+	ESPCurrentFont = fontEnum
+	local function applyTo(root)
+		if not root then return end
+		for _, obj in ipairs(root:GetDescendants()) do
+			if obj:IsA("TextLabel") or obj:IsA("TextButton") or obj:IsA("TextBox") then
+				pcall(function() obj.Font = fontEnum end)
+			end
+		end
+	end
+
+	pcall(function()
+		applyTo(game:GetService("CoreGui"))
+		applyTo(game:GetService("Players").LocalPlayer:FindFirstChildOfClass("PlayerGui"))
+	end)
+end
+
+-- Apply the selected font to UI elements created later.
+local ESPFontRoots = {}
+pcall(function()
+	table.insert(ESPFontRoots, game:GetService("CoreGui"))
+	table.insert(ESPFontRoots, game:GetService("Players").LocalPlayer:WaitForChild("PlayerGui"))
+end)
+for _, root in ipairs(ESPFontRoots) do
+	root.DescendantAdded:Connect(function(obj)
+		if obj:IsA("TextLabel") or obj:IsA("TextButton") or obj:IsA("TextBox") then
+			pcall(function() obj.Font = ESPCurrentFont end)
+		end
+	end)
+end
+
+ESPFontSection = ESPTab.CreateSection("Fonts")
+local ESPFontChoices = {
+	{"Amatic SC", Enum.Font.AmaticSC},
+	{"Antique", Enum.Font.Antique},
+	{"Arcade", Enum.Font.Arcade},
+	{"Arial", Enum.Font.Arial},
+	{"Arial Bold", Enum.Font.ArialBold},
+	{"Bangers", Enum.Font.Bangers},
+	{"Bodoni", Enum.Font.Bodoni},
+	{"Cartoon", Enum.Font.Cartoon},
+	{"Code", Enum.Font.Code},
+	{"Creepster", Enum.Font.Creepster},
+	{"Denk One", Enum.Font.DenkOne},
+	{"Fondamento", Enum.Font.Fondamento},
+	{"Fredoka One", Enum.Font.FredokaOne},
+	{"Garamond", Enum.Font.Garamond},
+	{"Gotham", Enum.Font.Gotham},
+}
+for _, choice in ipairs(ESPFontChoices) do
+	ESPFontSection.CreateButton({Title = "Font: " .. choice[1]}, function()
+		ApplyESPFont(choice[2])
+	end)
+end
+
 PvpTab = Main.CreatePage({ Page_Name = "PVP", Page_Title = "PVP Tab" })
 SettingsAimbotSection = PvpTab.CreateSection("PVP")
 local b = SettingsAimbotSection.CreateDropdown(
