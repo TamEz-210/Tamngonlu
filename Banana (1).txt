@@ -14529,7 +14529,7 @@ do
 end
 FarmMain = Main.CreatePage({ Page_Name = "Farming", Page_Title = "Farming" })
 EventBloxFruitMain = Main.CreatePage({ Page_Name = "Event Blox Fruit", Page_Title = "Event Blox Fruit" })
-SkEggSection = EventBloxFruitMain.CreateSection("Event Easter")
+SkEggSection = EventBloxFruitMain.CreateSection("Sk Egg")
 
 SkEggSection.CreateButton({ Title = "Open Easter Shop" }, function()
     v_2(game.ReplicatedStorage.Controllers.UI.EventShop):Open("Easter2026")
@@ -14583,7 +14583,7 @@ end)
 
 
 -- Sk Nha Cho: chi them toggle Auto Farm Dog Event
-SkEggDogSection = EventBloxFruitMain.CreateSection(" Event dog")
+SkEggDogSection = EventBloxFruitMain.CreateSection("Sk Nhà Chó")
 SkEggDogSection.CreateToggle({
     Title = "Auto Farm Dog Event [Beta 3]",
     Desc = "",
@@ -14995,7 +14995,7 @@ do
 	end
 
 	HalloweenSection.CreateToggle(
-		{ Title = "Auto Farm Pumpkin Hunt", Desc = nil, Default = Settings[HW_KEY] or false },
+		{ Title = "Auto Farm Pumpkin Hunt", Desc = "Fly to nearest pumpkin, then kill Jack O' Lantern / Pumpkin Snowman (800 studs)", Default = Settings[HW_KEY] or false },
 		function(state)
 			SaveSettings(HW_KEY, state)
 			if not state then
@@ -15026,7 +15026,7 @@ do
 	)
 
 	HalloweenSection.CreateToggle(
-		{ Title = "Kill Aura Jack O' Lantern", Desc = nil, Default = Settings["Kill Aura Jack O' Lantern"] or false },
+		{ Title = "Kill Aura Jack O' Lantern", Desc = "While farming Jack O' Lantern, kill Jack O' Lantern within 300 studs with the existing kill aura logic (needs Auto Farm Pumpkin Hunt)", Default = Settings["Kill Aura Jack O' Lantern"] or false },
 		function(state)
 			SaveSettings("Kill Aura Jack O' Lantern", state)
 		end
@@ -15139,7 +15139,7 @@ do
 	end
 
 	HalloweenSection.CreateToggle(
-		{ Title = "Auto Farm Pumpkin Snowman", Desc = nil, Default = Settings[SN_KEY] or false },
+		{ Title = "Auto Farm Pumpkin Snowman", Desc = "Only fly to PumpkinHunt.PumpkinPatch and kill Pumpkin Snowman", Default = Settings[SN_KEY] or false },
 		function(state)
 			SaveSettings(SN_KEY, state)
 			getgenv().__PSnowToken = getgenv().__PSnowToken + 1
@@ -15174,7 +15174,7 @@ do
 
 	-- hop chỉ chạy khi đang bật Auto Farm Pumpkin Snowman; chỉ hop khi server không có cả PumpkinPatch lẫn Pumpkin Snowman
 	HalloweenSection.CreateToggle(
-		{ Title = "Auto Hop Find Pumpkin Patch", Desc = nil, Default = Settings[SNHOP_KEY] or false },
+		{ Title = "Auto Hop Find Pumpkin Patch", Desc = "Needs Auto Farm Pumpkin Snowman. Hop server when no PumpkinPatch and no Pumpkin Snowman", Default = Settings[SNHOP_KEY] or false },
 		function(state)
 			SaveSettings(SNHOP_KEY, state)
 			getgenv().__PSnowHopToken = getgenv().__PSnowHopToken + 1
@@ -15916,7 +15916,7 @@ do
 	end
 
 	HalloweenSection.CreateToggle(
-		{ Title = "Auto Trick Or Treat", Desc = nil, Default = Settings[TT_KEY] or false },
+		{ Title = "Auto Trick Or Treat", Desc = "Fly to nearest HalloweenDoor, press E when prompt shows, click option1; chase GhostChase models", Default = Settings[TT_KEY] or false },
 		function(state)
 			SaveSettings(TT_KEY, state)
 			getgenv().__TrickTreatToken = getgenv().__TrickTreatToken + 1
@@ -16421,7 +16421,7 @@ do
 	end
 
 	HalloweenSection.CreateToggle(
-		{ Title = "Auto Summon + Farm Boss", + = nil, Default = Settings[DJ_KEY] or false },
+		{ Title = "Auto Summon + Farm Boss", Desc = "Witch > Summon > wait 15s > GreatPumpkinCompass (hold E) > kill Dapper Jack > collect CandySpillFx > reset player", Default = Settings[DJ_KEY] or false },
 		function(state)
 			SaveSettings(DJ_KEY, state)
 			getgenv().__DJToken = getgenv().__DJToken + 1
