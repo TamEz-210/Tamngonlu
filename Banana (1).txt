@@ -68,7 +68,7 @@ pcall(function()
 	local logo = Instance.new("Frame")
 	logo.Size = UDim2.new(0, 34, 0, 34)
 	logo.Position = UDim2.new(0, 0, 0, 2)
-	logo.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+	logo.BackgroundColor3 = Color3.fromRGB(255, 139, 35)
 	logo.BorderSizePixel = 0
 	logo.Parent = header
 	Instance.new("UICorner", logo).CornerRadius = UDim.new(0, 11)
@@ -159,7 +159,7 @@ pcall(function()
 	percent.Size = UDim2.new(0, 42, 0, 18)
 	percent.Font = Enum.Font.GothamBold
 	percent.Text = "1%"
-	percent.TextColor3 = Color3.fromRGB(245, 245, 245)
+	percent.TextColor3 = Color3.fromRGB(255, 194, 112)
 	percent.TextSize = 12
 	percent.TextXAlignment = Enum.TextXAlignment.Right
 	percent.Parent = panel
@@ -168,14 +168,14 @@ pcall(function()
 	local track = Instance.new("Frame")
 	track.Position = UDim2.new(0, 20, 0, 104)
 	track.Size = UDim2.new(1, -40, 0, 7)
-	track.BackgroundColor3 = Color3.fromRGB(58, 58, 58)
+	track.BackgroundColor3 = Color3.fromRGB(38, 39, 48)
 	track.BorderSizePixel = 0
 	track.Parent = panel
 	Instance.new("UICorner", track).CornerRadius = UDim.new(1, 0)
 
 	local fill = Instance.new("Frame")
 	fill.Size = UDim2.new(0.01, 0, 1, 0)
-	fill.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+	fill.BackgroundColor3 = Color3.fromRGB(255, 145, 62)
 	fill.BorderSizePixel = 0
 	fill.Parent = track
 	Instance.new("UICorner", fill).CornerRadius = UDim.new(1, 0)
@@ -555,12 +555,6 @@ function ReadSetting(tries)
 	end
 end
 Settings = ReadSetting()
--- Chi dat toc do bay mac dinh 168 mot lan neu chua co cau hinh.
--- Cac lan chay sau giu nguyen gia tri nguoi dung da tuy chinh.
-if Settings["Speed Tween "] == nil then
-    Settings["Speed Tween "] = 168
-    SaveSettings("Speed Tween ", 168)
-end
 getgenv().Settings = Settings
 BuyMeleeSecretForce = false
 function IsSecretQuestOn()
@@ -729,6 +723,132 @@ do
 	end
 end
 
+task.spawn(function()
+	pcall(function()
+		local DISCORD_LINK = "https://discord.gg/XTBcrRA5ae"
+		local AUTO_REMOVE_AFTER = 15
+		local TweenService = game:GetService("TweenService")
+		local parent = (gethui and gethui()) or game:GetService("CoreGui")
+		local old = parent:FindFirstChild("TopiDiscordCard")
+		if old then
+			old:Destroy()
+		end
+
+		local gui = Instance.new("ScreenGui")
+		gui.Name = "TopiDiscordCard"
+		gui.ResetOnSpawn = false
+		gui.IgnoreGuiInset = true
+		gui.DisplayOrder = 999
+		gui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+		pcall(function()
+			if syn and syn.protect_gui then
+				syn.protect_gui(gui)
+			end
+		end)
+		gui.Parent = parent
+
+		local card = Instance.new("Frame")
+		card.Name = "Card"
+		card.AnchorPoint = Vector2.new(0.5, 0)
+		card.Position = UDim2.new(0.5, 0, 0, -240)
+		card.Size = UDim2.new(0.9, 0, 0, 0)
+		card.AutomaticSize = Enum.AutomaticSize.Y
+		card.BackgroundColor3 = Color3.fromRGB(24, 26, 33)
+		card.BorderSizePixel = 0
+		card.Parent = gui
+		Instance.new("UICorner", card).CornerRadius = UDim.new(0, 12)
+		local stroke = Instance.new("UIStroke", card)
+		stroke.Color = Color3.fromRGB(88, 101, 242)
+		stroke.Thickness = 1.5
+		local limit = Instance.new("UISizeConstraint", card)
+		limit.MaxSize = Vector2.new(340, math.huge)
+		local pad = Instance.new("UIPadding", card)
+		pad.PaddingTop = UDim.new(0, 12)
+		pad.PaddingBottom = UDim.new(0, 12)
+		pad.PaddingLeft = UDim.new(0, 14)
+		pad.PaddingRight = UDim.new(0, 14)
+		local list = Instance.new("UIListLayout", card)
+		list.Padding = UDim.new(0, 8)
+		list.SortOrder = Enum.SortOrder.LayoutOrder
+
+		local title = Instance.new("TextLabel")
+		title.LayoutOrder = 1
+		title.BackgroundTransparency = 1
+		title.Size = UDim2.new(1, -28, 0, 20)
+		title.Font = Enum.Font.SourceSansBold
+		title.TextSize = 19
+		title.TextXAlignment = Enum.TextXAlignment.Left
+		title.TextColor3 = Color3.fromRGB(255, 255, 255)
+		title.Text = "Hỗ trợ & Cập nhật"
+		title.Parent = card
+
+		local msg = Instance.new("TextLabel")
+		msg.LayoutOrder = 2
+		msg.BackgroundTransparency = 1
+		msg.Size = UDim2.new(1, 0, 0, 0)
+		msg.AutomaticSize = Enum.AutomaticSize.Y
+		msg.Font = Enum.Font.SourceSans
+		msg.TextSize = 16
+		msg.TextWrapped = true
+		msg.TextXAlignment = Enum.TextXAlignment.Left
+		msg.TextYAlignment = Enum.TextYAlignment.Top
+		msg.TextColor3 = Color3.fromRGB(200, 204, 214)
+		msg.Text = "Script mới nên share cho xài free"
+			.. "free mà đòi hỏi như chó vậy"
+		msg.Parent = card
+
+		local btn = Instance.new("TextButton")
+		btn.LayoutOrder = 3
+		btn.Size = UDim2.new(1, 0, 0, 38)
+		btn.BackgroundColor3 = Color3.fromRGB(88, 101, 242)
+		btn.AutoButtonColor = true
+		btn.Font = Enum.Font.SourceSansBold
+		btn.TextSize = 17
+		btn.TextColor3 = Color3.fromRGB(255, 255, 255)
+		btn.Text = "Join server"
+		btn.Parent = card
+		Instance.new("UICorner", btn).CornerRadius = UDim.new(0, 8)
+
+		local close = Instance.new("TextButton")
+		close.Name = "Close"
+		close.AnchorPoint = Vector2.new(1, 0)
+		close.Position = UDim2.new(1, -8, 0, 8)
+		close.Size = UDim2.new(0, 28, 0, 28)
+		close.BackgroundTransparency = 1
+		close.Font = Enum.Font.GothamBold
+		close.TextSize = 16
+		close.TextColor3 = Color3.fromRGB(160, 164, 176)
+		close.Text = "X"
+		close.ZIndex = 5
+		close.Parent = card
+
+		local function removeUI()
+			if gui and gui.Parent then
+				gui:Destroy()
+			end
+		end
+
+		btn.MouseButton1Click:Connect(function()
+			local copy = setclipboard or toclipboard or (Clipboard and Clipboard.set)
+			local ok = copy and pcall(copy, DISCORD_LINK)
+			if ok then
+				removeUI()
+			else
+				btn.Text = DISCORD_LINK
+			end
+		end)
+
+		close.MouseButton1Click:Connect(removeUI)
+
+		task.delay(AUTO_REMOVE_AFTER, removeUI)
+
+		TweenService:Create(
+			card,
+			TweenInfo.new(0.4, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+			{ Position = UDim2.new(0.5, 0, 0, 60) }
+		):Play()
+	end)
+end)
 getgenv().CheckPlaceId = game.PlaceId == 100117331123089 and 100117331123089 or 7449423635
 getgenv().CheckPlaceId2 = game.PlaceId == 4442272183 and 4442272183 or 79091703265657
 getgenv().CheckPlaceId3 = game.PlaceId == 2753915549 and 2753915549 or 85211729168715
@@ -1221,7 +1341,7 @@ local uiOk, uiErr = pcall(function()
 		ImageLabel.ImageColor3 = t1.UIColor["Border Color"]
 		ImageLabel.ImageTransparency = 1
 		ImageLabel.ImageColor3 = t1.UIColor["Title Text Color"]
-		TextLabel.Text = "<font color=\"rgb(" .. (tostring(t4.Getcolor(t1.UIColor["Title Text Color"])[1]) .. "," .. tostring(t4.Getcolor(t1.UIColor["Title Text Color"])[2]) .. "," .. tostring(t4.Getcolor(t1.UIColor["Title Text Color"])[3])) .. ")\">" .. (p5.Title or "Day Hub") .. " </font> " .. (p5.Desc or "- Blox Fruits [Premium]")
+		TextLabel.Text = "<font color=\"rgb(" .. (tostring(t4.Getcolor(t1.UIColor["Title Text Color"])[1]) .. "," .. tostring(t4.Getcolor(t1.UIColor["Title Text Color"])[2]) .. "," .. tostring(t4.Getcolor(t1.UIColor["Title Text Color"])[3])) .. ")\">" .. (p5.Title or "Day Hub") .. " </font> " .. (p5.Desc or "- Blox Fruits")
 	
 		local ImageLabel3 = Instance.new("ImageLabel")
 	
@@ -1301,7 +1421,7 @@ local uiOk, uiErr = pcall(function()
 		TextLabel.TextWrapped = true
 		TextLabel.TextXAlignment = Enum.TextXAlignment.Center
 		TextLabel.TextColor3 = t1.UIColor["GUI Text Color"]
-		TextLabel.Text = "<font color=\"rgb(" .. (tostring(t4.Getcolor(t1.UIColor["Title Text Color"])[1]) .. "," .. tostring(t4.Getcolor(t1.UIColor["Title Text Color"])[2]) .. "," .. tostring(t4.Getcolor(t1.UIColor["Title Text Color"])[3])) .. ")\">Day Hub </font> - Blox Fruits [Premium]"
+		TextLabel.Text = "<font color=\"rgb(" .. (tostring(t4.Getcolor(t1.UIColor["Title Text Color"])[1]) .. "," .. tostring(t4.Getcolor(t1.UIColor["Title Text Color"])[2]) .. "," .. tostring(t4.Getcolor(t1.UIColor["Title Text Color"])[3])) .. ")\">Day Hub </font> - Blox Fruits"
 		Frame4.Name = "Background1"
 		Frame4.Parent = Frame7
 		Frame4.Position = UDim2.new(0, 5, 0, 0)
@@ -7211,7 +7331,7 @@ local uiOk, uiErr = pcall(function()
 	end
 	t3.CreateNoti({
 		Title = "Notification",
-		Desc = "🇻🇳The UI automatically hides once executed.\nPress the button at the bottom-left of the screen to show the GUI.🇻🇳",
+		Desc = "The UI automatically hides once executed.\nPress the button at the bottom-left of the screen to show the GUI.",
 		ShowTime = 10
 	}, true)
 	
@@ -7542,7 +7662,7 @@ getgenv().TopiTranslator = (function()
 	return T
 end)()
 
-Main = guardUI(A.CreateMain({ Title = "Blox Fruit", Desc = " - Blox Fruit By wzarii [Freemium]" }), "Main")
+Main = guardUI(A.CreateMain({ Title = "Blox Fruit", Desc = " - Blox Fruit By wzarii" }), "Main")
 PageShop = Main.CreatePage({ Page_Name = "Shop", Page_Title = "Shop" })
 getgenv().Options = A.Options
 SectionShopMisc = PageShop.CreateSection("Misc Shop")
@@ -7971,6 +8091,449 @@ SectionShopAbilities.CreateButton({ Title = "Soru [ $100,000 Beli ]" }, function
 	game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("BuyHaki", "Soru")
 end)
 PageStatusAndServer = Main.CreatePage({ Page_Name = "Status And Server", Page_Title = "Status And Server" })
+do
+	local Players = game:GetService("Players")
+	local lp = Players.LocalPlayer
+	local env = getgenv()
+
+	local UI_KEY = "Show TopiHub Status UI"
+	local PURPLE = Color3.fromRGB(150, 90, 255)
+	local BG = Color3.fromRGB(18, 12, 30)
+
+	local function tr(s)
+		local T = getgenv().TopiTranslator
+		if T and T.Translate then
+			local ok, r = pcall(T.Translate, s)
+			if ok and type(r) == "string" then
+				return r
+			end
+		end
+		return s
+	end
+	local function fmt(key, arg)
+		return (tr(key):gsub("{}", function()
+			return tostring(arg)
+		end))
+	end
+	local function actLabel(act)
+		local head, rest = act:match("^(Start Farm) : (.+)$")
+		if not head then
+			head, rest = act:match("^(Farm Material) : (.+)$")
+		end
+		if head then
+			return tr(head) .. " : " .. tr(rest)
+		end
+		return tr(act)
+	end
+
+	local CHAIN = {
+		"Auto New World",
+		"Collect Chest When Server Spawn God's Chalice or Fist of Darkness",
+		"Auto Third World", "Attack Darkbeard", "Summon Darkbeard",
+		"Attack Rip Indra", "Auto Touch Pad Haki", "Auto Summon Rip Indra",
+		"Attack Soul Reaper", "Summon Soul Reaper", "Attack Dough King", "Summon Dough King",
+		"Auto Elite Hunter", "Auto Factory", "Auto Pirate Raid", "Teleport To Fruit",
+		"Auto Quest Dojo Trainer",
+	}
+	local GATED_OTHER = {
+		"Auto Secret Quest", "Auto Fishing", "Auto Accept Quest Fishing",
+		"Auto Attack All Mob and Boss", "Auto Chest", "Kill Mob",
+	}
+	local INDEPENDENT = {
+		"Auto Quest Dragon Hunter", "Auto Collect Berry", "Auto Chest Hop",
+		"Auto Buy Chip and Attack Law", "Auto UP Observation V2", "Farm Observation",
+		"Farm Observation [ Hop Server ]", "Kill Boss", "Kill All Boss",
+		"Auto Raid", "Auto Multi Raid", "Auto Awake Fruit", "Auto Join Dungeon", "Auto Attack Dungeon",
+		"Auto Sea Event", "Auto Sea Event With Friend", "Auto Find Mirage", "Auto Spawn Kitsune Island",
+		"Auto Summon Soul Ember", "Auto Collect Soul Ember", "Auto Trade Azure Ember",
+		"Auto Find Leviathan", "Multi Find Leviathan", "Auto Start Leviathan", "Auto Attack Leviathan",
+		"Auto Destroy IDK", "Auto Upgrade Race V2-V3", "Auto Upgrade Race V2-V3 Draco",
+		"Auto Trial", "Auto Trial Draco", "Multi Trial", "Auto Pull Lever",
+		"Auto Get Fully Cyborg", "Auto Get Cyborg", "Auto Get Ghoul",
+		"Auto Finish Train Quest", "Auto Finish Train Draco Quest",
+		"Auto Trade Bone", "Auto Get Rainbow Haki", "Auto Soul Guitar", "Auto CDK", "Auto Yama",
+		"Auto Tushita", "Auto TTK", "Auto Saber", "Auto Craft Item Shark Anchor", "Auto Yoru Mini",
+		"Auto Farm Mastery 600 Melees", "Auto Farm Mastery 600 Sword In Inventory",
+		"Auto Upgrade Sword Inventory", "Auto Upgrade Gun Inventory",
+		"Auto Crafting Volcanic Magnet", "Auto Find Prehistoric Island", "Auto Event Prehistoric Island",
+		"Auto Collect Bone", "Auto Collect Egg",
+	}
+
+	local owner
+	function env.BananaOwner(name)
+		owner = name
+	end
+	BananaOwner = env.BananaOwner
+
+	local override, overrideUntil = nil, 0
+	function env.SetBananaStatus(text, ttl)
+		override = text and tostring(text) or nil
+		overrideUntil = tick() + (ttl or 4)
+	end
+
+	local hopDepth, teleportUntil = 0, 0
+	pcall(function()
+		lp.OnTeleport:Connect(function()
+			teleportUntil = tick() + 8
+		end)
+	end)
+	local wrapped = {}
+	local function hookHop()
+		for _, name in ipairs({ "HopServer", "HopLessAll" }) do
+			local cur = env[name]
+			if type(cur) == "function" and wrapped[name] ~= cur then
+				local orig = cur
+				local new = function(...)
+					hopDepth = hopDepth + 1
+					local r = table.pack(pcall(orig, ...))
+					hopDepth = math.max(0, hopDepth - 1)
+					if not r[1] then
+						error(r[2], 0)
+					end
+					return table.unpack(r, 2, r.n)
+				end
+				wrapped[name] = new
+				env[name] = new
+			end
+		end
+	end
+
+	local lastMoveCF, lastMoveT = nil, 0
+	local lastBoatCF, lastBoatT = nil, 0
+	local lastMob, lastMobT = nil, 0
+	local lastFind, lastFindT = nil, 0
+
+	local function mobName(E)
+		if typeof(E) ~= "Instance" then
+			return nil
+		end
+		if E:IsA("Model") then
+			return E.Name
+		end
+		local p = E.Parent
+		if p and p:IsA("Model") then
+			return p.Name
+		end
+		return E.Name
+	end
+	local function onAttack(E)
+		local n = mobName(E)
+		if n then
+			lastMob, lastMobT = n, tick()
+		end
+	end
+	local function onMove(P)
+		if typeof(P) == "CFrame" then
+			lastMoveCF, lastMoveT = P, tick()
+		end
+	end
+	local function onBoat(_, F)
+		if typeof(F) == "CFrame" then
+			lastBoatCF, lastBoatT = F, tick()
+		end
+	end
+	local function onFind(Q)
+		local txt
+		if type(Q) == "string" then
+			txt = Q
+		elseif type(Q) == "table" then
+			local names = {}
+			for i = 1, math.min(#Q, 2) do
+				if type(Q[i]) == "string" then
+					names[#names + 1] = Q[i]
+				end
+			end
+			if #names > 0 then
+				txt = table.concat(names, "/")
+			end
+		end
+		if txt then
+			lastFind, lastFindT = txt, tick()
+		end
+	end
+
+	local function wrap(orig, pre)
+		return function(...)
+			pcall(pre, ...)
+			return orig(...)
+		end
+	end
+
+	local wTo, wBackup, wSize, wClick, wShoot, wDetect, wBoat
+	local function hookMovement()
+		if type(toTarget) == "function" and toTarget ~= wTo then
+			wTo = wrap(toTarget, onMove)
+			toTarget = wTo
+		end
+		if type(env.BackupTween) == "function" and env.BackupTween ~= wBackup then
+			wBackup = wrap(env.BackupTween, onMove)
+			env.BackupTween = wBackup
+		end
+		if type(sizepart) == "function" and sizepart ~= wSize then
+			wSize = wrap(sizepart, onAttack)
+			sizepart = wSize
+		end
+		if type(env.ClickM1) == "function" and env.ClickM1 ~= wClick then
+			wClick = wrap(env.ClickM1, onAttack)
+			env.ClickM1 = wClick
+		end
+		if type(ShootM1) == "function" and ShootM1 ~= wShoot then
+			wShoot = wrap(ShootM1, onAttack)
+			ShootM1 = wShoot
+		end
+		if type(DetectMob) == "function" and DetectMob ~= wDetect then
+			wDetect = wrap(DetectMob, onFind)
+			DetectMob = wDetect
+		end
+		if type(manageTween) == "function" and manageTween ~= wBoat then
+			wBoat = wrap(manageTween, onBoat)
+			manageTween = wBoat
+		end
+	end
+
+	local locCache, locT = {}, 0
+	local function placeName(cf)
+		if typeof(cf) ~= "CFrame" then
+			return "?"
+		end
+		if tick() - locT > 5 then
+			locT = tick()
+			locCache = {}
+			pcall(function()
+				for _, p in ipairs(workspace._WorldOrigin.Locations:GetChildren()) do
+					if p:IsA("BasePart") then
+						locCache[#locCache + 1] = { p.Name, p.Position }
+					end
+				end
+			end)
+		end
+		local pos = cf.Position
+		local best, bd = nil, math.huge
+		for _, e in ipairs(locCache) do
+			local dx, dz = e[2].X - pos.X, e[2].Z - pos.Z
+			local d = math.sqrt(dx * dx + dz * dz)
+			if d < bd then
+				best, bd = e[1], d
+			end
+		end
+		if best and bd < 1500 then
+			return best
+		end
+		return string.format("%d, %d, %d", math.floor(pos.X), math.floor(pos.Y), math.floor(pos.Z))
+	end
+
+	local function on(k)
+		return Settings[k] == true
+	end
+
+	local function computeActive()
+		local out = {}
+		local stackFarm = StackFarm ~= false
+		local stackOther = StackFarmOther ~= false
+
+		if not stackFarm or not stackOther then
+			local name = owner
+			if not (name and on(name)) then
+				name = nil
+				for _, k in ipairs(CHAIN) do
+					if on(k) then
+						name = k
+						break
+					end
+				end
+			end
+			if name then
+				out[#out + 1] = name
+			end
+		end
+
+		if stackFarm and on("Start Farm") then
+			if on("Farm Material") then
+				out[#out + 1] = "Farm Material : " .. tostring(Settings["Select Material"] or "?")
+			else
+				out[#out + 1] = "Start Farm : " .. tostring(Settings["Select Method Farm"] or "Level Farm")
+			end
+			if on("Farm Mastery") then
+				out[#out + 1] = "Farm Mastery"
+			end
+		end
+
+		if stackOther then
+			for _, k in ipairs(GATED_OTHER) do
+				if on(k) then
+					out[#out + 1] = k
+				end
+			end
+		end
+
+		for _, k in ipairs(INDEPENDENT) do
+			if on(k) then
+				out[#out + 1] = k
+			end
+		end
+		return out
+	end
+
+	local function autoStatus(active)
+		if hopDepth > 0 then
+			return tr("Hopping server...")
+		end
+		if tick() < teleportUntil then
+			return tr("Teleporting...")
+		end
+		local char = lp.Character
+		local hum = char and char:FindFirstChildOfClass("Humanoid")
+		if not hum or hum.Health <= 0 then
+			return tr("Waiting for respawn...")
+		end
+
+		local now = tick()
+		local act = active[1]
+		local suffix = act and (" | " .. actLabel(act)) or ""
+
+		if lastMob and now - lastMobT < 1.5 then
+			return fmt("Fighting {}", tr(lastMob)) .. suffix
+		end
+		if lastBoatCF and now - lastBoatT < 1.5 then
+			return fmt("Sailing boat to {}", tr(placeName(lastBoatCF))) .. suffix
+		end
+		if lastMoveCF and now - lastMoveT < 1.0 then
+			local find = (lastFind and now - lastFindT < 2) and (" (" .. fmt("find {}", tr(lastFind)) .. ")") or ""
+			return fmt("Traveling to {}", tr(placeName(lastMoveCF))) .. find .. suffix
+		end
+
+		if not act then
+			return tr("Idle")
+		end
+		if string.sub(act, 1, 10) == "Start Farm" then
+			local okQ, quest = pcall(GetQuestTitle)
+			if okQ and quest then
+				return actLabel(act) .. " | " .. fmt("waiting mob : {}", string.sub(tostring(quest), 1, 50))
+			end
+			return actLabel(act) .. " | " .. tr("taking quest...")
+		end
+		return fmt("Running : {}", actLabel(act))
+	end
+
+	local function getParent()
+		if gethui then
+			local ok, ui = pcall(gethui)
+			if ok and ui then
+				return ui
+			end
+		end
+		local ok, core = pcall(function()
+			return game:GetService("CoreGui")
+		end)
+		if ok and core then
+			return core
+		end
+		return lp:WaitForChild("PlayerGui")
+	end
+
+	local parent = getParent()
+	for _, n in ipairs({ "BananaCatStatusUI", "TopiHubStatusUI" }) do
+		local old = parent:FindFirstChild(n)
+		if old then
+			old:Destroy()
+		end
+	end
+
+	local gui = Instance.new("ScreenGui")
+	gui.Name = "TopiHubStatusUI"
+	gui.ResetOnSpawn = false
+	gui.IgnoreGuiInset = true
+	gui.DisplayOrder = 999
+	gui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+	gui.Enabled = Settings[UI_KEY] == true
+	gui.Parent = parent
+
+	local frame = Instance.new("Frame")
+	frame.Name = "Main"
+	frame.AnchorPoint = Vector2.new(0.5, 0)
+	frame.Position = UDim2.new(0.5, 0, 0, 12)
+	frame.Size = UDim2.new(0.9, 0, 0, 0)
+	frame.AutomaticSize = Enum.AutomaticSize.Y
+	frame.BackgroundColor3 = BG
+	frame.BackgroundTransparency = 0.05
+	frame.BorderSizePixel = 0
+	frame.Parent = gui
+
+	local sizeLimit = Instance.new("UISizeConstraint")
+	sizeLimit.MaxSize = Vector2.new(480, math.huge)
+	sizeLimit.Parent = frame
+	local corner = Instance.new("UICorner")
+	corner.CornerRadius = UDim.new(0, 16)
+	corner.Parent = frame
+	local stroke = Instance.new("UIStroke")
+	stroke.Color = PURPLE
+	stroke.Thickness = 2
+	stroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+	stroke.Parent = frame
+	local padding = Instance.new("UIPadding")
+	padding.PaddingLeft = UDim.new(0, 22)
+	padding.PaddingRight = UDim.new(0, 22)
+	padding.PaddingTop = UDim.new(0, 14)
+	padding.PaddingBottom = UDim.new(0, 14)
+	padding.Parent = frame
+	local list = Instance.new("UIListLayout")
+	list.SortOrder = Enum.SortOrder.LayoutOrder
+	list.Padding = UDim.new(0, 6)
+	list.Parent = frame
+
+	local function makeLabel(text, color, size, order)
+		local l = Instance.new("TextLabel")
+		l.BackgroundTransparency = 1
+		l.Size = UDim2.new(1, 0, 0, 0)
+		l.AutomaticSize = Enum.AutomaticSize.Y
+		l.Font = Enum.Font.GothamBold
+		l.Text = text
+		l.TextColor3 = color
+		l.TextSize = size
+		l.TextWrapped = true
+		l.TextXAlignment = Enum.TextXAlignment.Left
+		l.LayoutOrder = order
+		l.Parent = frame
+		return l
+	end
+
+	local titleLabel = makeLabel(tr("TopiHub Status"), PURPLE, 20, 1)
+	local statusLabel = makeLabel("Status : ...", Color3.fromRGB(255, 255, 255), 18, 2)
+
+	local lastStatus
+	local function refresh()
+		local active = computeActive()
+		local text = (override and tick() < overrideUntil) and tr(override) or autoStatus(active)
+		local st = tr("Status") .. " : " .. text
+		local title = tr("TopiHub Status")
+		if titleLabel.Text ~= title then
+			titleLabel.Text = title
+		end
+		if st ~= lastStatus then
+			lastStatus = st
+			statusLabel.Text = st
+		end
+	end
+
+	task.spawn(function()
+		while gui.Parent do
+			pcall(hookHop)
+			pcall(hookMovement)
+			pcall(refresh)
+			task.wait(0.3)
+		end
+	end)
+
+	local SectionStatusUI = PageStatusAndServer.CreateSection("TopiHub Status UI")
+	SectionStatusUI.CreateToggle({
+		Title = "Show TopiHub Status UI",
+		Desc = "Show what the script is doing at the top of the screen",
+		Default = Settings[UI_KEY] == true,
+	}, function(v)
+		SaveSettings(UI_KEY, v)
+		gui.Enabled = v
+	end)
+end
 SectionStatus = PageStatusAndServer.CreateSection("Status")
 TimerLabel = SectionStatus.CreateLabel({ Title = "Timer" })
 TimerServerLabel = SectionStatus.CreateLabel({ Title = "Timer Server" })
@@ -9699,7 +10262,19 @@ spawn(function()
 end)
 LocalPlayerMain = Main.CreatePage({ Page_Name = "LocalPlayer", Page_Title = "LocalPlayer" })
 SectionLocalPlayerMain = LocalPlayerMain.CreateSection("Local Player")
-TopiTranslator.SelectLang("Vietnamese")
+local savedLang = Settings["Translate Language"]
+if not TopiTranslator.Langs[savedLang] then
+	savedLang = "Vietnamese"
+end
+TopiTranslator.SelectLang(savedLang)
+SectionLocalPlayerMain.CreateDropdown({
+	Title = "Translate Language",
+	List = TopiTranslator.LangList,
+	Default = savedLang,
+}, function(v)
+	SaveSettings("Translate Language", v)
+	TopiTranslator.SelectLang(v)
+end)
 SectionLocalPlayerMain.CreateToggle(
 	{
 		Title = "Auto Translate",
@@ -14149,7 +14724,7 @@ SettingFarmMainSection.CreateToggle(
 	end
 )
 SettingFarmMainSection.CreateSlider(
-	{ Title = "Speed Tween ", Min = 0, Max = 1000, Default = Settings["Speed Tween "] or 168, Precise = true },
+	{ Title = "Speed Tween ", Min = 0, Max = 1000, Default = Settings["Speed Tween "] or 300, Precise = true },
 	function(I)
 		SaveSettings("Speed Tween ", I)
 	end
@@ -14522,7 +15097,1038 @@ do
 	end
 end
 FarmMain = Main.CreatePage({ Page_Name = "Farming", Page_Title = "Farming" })
--- Event Blox Fruit page removed.
+SettingAutoFarmSection = FarmMain.CreateSection("Setting Farm")
+SettingAutoFarmSection.CreateDropdown(
+	{
+		Title = "Select Method Farm",
+		List = { "Level Farm", "Farm Bones", "Farm Katakuri", "Farm Tyrant of the Skies", "Aura Farm" },
+		Search = false,
+		Selected = false,
+		Default = Settings["Select Method Farm"] or nil,
+	},
+	function(o)
+		SaveSettings("Select Method Farm", o)
+	end
+)
+SettingAutoFarmSection.CreateSlider(
+	{
+		Title = "Distance Farm Aura",
+		Min = 0,
+		Max = 1000,
+		Default = Settings["Distance Farm Aura"] or 300,
+		Precise = true,
+	},
+	function(o)
+		SaveSettings("Distance Farm Aura", o)
+	end
+)
+SettingAutoFarmSection.CreateToggle(
+	{ Title = "Ignore Attack Katakuri", Desc = nil, Default = Settings["Ignore Attack Katakuri"] or false },
+	function(o)
+		SaveSettings("Ignore Attack Katakuri", o)
+	end
+)
+SettingAutoFarmSection.CreateToggle(
+	{ Title = "Hop Find Katakuri", Desc = nil, Default = Settings["Hop Find Katakuri"] or false },
+	function(o)
+		SaveSettings("Hop Find Katakuri", o)
+	end
+)
+SettingAutoFarmSection.CreateToggle(
+	{
+		Title = "Auto Quest [Katakuri/Bone/Tyrant]",
+		Desc = nil,
+		Default = Settings["Auto Quest [Katakuri/Bone/Tyrant]"] or false,
+	},
+	function(o)
+		SaveSettings("Auto Quest [Katakuri/Bone/Tyrant]", o)
+	end
+)
+local o = SettingAutoFarmSection.CreateToggle(
+	{ Title = "Start Farm", Desc = nil, Default = Settings["Start Farm"] or false },
+	function(V)
+		SaveSettings("Start Farm", V)
+	end
+)
+getgenv().BuddhaFarmToggle = SettingAutoFarmSection.CreateToggle(
+	{ Title = "Use Buddha with farming", Desc = nil, Default = Settings["Use Buddha with farming"] or false },
+	function(V)
+		SaveSettings("Use Buddha with farming", V)
+		if not V then
+			return
+		end
+		task.spawn(function()
+			local p = game:GetService("Players").LocalPlayer
+			local t0 = tick()
+			while tick() - t0 < 10 and not (p.Character and p:FindFirstChild("Backpack")) do
+				task.wait(0.2)
+			end
+			task.wait(1)
+			local fruit = getgenv().BuddhaCurrentFruit()
+			if fruit ~= "Buddha-Buddha" then
+				A.CreateNoti({
+					Title = "Tam Notification",
+					Desc = fruit and ("Player is using fruit " .. fruit .. ", not Buddha")
+						or "Player has no fruit equipped, not Buddha",
+					ShowTime = 5,
+				})
+				SaveSettings("Use Buddha with farming", false)
+				pcall(function()
+					getgenv().BuddhaFarmToggle.SetStage(false)
+				end)
+			end
+		end)
+	end
+)
+MasteryFarmSection = FarmMain.CreateSection("Mastery Farm")
+MasteryFarmSection.CreateDropdown(
+	{
+		Title = "Select Method Farm Mastery",
+		List = { "Blox Fruit", "Gun" },
+		Search = true,
+		Selected = false,
+		Default = Settings["Select Method Farm Mastery"] or nil,
+	},
+	function(V)
+		SaveSettings("Select Method Farm Mastery", V)
+	end
+)
+MasteryFarmSection.CreateSlider(
+	{ Title = "Health %", Min = 0, Max = 100, Default = Settings["Health %"] or 40, Precise = true },
+	function(V)
+		SaveSettings("Health %", V)
+	end
+)
+MasteryFarmSection.CreateToggle(
+	{ Title = "Farm Mastery", Desc = nil, Default = Settings["Farm Mastery"] or false },
+	function(V)
+		SaveSettings("Farm Mastery", V)
+		if V and not Settings["Start Farm"] then
+			A.CreateNoti({ Title = "Tam Notification", Desc = "Turn On Start Farm Plz", ShowTime = 5 })
+		end
+	end
+)
+FarmingMaterialSection = FarmMain.CreateSection("Farming Material")
+FarmingMaterialSection.CreateDropdown(
+	{
+		Title = "Select Material",
+		List = TableMaterials,
+		Search = true,
+		Selected = false,
+		Default = Settings["Select Material"] or nil,
+	},
+	function(V)
+		SaveSettings("Select Material", V)
+	end
+)
+FarmingMaterialSection.CreateToggle(
+	{ Title = "Farm Material", Desc = nil, Default = Settings["Farm Material"] or false },
+	function(V)
+		SaveSettings("Farm Material", V)
+		if V and not Settings["Start Farm"] then
+			A.CreateNoti({ Title = "Tam Notification", Desc = "Turn On Start Farm Plz", ShowTime = 5 })
+		end
+	end
+)
+local V, N, y, P, e, Y =
+	{ "BartiloQuest", "Trainees", "MarineQuest", "CitizenQuest" },
+	{},
+	{ "Baking Staff", "Head Baker", "Cake Guard", "Cookie Crafter" },
+	{ "Cocoa Warrior", "Chocolate Bar Battler", "Candy Rebel", "Sweet Thief" },
+	{ "Reborn Skeleton", "Demonic Soul", "Living Zombie", "Posessed Mummy" },
+	{ "Isle Champion", "Serpent Hunter", "Skull Slayer", "Sun-kissed Warrior" }
+getgenv().NameMobQuest = ""
+getgenv().NameQuest = ""
+getgenv().IDQuest = 0
+getgenv().questpoint = {}
+local H = require(game.ReplicatedStorage.Quests)
+local function B()
+	local Z, C = t.Data.Level.Value, 0
+	if Z >= 1450 and game.PlaceId == getgenv().CheckPlaceId2 then
+		getgenv().NameMobQuest = "Water Fighter"
+		getgenv().NameQuest = "ForgottenQuest"
+		getgenv().IDQuest = 2
+	elseif Z >= 700 and game.PlaceId == getgenv().CheckPlaceId3 then
+		getgenv().NameMobQuest = "Galley Captain"
+		getgenv().NameQuest = "FountainQuest"
+		getgenv().IDQuest = 2
+	else
+		for J, F in pairs(H) do
+			for q, c in pairs(F) do
+				if not table.find(V, J) then
+					local F = c.LevelReq
+					for D, r in pairs(c.Task) do
+						if Z >= F and F >= C and r > 1 then
+							getgenv().NameMobQuest = D
+							getgenv().NameQuest = J
+							getgenv().IDQuest = q
+							C = F
+						end
+					end
+				end
+			end
+		end
+	end
+end
+function CountQuest()
+	local Z = {}
+	for C, C in pairs(H) do
+		for J, J in pairs(C) do
+			for F, q in pairs(J.Task) do
+				if F == getgenv().mobv then
+					for J, J in pairs(C) do
+						if J.LevelReq <= t.Data.Level.Value and J.Name ~= "Town Raid" then
+							for C, F in pairs(J.Task) do
+								if F > 1 then
+									table.insert(Z, C)
+								end
+							end
+						end
+					end
+				end
+			end
+		end
+	end
+	return Z
+end
+local Z = require(game.ReplicatedStorage:WaitForChild("GuideModule"))
+function DontQuest()
+	return Z.Data and Z.Data.QuestData ~= nil
+end
+function GetNameDoubleQuest()
+	if DontQuest() then
+		for C, J in next, Z.Data.QuestData.Task, nil do
+			return C
+		end
+	end
+end
+function DoubleQuest()
+	wait(0.5)
+	B()
+	local B = {}
+	if DontQuest() and GetNameDoubleQuest() == getgenv().NameMobQuest and #CountQuest() >= 2 then
+		for C, J in pairs(H) do
+			for F, F in pairs(J) do
+				for q in pairs(F.Task) do
+					if tostring(q) == getgenv().mobv then
+						for F, q in pairs(J) do
+							for J, c in pairs(q.Task) do
+								if J ~= getgenv().mobv and c > 1 then
+									B.Name = J
+									B.NameQuest = C
+									B.ID = F
+									return B
+								end
+							end
+						end
+					end
+				end
+			end
+		end
+	else
+		B.Name = getgenv().NameMobQuest
+		B.NameQuest = getgenv().NameQuest
+		B.ID = getgenv().IDQuest
+	end
+	return B
+end
+function CFrameQuest()
+	local B = {}
+	for C, J in next, H, nil do
+		if C ~= "MarineQuest" then
+			for F, F in next, J, nil do
+				B[F.LevelReq] = C
+			end
+		end
+	end
+	getgenv().questpoint = {}
+	for C, J in next, Z.Data.NPCList, nil do
+		for F, q in next, J.Levels, nil do
+			F = B[q]
+			if C.Parent.Name ~= "Marine Leader" and F and not getgenv().questpoint[F] then
+				getgenv().questpoint[F] = CFrame.new(J.Position)
+			end
+		end
+	end
+	getgenv().questpoint.SkyExp1Quest = CFrame.new(-7857.28516, 5544.34033, -382.321503)
+end
+local function B(C)
+	local J = Z.Data.QuestData
+	local F, q, c = J and (next(J.Task)), 0, {}
+	for D, r in pairs(Z.Data.NPCList) do
+		if not table.find(V, r.InternalQuestName) then
+			for V, n in pairs(r.Levels) do
+				D = H[r.InternalQuestName][V]
+				if D then
+					local u, W = next(D.Task)
+					if W and W > 1 and n <= C and n >= q then
+						c = {
+							Level = n,
+							Name = r.NPCName,
+							QuestName = r.InternalQuestName,
+							Pos = r.Position,
+							Id = V,
+							Mob = u,
+						}
+						if F == u and V > 1 then
+							J = H[r.InternalQuestName][V - 1]
+							if J and J.Task then
+								for H, C in pairs(J.Task) do
+									if H ~= F and C > 1 then
+										c.Mob = H
+										c.Id = V - 1
+										break
+									end
+								end
+							end
+						end
+						q = n
+					end
+				end
+			end
+		end
+	end
+	return c
+end
+
+TakeQuestLevel = function()
+	local V = B(t.Data.Level.Value)
+	if getgenv().DebugFarmLevel then
+		print(("[TakeQuestLevel] Level=%s Found=%s Pos=%s Mob=%s QuestName=%s"):format(
+			tostring(t.Data.Level.Value),
+			tostring(V ~= nil),
+			tostring(V and V.Pos),
+			tostring(V and V.Mob),
+			tostring(V and V.QuestName)
+		))
+	end
+	if not V or not V.Pos then
+		return
+	end
+	local H, B, C =
+		typeof(V.Pos) == "CFrame" and V.Pos.Position or V.Pos,
+		t.Character and (t.Character:FindFirstChild("HumanoidRootPart")),
+		t.Character and (t.Character:FindFirstChild("Humanoid"))
+	if not B or not C then
+		return
+	end
+	if (H - B.Position).Magnitude <= 8 and C.Health > 0 then
+		wait(0.3)
+		CommF:InvokeServer("StartQuest", tostring(V.QuestName), V.Id)
+	else
+		toTarget(CFrame.new(H) * CFrame.new(0, 4, 2), true)
+	end
+end
+
+GetLevelQuestMob = function()
+	local ok, info = pcall(B, t.Data.Level.Value)
+	if ok and info and info.Mob then
+		return info.Mob
+	end
+end
+
+local _questMobCache = { text = nil, mob = nil }
+function GetCurrentQuestMob()
+	local exact = GetNameDoubleQuest()
+	if exact then
+		return exact
+	end
+	local text = GetQuestText():lower()
+	if text == "" then
+		return nil
+	end
+	if _questMobCache.text == text then
+		return _questMobCache.mob
+	end
+	local best
+	for _, quest in pairs(H) do
+		if type(quest) == "table" then
+			for _, data in pairs(quest) do
+				if type(data) == "table" and type(data.Task) == "table" then
+					for mobName, count in pairs(data.Task) do
+						if
+							type(mobName) == "string"
+							and count > 1
+							and text:find(mobName:lower(), 1, true)
+							and (not best or #mobName > #best)
+						then
+							best = mobName
+						end
+					end
+				end
+			end
+		end
+	end
+	_questMobCache.text, _questMobCache.mob = text, best
+	return best
+end
+
+function DetectPartSpawnMob(V, H)
+	local function B(C)
+		return C:gsub(" %p?Lv%.? %d+%p?", "")
+	end
+	local C = string.find(V, "Lv.") and (B(V)) or V
+	for J, F in pairs(TableMobSpawn) do
+		if F:IsA("Part") then
+			J = string.find(F.Name, "Lv.") and (B(F.Name)) or F.Name
+			if (J == V or J == C) and (not H or not F:FindFirstChild("Ignored")) then
+				return F
+			end
+		end
+	end
+	for J, F in pairs(workspace._WorldOrigin.EnemySpawns:GetChildren()) do
+		if F:IsA("Part") then
+			J = string.find(F.Name, "Lv.") and (B(F.Name)) or F.Name
+			if (J == V or J == C) and (not H or not F:FindFirstChild("Ignored")) then
+				table.insert(TableMobSpawn, F)
+				return F
+			end
+		end
+	end
+	for J, F in pairs(getnilinstances()) do
+		if F:IsA("Part") then
+			J = string.find(F.Name, "Lv.") and (B(F.Name)) or F.Name
+			if (J == V or J == C) and (not H or not F:FindFirstChild("Ignored")) then
+				table.insert(TableMobSpawn, F)
+				return F
+			end
+		end
+	end
+	return nil
+end
+function DeleteIgnoredMobSpawn()
+	for V, V in pairs(TableMobSpawn) do
+		if V:FindFirstChild("Ignored") then
+			V.Ignored:Destroy()
+		end
+	end
+end
+function DetectNameTablePart(V)
+	for H, H in next, V, nil do
+		if not table.find(N, H) then
+			return H
+		end
+	end
+end
+function TeleportSpawnMob(V)
+	if typeof(V) == "table" then
+		if #N >= #V then
+			N = {}
+			return
+		end
+		local H = DetectPartSpawnMob(DetectNameTablePart(V))
+		if H then
+			toTarget(H.CFrame * CFrame.new(0, 60, 0))
+			wait(0.5)
+		end
+	else
+		wait(0.5)
+		local H = DetectPartSpawnMob(V, true)
+		if H then
+			if (H.Position - t.Character.HumanoidRootPart.Position).Magnitude <= 100 or (DetectMob(V)) then
+				Instance.new("IntValue", H).Name = "Ignored"
+			end
+			toTarget(H.CFrame * CFrame.new(0, 60, 0))
+		else
+			DeleteIgnoredMobSpawn()
+		end
+	end
+end
+function QuestBoneAndkatakuri(V, H)
+	local B = getgenv().questpoint[V]
+	if not B then
+		CFrameQuest()
+		task.wait(1.5)
+		B = getgenv().questpoint[V]
+		if not B then
+			return
+		end
+	end
+	local C, J =
+		t.Character and (t.Character:FindFirstChild("HumanoidRootPart")),
+		t.Character and (t.Character:FindFirstChildOfClass("Humanoid"))
+	if not C or not J then
+		return
+	end
+	if (B.Position - C.Position).Magnitude <= 8 then
+		if J.Health > 0 then
+			task.wait(0.3)
+			CommF:InvokeServer("StartQuest", V, H)
+		end
+	else
+		toTarget(B * CFrame.new(0, 4, 2), true)
+	end
+end
+local V = { "Control-Control", "Buddha-Buddha", "Diamond-Diamond", "Falcon-Falcon" }
+local function H(B, C)
+	local J = t.PlayerGui.Main.Skills[B]:FindFirstChild(C)
+	if not J then
+		return false
+	end
+	return J:IsA("Frame") and J.Title.TextColor3 == Color3.new(1, 1, 1) and J.Cooldown.Size == UDim2.new(0, 0, 1, -1)
+		or J.Cooldown.Size == UDim2.new(1, 0, 1, -1)
+end
+local function B(C)
+	if H(C, "Z") then
+		local H = game:GetService("VirtualInputManager")
+		H:SendKeyEvent(true, "Z", false, game)
+		H:SendKeyEvent(false, "Z", false, game)
+	end
+end
+local function H(C)
+	local J = t.PlayerGui.Main.Skills[C.Name]
+	if not J then
+		return nil
+	end
+	for F, F in ipairs(J:GetChildren()) do
+		if
+			F:IsA("Frame")
+			and F.Name ~= "Template"
+			and (F.Name ~= "Z" or F.Name == "Z" and not table.find(V, C.Name))
+			and Settings["Select Skills " .. C.ToolTip]
+			and Settings["Select Skills " .. C.ToolTip][F.Name]
+			and (
+				F.Title.TextColor3 == Color3.new(1, 1, 1) and F.Cooldown.Size == UDim2.new(0, 0, 1, -1)
+				or F.Cooldown.Size == UDim2.new(1, 0, 1, -1)
+			)
+		then
+			return F.Name
+		end
+	end
+end
+function UsedualFlock()
+	equiptool(NameWeapon(Settings["Select Weapon"] or "Melee"))
+end
+function FarmMastery(V)
+	if not V or not V:FindFirstChild("Humanoid") or not V:FindFirstChild("HumanoidRootPart") then
+		return
+	end
+	getgenv().AimPos = V.HumanoidRootPart.CFrame
+	if not Settings["Farm Mastery"] then
+		UsedualFlock()
+		return
+	end
+	if V.Humanoid.Health / V.Humanoid.MaxHealth > (Settings["Health %"] or 100) / 100 then
+		UsedualFlock()
+		return
+	end
+	local C = Settings["Select Method Farm Mastery"]
+	local J, F = NameWeapon(C), NameWeapon(C, true)
+	if not J or not F then
+		return
+	end
+	if C == "Gun" and (t.Character:FindFirstChild(J)) then
+		if not (getgenv().ShootAllGun and getgenv().ShootAllGun(V.HumanoidRootPart, t.Character:FindFirstChild(J))) then
+			ShootM1(V)
+		end
+	end
+	equiptool(J)
+	if J == "Control-Control" then
+		C = workspace._WorldOrigin:FindFirstChild("Globe")
+		if not C or t:DistanceFromCharacter(C.Position) > C.AB.CurveSize0 / 1.75 then
+			B(J)
+			return
+		end
+	elseif J == "Buddha-Buddha" then
+		if not t.Character.HumanoidRootPart:FindFirstChild("Buddha") then
+			B(J)
+			return
+		end
+	elseif J == "Diamond-Diamond" then
+		if not t.Character:FindFirstChild("DiamondBody") then
+			B(J)
+			return
+		end
+	elseif J == "Falcon-Falcon" then
+		if not t.Character:FindFirstChild("FalconWings") then
+			B(J)
+			return
+		end
+	end
+	C = H(F)
+	if C then
+		V, J = Settings["Skill " .. C .. " " .. F.ToolTip] or 0.5, game:GetService("VirtualInputManager")
+		J:SendKeyEvent(true, C, false, game)
+		if Settings["Use skill fast dont hold"] then
+			task.wait(0.05)
+		else
+			task.wait(V)
+		end
+		J:SendKeyEvent(false, C, false, game)
+	end
+end
+getgenv().StackFarm = true
+getgenv().StackFarmOther = true
+StackFarm = getgenv().StackFarm
+StackFarmOther = getgenv().StackFarmOther
+function DetectMobAura()
+	local V, H = typeof(Settings["Distance Farm Aura"]) ~= "number" and (tonumber(Settings["Distance Farm Aura"]))
+		or Settings["Distance Farm Aura"]
+		or 300
+	for B, C in pairs(game.Workspace.Enemies:GetChildren()) do
+		if IsMobAlive(C) then
+			B = (
+				C.HumanoidRootPart.Position - game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.Position
+			).magnitude
+			if B < V then
+				V, H = B, C.Name
+			end
+		end
+	end
+	return H
+end
+getgenv().StackFarm = true
+getgenv().YPosFruit = 20
+function CheckCDSkillTransformation(V, H)
+	local B, C, J = next, game:GetService("Players").LocalPlayer.PlayerGui.Main.Skills[V.Name]:GetChildren()
+	for F, F in B, C, J do
+		if F:IsA("Frame") then
+			if
+				F.Name ~= "Template"
+					and not string.find(F.Title.Text, "Transformation")
+					and H[F.Name]
+					and F.Title.TextColor3 == Color3.new(1, 1, 1)
+					and F.Cooldown.Size == UDim2.new(0, 0, 1, -1)
+				or F.Cooldown.Size == UDim2.new(1, 0, 1, -1)
+			then
+				return F, Settings["Skill " .. F.Name .. " " .. V.ToolTip]
+			end
+		end
+	end
+end
+function AutoAllSkill(V)
+	local V, H, B, C, J =
+		NameWeapon("Melee", true) or false,
+		NameWeapon("Sword", true) or false,
+		NameWeapon("Blox Fruit", true) or false,
+		NameWeapon("Gun", true) or false,
+		game:GetService("Players").LocalPlayer.PlayerGui.Main.Skills
+	if V and not J:FindFirstChild(V.Name) then
+		equiptool(V.Name)
+		return
+	end
+	if H and not J:FindFirstChild(H.Name) then
+		equiptool(H.Name)
+		return
+	end
+	if B and not J:FindFirstChild(B.Name) then
+		equiptool(B.Name)
+		return
+	end
+	if C and not J:FindFirstChild(C.Name) then
+		equiptool(C.Name)
+		return
+	end
+	J = (function() if V and (CheckCDSkillTransformation(V, Settings["Select Skills " .. V.ToolTip])) then return (CheckCDSkillTransformation(V, Settings["Select Skills " .. V.ToolTip])) else return (function() if H and (CheckCDSkillTransformation(H, Settings["Select Skills " .. H.ToolTip])) then return (CheckCDSkillTransformation(H, Settings["Select Skills " .. H.ToolTip])) else return (function() if C and (CheckCDSkillTransformation(C, Settings["Select Skills " .. C.ToolTip])) then return (CheckCDSkillTransformation(C, Settings["Select Skills " .. C.ToolTip])) else return (function() if B and (CheckCDSkillTransformation(B, Settings["Select Skills " .. B.ToolTip])) then return (CheckCDSkillTransformation(B, Settings["Select Skills " .. B.ToolTip])) else return nil end end)() end end)() end end)() end end)()
+	if J then
+		B = J.Parent.Name
+		equiptool(B)
+		if t.Character:FindFirstChild(B) then
+			game:GetService("VirtualInputManager"):SendKeyEvent(true, J.Name, false, game)
+			if Settings["Use skill fast dont hold"] then
+				task.wait(0.05)
+			else
+				task.wait(HoldDelay(J.Name, B))
+			end
+			game:GetService("VirtualInputManager"):SendKeyEvent(false, J.Name, false, game)
+		end
+	end
+end
+local V, H =
+	require(game:GetService("ReplicatedStorage"):WaitForChild("ItemReplicationService")),
+	require(game:GetService("ReplicatedStorage"):WaitForChild("ItemConfig"))
+local function B()
+	local C, J = {}, V.KEYS
+	for F, F in V:GetItems(J.QUANTITY) do
+		if F.Value and F.Value > 0 then
+			local q, c = pcall(function()
+				return H.match(F.ItemId):unwrap()
+			end)
+			if q and c and c.Display then
+				local H, q = c.Display.Category, c.Index and c.Index.StorageKey
+				local D, r =
+					(function() if H == "Blox Fruit" then return q or c.Display.Name or "ItemId_" .. F.ItemId else return c.Display.Name or q or "ItemId_" .. F.ItemId end end)(),
+					V:ReadItem(J.MASTERY, F.ItemId, F.NetworkedUID) or 0
+				table.insert(
+					C,
+					{ Name = D, Type = H, Count = F.Value, Mastery = r, ItemId = F.ItemId, UID = F.NetworkedUID }
+				)
+			end
+		end
+	end
+	return C
+end
+do
+	local V
+	local H = 0
+	function CheckItemInventory(C)
+		if not V or tick() - H > 1 then
+			V = {}
+			for J, J in B() do
+				V[J.Name] = true
+			end
+			H = tick()
+		end
+		return V[C] == true
+	end
+end
+function DetectModelDestroyTyrant()
+	local V, H, C =
+		next,
+		(workspace.Map:FindFirstChild("TikiOutpost") and (workspace.Map.TikiOutpost.IslandModel:FindFirstChild(
+			"EagleBossArena",
+			true
+		))):GetChildren()
+	for J, J in V, H, C do
+		if J.Name == "Tree" and not J:GetAttribute("AlreadyDestroyedClient") then
+			return J
+		end
+	end
+end
+(function()
+	local V = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"
+	return {
+		encode = function(H)
+			return (H:gsub(".", function(C)
+				local J, F = C:byte(), ""
+				for C = 8, 1, -1 do
+					F = F .. (J % 2 ^ C - J % 2 ^ (C - 1) > 0 and "1" or "0")
+				end
+				return F
+			end) .. "0000"):gsub("%d%d%d?%d?%d?%d?", function(C)
+				if #C < 6 then
+					return ""
+				end
+				local J = 0
+				for F = 1, 6, 1 do
+					J = J + (C:sub(F, F) == "1" and 2 ^ (6 - F) or 0)
+				end
+				return V:sub(J + 1, J + 1)
+			end) .. ({ "", "==", "=" })[#H % 3 + 1]
+		end,
+		decode = function(H)
+			return string
+				.gsub(H, "[^" .. V .. "=]", "")
+				:gsub(".", function(H)
+					if H == "=" then
+						return ""
+					end
+					local C, J = V:find(H) - 1, ""
+					for V = 6, 1, -1 do
+						J = J .. (C % 2 ^ V - C % 2 ^ (V - 1) > 0 and "1" or "0")
+					end
+					return J
+				end)
+				:gsub("%d%d%d?%d?%d?%d?%d?%d?", function(V)
+					if #V ~= 8 then
+						return ""
+					end
+					local H = 0
+					for C = 1, 8, 1 do
+						H = H + (V:sub(C, C) == "1" and 2 ^ (8 - C) or 0)
+					end
+					return string.char(H)
+				end)
+		end,
+	}
+end)()
+local V = "https://raw.banana-hub.xyz/api"
+local function H(C, J)
+	local J
+	local F, F = pcall(function()
+		J =
+			ExploitReq({ Url = ("%s/data/recent?name=%s&limit=%s"):format(V, C, 100):gsub(" ", "%%20"), Method = "GET" })
+	end)
+	if F then
+		return false
+	end
+	return J.Body
+end
+local V
+function SpecialHop(C)
+	if getgenv().Key and #getgenv().Key == 32 then
+		return
+	end
+	if V and tick() - V < 5 then
+		return
+	end
+	local J, F = {}, H(C, 700)
+	if not F then
+		return
+	end
+	Servers = game:GetService("HttpService"):JSONDecode(F)
+	for H, q in next, Servers.data, nil do
+		if q and q.name == C then
+			table.insert(J, H)
+		end
+	end
+	V = tick()
+	if #J > 0 then
+		F = {}
+		for V, V in next, Servers.data, nil do
+			if V and V.name == C then
+				local H, C, J, q, q = V.jobid, V.Players, V.placeid, f()
+				H = (function() if string.find(H, "BananaCat") then return (q(H)) else return H end end)()
+				if
+					H
+					and H ~= game.JobId
+					and not table.find(F, H)
+					and not CheckIsplayingRaid()
+					and not Settings[H]
+					and (C and C < game.Players.MaxPlayers or not V.Players)
+					and (J and game.PlaceId == J or not J)
+				then
+					table.insert(F, H)
+					game:GetService("ReplicatedStorage").__ServerBrowser:InvokeServer("teleport", tostring(H))
+					SaveSettings(tostring(H), true)
+					getgenv().limit_type("clearAll")
+				end
+			end
+		end
+	end
+end
+function FarmMethod()
+	local f, V, H = Settings["Select Method Farm"]
+	local C, J = 9999, 2
+	if f == "Farm Katakuri" then
+		C, V, H = 2275, y, "CakeQuest2"
+	elseif f == "Farm Bones" then
+		C, V, H = 2050, e, "HauntedQuest2"
+	elseif f == "Farm Tyrant of the Skies" then
+		C, V, H = 2575, Y, "TikiQuest3"
+	else
+		V = ((f == "Aura Farm" and (DetectMobAura())) and { DetectMobAura() } or V)
+	end
+	if Settings["Farm Material"] then
+		V = NameMaterials[Settings["Select Material"]]
+		if not NameWorldMaterials[Settings["Select Material"]][game.PlaceId] then
+			f = NameWorldMaterials[Settings["Select Material"]][getgenv().CheckPlaceId2]
+				or NameWorldMaterials[Settings["Select Material"]][getgenv().CheckPlaceId3]
+				or NameWorldMaterials[Settings["Select Material"]][getgenv().CheckPlaceId]
+			game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer(f)
+			return
+		end
+	end
+	if V == nil and HasQuest() then
+		f = GetCurrentQuestMob()
+		if not f then
+			task.wait(0.2)
+			return
+		end
+	else
+		f = V or (GetNameDoubleQuest()) or (GetLevelQuestMob and GetLevelQuestMob()) or ""
+	end
+	if getgenv().DebugFarmLevel then
+		print(("[FarmMethod] HasQuest=%s f=%s"):format(tostring(HasQuest()), tostring(f)))
+	end
+	if not HasQuest() and typeof(f) == "string" then
+		TakeQuestLevel()
+	else
+		if
+			Settings["Auto Quest [Katakuri/Bone/Tyrant]"]
+			and t.Data.Level.Value >= C
+			and not HasQuest()
+		then
+			QuestBoneAndkatakuri(H, J)
+			return
+		end
+		if not Settings["Farm Material"] and Settings["Select Method Farm"] == "Farm Tyrant of the Skies" then
+			if CheckNameBoss("Tyrant of the Skies") then
+				V = CheckNameBoss("Tyrant of the Skies")
+				repeat
+					task.wait()
+					getgenv().BuddhaBossGuard()
+					sizepart(V)
+					if
+						game:GetService("Players").LocalPlayer.PlayerGui.TransformationHUD.ImageLabel.Visible
+						and (Settings["Auto Finish Train Quest"] or Settings["Auto Finish Train Draco Quest"])
+					then
+						toTarget(V.HumanoidRootPart.CFrame * CFrame.new(7, BuddhaFarmY(), 0))
+					elseif Settings["Select Weapon"] == "Blox Fruit" then
+						toTarget(V.HumanoidRootPart.CFrame * CFrame.new(-7, FruitFarmY(), 0))
+					else
+						toTarget(V.HumanoidRootPart.CFrame * CFrame.new(7, BuddhaFarmY(), 0))
+					end
+					UsedualFlock()
+					ClickM1(V)
+				until not IsMobAlive(V) or not Settings["Start Farm"] or not StackFarm
+				return
+			else
+				local V = workspace:FindFirstChild("Map", true)
+					and (workspace.Map:FindFirstChild("TikiOutpost", true))
+					and (workspace.Map.TikiOutpost:FindFirstChild("IslandModel", true))
+				if V then
+					local Y, H, C, J =
+						V:FindFirstChild("Eye1", true),
+						V:FindFirstChild("Eye2", true),
+						V:FindFirstChild("Eye3", true),
+						V:FindFirstChild("Eye4", true)
+					if
+						Y
+						and H
+						and C
+						and J
+						and Y.Transparency == 0
+						and H.Transparency == 0
+						and C.Transparency == 0
+						and J.Transparency == 0
+					then
+						local V = DetectModelDestroyTyrant()
+						if V then
+							if t:DistanceFromCharacter(V.WorldPivot.Position) > 10 then
+								toTarget(V.WorldPivot)
+							elseif CheckItemInventory("Skull Guitar") then
+								if not NameWeapon("Gun") or NameWeapon("Gun") ~= "Skull Guitar" then
+									game:GetService("ReplicatedStorage").Remotes.CommF_
+										:InvokeServer(unpack({ [1] = "LoadItem", [2] = "Skull Guitar" }))
+								else
+									equiptool(NameWeapon("Gun"))
+									getgenv().ClickWorldPos(V.WorldPivot.Position)
+								end
+							else
+								getgenv().AimPos = V.WorldPivot
+								AutoAllSkill()
+							end
+						end
+						return
+					end
+				end
+			end
+		end
+		if
+			not Settings["Farm Material"]
+			and Settings["Select Method Farm"] == "Farm Katakuri"
+			and not Settings["Ignore Attack Katakuri"]
+		then
+			if CheckNameBoss("Cake Prince") then
+				local V = CheckNameBoss("Cake Prince")
+				getgenv().BuddhaBossGuard()
+
+				local mirror = workspace.Map:FindFirstChild("CakeLoaf")
+					and workspace.Map.CakeLoaf:FindFirstChild("BigMirror")
+					and workspace.Map.CakeLoaf.BigMirror:FindFirstChild("Main")
+				local root = t.Character and t.Character:FindFirstChild("HumanoidRootPart")
+
+				if mirror and root and root.Position.Y <= 4000 then
+					repeat
+						repeat
+							task.wait()
+							getgenv().BuddhaBossGuard()
+							root = t.Character and t.Character:FindFirstChild("HumanoidRootPart")
+							if not root then
+								break
+							end
+							toTarget(V.HumanoidRootPart.CFrame * CFrame.new(7, BuddhaFarmY(), 0))
+						until (mirror.Position - root.Position).Magnitude <= 20
+							or root.Position.Y > 4000
+							or not IsMobAlive(V)
+							or not Settings["Start Farm"]
+							or not StackFarm
+						task.wait(1.5)
+						root = t.Character and t.Character:FindFirstChild("HumanoidRootPart")
+					until not root
+						or root.Position.Y > 4000
+						or not IsMobAlive(V)
+						or not Settings["Start Farm"]
+						or not StackFarm
+				end
+
+				repeat
+					task.wait()
+					getgenv().BuddhaBossGuard()
+					sizepart(V)
+					if
+						game:GetService("Players").LocalPlayer.PlayerGui.TransformationHUD.ImageLabel.Visible
+						and (Settings["Auto Finish Train Quest"] or Settings["Auto Finish Train Draco Quest"])
+					then
+						toTarget(V.HumanoidRootPart.CFrame * CFrame.new(7, BuddhaFarmY(), 0))
+					elseif Settings["Select Weapon"] == "Blox Fruit" then
+						toTarget(V.HumanoidRootPart.CFrame * CFrame.new(-7, FruitFarmY(), 0))
+					else
+						toTarget(V.HumanoidRootPart.CFrame * CFrame.new(7, BuddhaFarmY(), 0))
+					end
+					UsedualFlock()
+					ClickM1(V)
+				until not IsMobAlive(V) or not Settings["Start Farm"] or not StackFarm
+				return
+			else
+				spawn(KataHopStep)
+			end
+		end
+		local V = DetectMob(f)
+		if not V then
+			if typeof(f) == "table" then
+				if #N >= #f then
+					N = {}
+					return
+				end
+				local Y = DetectNameTablePart(f)
+				local H = DetectPartSpawnMob(Y)
+				if H then
+					table.insert(N, Y)
+					repeat
+						task.wait()
+						toTarget(H.CFrame * CFrame.new(0, 60, 0))
+					until (H.Position - t.Character.HumanoidRootPart.Position).Magnitude <= 100
+						or (DetectMob(f))
+						or not Settings["Start Farm"]
+						or not StackFarm
+					wait(0.4)
+				end
+			else
+				local Y = DetectPartSpawnMob(f, true)
+				if Y then
+					Instance.new("IntValue", Y).Name = "Ignored"
+					repeat
+						task.wait()
+						toTarget(Y.CFrame * CFrame.new(0, 60, 0))
+					until (Y.Position - t.Character.HumanoidRootPart.Position).Magnitude <= 100
+						or (DetectMob(f))
+						or not Settings["Start Farm"]
+						or not StackFarm
+					wait(0.4)
+				else
+					DeleteIgnoredMobSpawn()
+				end
+			end
+		else
+			repeat
+				task.wait()
+				sizepart(V)
+				BringMob(V)
+				FarmMastery(V)
+				ClickM1(V)
+				if
+					game:GetService("Players").LocalPlayer.PlayerGui.TransformationHUD.ImageLabel.Visible
+					and (Settings["Auto Finish Train Quest"] or Settings["Auto Finish Train Draco Quest"])
+				then
+					toTarget(V.HumanoidRootPart.CFrame * CFrame.new(7, BuddhaFarmY(), 0))
+				elseif Settings["Select Weapon"] == "Blox Fruit" then
+					toTarget(V.HumanoidRootPart.CFrame * CFrame.new(-7, FruitFarmY(), 0))
+				else
+					toTarget(V.HumanoidRootPart.CFrame * CFrame.new(7, BuddhaFarmY(), 0))
+				end
+			until not IsMobAlive(V) or not Settings["Start Farm"] or not StackFarm
+			if getgenv().QuestTrainer and getgenv().QuestTrainer.CountKillMob then
+				getgenv().QuestTrainer.CountKillMob = getgenv().QuestTrainer.CountKillMob + 1
+			end
+		end
+	end
+end
+spawn(function()
+	while task.wait() do
+		local f, f = pcall(function()
+			if Settings["Start Farm"] and StackFarm then
+				getgenv().FarmingTabActive = true
+				FarmMethod()
+			end
+		end)
+		getgenv().FarmingTabActive = false
+		if f then
+			print(f)
+		end
+	end
+end)
 stackFarmMain = Main.CreatePage({ Page_Name = "Stack Farming", Page_Title = "Stack Farming" })
 AutoWorldSection = stackFarmMain.CreateSection("Auto World")
 AutoWorldSection.CreateToggle(
@@ -14630,6 +16236,19 @@ StackDevilFruitSection.CreateToggle(
 	},
 	function(f)
 		SaveSettings("Teleport To Fruit [ Hop Server ]", f)
+	end
+)
+EventGameSection = stackFarmMain.CreateSection("Event Game")
+EventGameSection.CreateToggle(
+	{ Title = "Auto Factory", Desc = nil, Default = Settings["Auto Factory"] or false },
+	function(f)
+		SaveSettings("Auto Factory", f)
+	end
+)
+EventGameSection.CreateToggle(
+	{ Title = "Auto Pirate Raid", Desc = nil, Default = Settings["Auto Pirate Raid"] or false },
+	function(f)
+		SaveSettings("Auto Pirate Raid", f)
 	end
 )
 BossRipIndraSection = stackFarmMain.CreateSection("Boss Rip Indra")
@@ -34530,65 +36149,6 @@ ESPSection.CreateToggle({ Title = "ESP Player", Desc = nil, Default = Settings["
 	end
 	SaveSettings("ESP Player", b)
 end)
-
--- ESP FONT OPTIONS (ported from Anime Mob Hub)
-local ESPCurrentFont = Enum.Font.Arial
-
-local function ApplyESPFont(fontEnum)
-	ESPCurrentFont = fontEnum
-	local function applyTo(root)
-		if not root then return end
-		for _, obj in ipairs(root:GetDescendants()) do
-			if obj:IsA("TextLabel") or obj:IsA("TextButton") or obj:IsA("TextBox") then
-				pcall(function() obj.Font = fontEnum end)
-			end
-		end
-	end
-
-	pcall(function()
-		applyTo(game:GetService("CoreGui"))
-		applyTo(game:GetService("Players").LocalPlayer:FindFirstChildOfClass("PlayerGui"))
-	end)
-end
-
--- Apply the selected font to UI elements created later.
-local ESPFontRoots = {}
-pcall(function()
-	table.insert(ESPFontRoots, game:GetService("CoreGui"))
-	table.insert(ESPFontRoots, game:GetService("Players").LocalPlayer:WaitForChild("PlayerGui"))
-end)
-for _, root in ipairs(ESPFontRoots) do
-	root.DescendantAdded:Connect(function(obj)
-		if obj:IsA("TextLabel") or obj:IsA("TextButton") or obj:IsA("TextBox") then
-			pcall(function() obj.Font = ESPCurrentFont end)
-		end
-	end)
-end
-
-ESPFontSection = ESPTab.CreateSection("Fonts")
-local ESPFontChoices = {
-	{"Amatic SC", Enum.Font.AmaticSC},
-	{"Antique", Enum.Font.Antique},
-	{"Arcade", Enum.Font.Arcade},
-	{"Arial", Enum.Font.Arial},
-	{"Arial Bold", Enum.Font.ArialBold},
-	{"Bangers", Enum.Font.Bangers},
-	{"Bodoni", Enum.Font.Bodoni},
-	{"Cartoon", Enum.Font.Cartoon},
-	{"Code", Enum.Font.Code},
-	{"Creepster", Enum.Font.Creepster},
-	{"Denk One", Enum.Font.DenkOne},
-	{"Fondamento", Enum.Font.Fondamento},
-	{"Fredoka One", Enum.Font.FredokaOne},
-	{"Garamond", Enum.Font.Garamond},
-	{"Gotham", Enum.Font.Gotham},
-}
-for _, choice in ipairs(ESPFontChoices) do
-	ESPFontSection.CreateButton({Title = "Font: " .. choice[1]}, function()
-		ApplyESPFont(choice[2])
-	end)
-end
-
 PvpTab = Main.CreatePage({ Page_Name = "PVP", Page_Title = "PVP Tab" })
 SettingsAimbotSection = PvpTab.CreateSection("PVP")
 local b = SettingsAimbotSection.CreateDropdown(
@@ -35641,122 +37201,129 @@ __BF_FinishLoading()
 getgenv().__BF_LOADED = game.JobId
 
 
--- Hop Boss (Redz-style auto attack or hop)
+-- Hop Boss (moved from the source script into the bottom of Status And Server)
 local TamHopBossSection = PageStatusAndServer.CreateSection("Hop Boss")
+local TamBossLists = {
+    First = {
+        "Greybeard", "The Saw", "Saber Expert", "The Gorilla King", "Bobby",
+        "Yeti", "Vice Admiral", "Warden", "Chief Warden", "Swan",
+        "Magma Admiral", "Fishman Lord", "Wysper", "Thunder God", "Cyborg",
+    },
+    Second = {
+        "Darkbeard", "Cursed Captain", "Order", "Don Swan", "Diamond",
+        "Jeremy", "Fajita", "Smoke Admiral", "Awakened Ice Admiral", "Tide Keeper",
+    },
+    Third = {
+        "Dough King", "Cake Prince", "rip_indra True Form", "Soul Reaper", "Stone",
+        "Island Empress", "Kilo Admiral", "Captain Elephant", "Beautiful Pirate",
+        "Cake Queen", "Longma",
+    },
+}
+local TamHopWorld = Settings["Hop Boss World"] or "Third"
+local TamHopBossDropdown
+local TamHopBoss = Settings["Hop Boss " .. TamHopWorld] or TamBossLists[TamHopWorld][1]
 
-local function TamFindHopBoss(names)
-    local wanted = type(names) == "table" and names or { names }
-    local containers = {
-        game:GetService("Workspace"):FindFirstChild("Enemies"),
-        game:GetService("ReplicatedStorage"),
-    }
-    for _, container in ipairs(containers) do
-        if container then
-            for _, mob in ipairs(container:GetChildren()) do
-                if table.find(wanted, mob.Name) and IsMobAlive(mob) then
-                    return mob
+TamHopBossSection.CreateDropdown({
+    Title = "Select World",
+    List = { "First", "Second", "Third" },
+    Search = false,
+    Selected = false,
+    Default = TamHopWorld,
+}, function(value)
+    TamHopWorld = value
+    SaveSettings("Hop Boss World", value)
+    TamHopBoss = TamBossLists[value][1]
+    SaveSettings("Hop Boss " .. value, TamHopBoss)
+    if TamHopBossDropdown then
+        pcall(function() TamHopBossDropdown:GetNewList(TamBossLists[value]) end)
+    end
+end)
+
+TamHopBossDropdown = TamHopBossSection.CreateDropdown({
+    Title = "Select Boss",
+    List = TamBossLists[TamHopWorld],
+    Search = true,
+    Selected = false,
+    Default = TamHopBoss,
+}, function(value)
+    TamHopBoss = value
+    SaveSettings("Hop Boss " .. TamHopWorld, value)
+end)
+
+TamHopBossSection.CreateButton({ Title = "Refresh Boss List" }, function()
+    pcall(function()
+        TamHopBossDropdown:GetNewList(TamBossLists[TamHopWorld])
+    end)
+end)
+
+local function TamHopBossFindServer(bossName)
+    local requestFunc = (syn and syn.request) or (http and http.request) or http_request or request
+    if type(requestFunc) ~= "function" then
+        return nil, "Executor does not support HTTP requests"
+    end
+
+    local ok, response = pcall(function()
+        return requestFunc({
+            Url = "https://prvf.onrender.com/data",
+            Method = "GET"
+        })
+    end)
+    if not ok or not response or not response.Body then
+        return nil, "Could not get boss server data"
+    end
+
+    local decodedOk, data = pcall(function()
+        return game:GetService("HttpService"):JSONDecode(response.Body)
+    end)
+    if not decodedOk or type(data) ~= "table" then
+        return nil, "Invalid boss server data"
+    end
+
+    for jobId, bossData in pairs(data) do
+        if type(bossData) == "table" then
+            local found = false
+            for _, name in pairs(bossData) do
+                if tostring(name) == bossName then
+                    found = true
+                    break
                 end
             end
+            if found and tostring(jobId) ~= game.JobId then
+                return tostring(jobId)
+            end
+        elseif type(bossData) == "string" and string.find(bossData, bossName, 1, true)
+            and tostring(jobId) ~= game.JobId then
+            return tostring(jobId)
         end
     end
-    return nil
+    return nil, "No server with " .. tostring(bossName) .. " found"
 end
 
-local function TamHopBossAttack(mob, settingKey)
-    repeat
-        task.wait()
-        if not Settings[settingKey] or not IsMobAlive(mob) then
-            break
-        end
-        pcall(sizepart, mob)
-        if Settings["Select Weapon"] == "Blox Fruit" then
-            pcall(toTarget, mob.HumanoidRootPart.CFrame * CFrame.new(-7, FruitFarmY(), 0))
-        else
-            pcall(toTarget, mob.HumanoidRootPart.CFrame * CFrame.new(7, BuddhaFarmY(), 0))
-        end
-        pcall(ClickM1, mob)
-        pcall(UsedualFlock)
-    until not Settings[settingKey] or not IsMobAlive(mob)
-end
-
-local function TamRunBossHop(settingKey, bossNames, eliteMode)
+TamHopBossSection.CreateButton({ Title = "Hop Boss" }, function()
+    if not TamHopBoss or TamHopBoss == "" then
+        return
+    end
     task.spawn(function()
-        while Settings[settingKey] do
-            local ok, err = pcall(function()
-                if eliteMode then
-                    local playerGui = game:GetService("Players").LocalPlayer:FindFirstChild("PlayerGui")
-                    local main = playerGui and playerGui:FindFirstChild("Main")
-                    local quest = main and main:FindFirstChild("Quest")
-                    local visible = quest and quest.Visible
-                    local titleObject = visible and quest:FindFirstChild("Container")
-                    titleObject = titleObject and titleObject:FindFirstChild("QuestTitle")
-                    titleObject = titleObject and titleObject:FindFirstChild("Title")
-                    local title = titleObject and titleObject.Text or ""
-                    local hasEliteQuest = visible and (
-                        string.find(title, "Diablo", 1, true)
-                        or string.find(title, "Urban", 1, true)
-                        or string.find(title, "Deandre", 1, true)
-                    )
-                    if hasEliteQuest then
-                        local elite = TamFindHopBoss({ "Diablo", "Urban", "Deandre" })
-                        if elite then
-                            TamHopBossAttack(elite, settingKey)
-                        else
-                            HopServer(5, function()
-                                return not Settings[settingKey] or TamFindHopBoss({ "Diablo", "Urban", "Deandre" }) ~= nil
-                            end)
-                        end
-                    else
-                        HopServer(5, function()
-                            local pg = game:GetService("Players").LocalPlayer:FindFirstChild("PlayerGui")
-                            local m = pg and pg:FindFirstChild("Main")
-                            local q = m and m:FindFirstChild("Quest")
-                            local t = q and q:FindFirstChild("Container")
-                            t = t and t:FindFirstChild("QuestTitle")
-                            t = t and t:FindFirstChild("Title")
-                            local text = t and t.Text or ""
-                            return not Settings[settingKey] or (q and q.Visible and (
-                                string.find(text, "Diablo", 1, true)
-                                or string.find(text, "Urban", 1, true)
-                                or string.find(text, "Deandre", 1, true)
-                            ))
-                        end)
-                    end
-                else
-                    local boss = TamFindHopBoss(bossNames)
-                    if boss then
-                        TamHopBossAttack(boss, settingKey)
-                    else
-                        HopServer(5, function()
-                            return not Settings[settingKey] or TamFindHopBoss(bossNames) ~= nil
-                        end)
-                    end
-                end
+        local jobId, err = TamHopBossFindServer(TamHopBoss)
+        if not jobId then
+            pcall(function()
+                game:GetService("StarterGui"):SetCore("SendNotification", {
+                    Title = "Tam Hub",
+                    Text = tostring(err or "No server found"),
+                    Duration = 5
+                })
             end)
-            if not ok then
-                warn("[Tam Hop Boss] " .. tostring(err))
-                task.wait(1)
-            end
-            task.wait(0.2)
+            return
         end
-    end)
-end
 
-local function TamAddBossHopToggle(title, settingKey, bossNames, eliteMode)
-    TamHopBossSection.CreateToggle({
-        Title = title,
-        Desc = "Có boss/quest thì tự đánh, không có thì tự hop server",
-        Default = Settings[settingKey] or false,
-    }, function(value)
-        SaveSettings(settingKey, value)
-        if value then
-            TamRunBossHop(settingKey, bossNames, eliteMode)
-        end
+        pcall(function()
+            game:GetService("StarterGui"):SetCore("SendNotification", {
+                Title = "Tam Hub",
+                Text = "Found " .. tostring(TamHopBoss) .. " server. Teleporting...",
+                Duration = 5
+            })
+        end)
+        task.wait(0.5)
+        game:GetService("TeleportService"):TeleportToPlaceInstance(game.PlaceId, jobId, game:GetService("Players").LocalPlayer)
     end)
-end
-
-TamAddBossHopToggle("Auto Attack or Hop Server Rip Indra", "Hop Boss Rip Indra", "rip_indra", false)
-TamAddBossHopToggle("Auto Attack or Hop Server Darkbeard", "Hop Boss Darkbeard", "Darkbeard", false)
-TamAddBossHopToggle("Auto Attack or Hop Server Elites", "Hop Boss Elites", { "Diablo", "Urban", "Deandre" }, true)
-TamAddBossHopToggle("Auto Attack or Hop Server Dough King", "Hop Boss Dough King", "Dough King", false)
-TamAddBossHopToggle("Auto Attack or Hop Server Soul Reaper", "Hop Boss Soul Reaper", "Soul Reaper", false)
+end)
