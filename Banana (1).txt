@@ -7206,7 +7206,7 @@ local uiOk, uiErr = pcall(function()
 	end
 	t3.CreateNoti({
 		Title = "Notification",
-		Desc = "The UI automatically hides once executed.\nPress the button at the bottom-left of the screen to show the GUI.",
+		Desc = "🇻🇳 xin chào ae🇻🇳",
 		ShowTime = 10
 	}, true)
 	
@@ -13600,6 +13600,12 @@ local Q, d =
 			SaveSettings("Select Weapon", I)
 		end
 	)
+SettingFarmMainSection.CreateToggle(
+	{ Title = "Super Attack [Beta]", Desc = "Separate toggle setting", Default = Settings["Super Attack"] or false },
+	function(I)
+		SaveSettings("Super Attack", I)
+	end
+)
 SettingFarmMainSection.CreateToggle(
 	{ Title = "Attack No Animation ", Desc = nil, Default = Settings["Attack No Animation "] or true },
 	function(I)
