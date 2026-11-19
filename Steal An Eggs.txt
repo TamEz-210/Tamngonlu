@@ -58,8 +58,8 @@ LITE.translate, LITE.deco, LITE.glass = true, true, true
 local VERSION = "V9"
 -- HUB_NAME: tên ở HEADER ĐỎ (menu Chilli) và ISLAND.
 -- VENYX_TITLE: tên thay cho chữ "VENYX" ở tiêu đề cửa sổ Venyx khi chạy menu Venyx.
-local HUB_NAME = "Chilli × Venyx"
-local VENYX_TITLE = "Venyx × Chilli"
+local HUB_NAME = "Day × Tam"
+local VENYX_TITLE = "Day × Tam"
 local BRAND = HUB_NAME
 -- Ở mọi chỗ khác (hộp thoại, nút trong Venyx...) giữ tên thường: Chilli Hub / Venyx
 local TEXT_BRAND = "Chilli Hub " .. VERSION
