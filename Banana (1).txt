@@ -13586,35 +13586,6 @@ end
 task.wait(1)
 SettingFarmMain = Main.CreatePage({ Page_Name = "Setting Farm", Page_Title = "Setting Farm" })
 SettingFarmMainSection = SettingFarmMain.CreateSection("Setting Farm")
-
--- Fast Auto Attack adapted to Banana's existing CombatUtil attack system.
-local FastAttackMode = Settings["Fast Attack Mode"] or "Fast Attack"
-local FastAttackEnabled = Settings["Fast Auto Attack"]
-if FastAttackEnabled == nil then FastAttackEnabled = true end
-
-local function ApplyFastAttackMode()
-    if FastAttackEnabled and FastAttackMode == "Fast Attack" then
-        v_u_16 = 0.07
-    else
-        v_u_16 = 1
-    end
-end
-
-SettingFarmMainSection.CreateDropdown(
-    {
-        Title = "Select Fast Attack",
-        List = { "Normal Attack", "Fast Attack" },
-        Search = false,
-        Selected = false,
-        Default = FastAttackMode,
-    },
-    function(value)
-        FastAttackMode = value
-        SaveSettings("Fast Attack Mode", value)
-        ApplyFastAttackMode()
-    end
-)
-ApplyFastAttackMode()
 local Q, d =
 	false,
 	SettingFarmMainSection.CreateDropdown(
@@ -13632,16 +13603,10 @@ local Q, d =
 SettingFarmMainSection.CreateToggle(
 	{ Title = "Super Attack [Beta]", Desc = "Separate toggle setting", Default = Settings["Super Attack"] or false },
 	function(I)
+	elseif SelectFastAttackMode == "AnDepZai Fast" then
+		FireCooldown = 0.02
 		SaveSettings("Super Attack", I)
 	end
-)
-SettingFarmMainSection.CreateToggle(
-    { Title = "Fast Auto Attack", Desc = "Enable or disable Fast Attack", Default = FastAttackEnabled },
-    function(value)
-        FastAttackEnabled = value
-        SaveSettings("Fast Auto Attack", value)
-        ApplyFastAttackMode()
-    end
 )
 SettingFarmMainSection.CreateToggle(
 	{ Title = "Attack No Animation ", Desc = nil, Default = Settings["Attack No Animation "] or true },
