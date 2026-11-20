@@ -1,6 +1,6 @@
 --//dsc Dev-AnhTuanSiTink
 getgenv().Key = "NO_KEY_NEEDED"
-getgenv().__BANANA_SCRIPT_ROUTE = "kaigod"
+getgenv().__BANANA_SCRIPT_ROUTE = "Main"
 Config = {
     Team = "Pirates",
     FastTween = true,
@@ -153,7 +153,7 @@ if true then
           fn3("UICorner", {CornerRadius = UDim.new(0, 13)}, Frame3)
           fn3("UIGradient", {Color = ColorSequence.new(Color3.fromRGB(255, 220, 123), Color3.fromRGB(255, 145, 46)), Rotation = 135}, Frame3)
           fn3("TextLabel", {Name = "Letter", Size = UDim2.new(1, 0, 1, 0), BackgroundTransparency = 1, Text = "C", TextColor3 = Color3.fromRGB(29, 20, 12), Font = Enum.Font.GothamBold, TextSize = 21}, Frame3)
-          fn3("TextLabel", {Name = "Title", Position = UDim2.new(0, 83, 0, 23), Size = UDim2.new(0, 275, 0, 25), BackgroundTransparency = 1, Text = "Tam Hub", TextColor3 = Color3.fromRGB(247, 248, 252), Font = Enum.Font.GothamBold, TextSize = 20, TextXAlignment = Enum.TextXAlignment.Left}, Frame2)
+          fn3("TextLabel", {Name = "Title", Position = UDim2.new(0, 83, 0, 23), Size = UDim2.new(0, 275, 0, 25), BackgroundTransparency = 1, Text = "Banana Cat Hub crack by Tam", TextColor3 = Color3.fromRGB(247, 248, 252), Font = Enum.Font.GothamBold, TextSize = 20, TextXAlignment = Enum.TextXAlignment.Left}, Frame2)
           fn3("TextLabel", {Name = "Subtitle", Position = UDim2.new(0, 84, 0, 48), Size = UDim2.new(0, 295, 0, 18), BackgroundTransparency = 1, Text = "FAST WHITELIST  /  V5.0", TextColor3 = Color3.fromRGB(137, 143, 163), Font = Enum.Font.GothamMedium, TextSize = 10, TextXAlignment = Enum.TextXAlignment.Left}, Frame2)
           local Frame4 = fn3("Frame", {Name = "SecureBadge", Position = UDim2.new(1, -133, 0, 31), Size = UDim2.new(0, 84, 0, 25), BackgroundColor3 = Color3.fromRGB(101, 224, 168), BackgroundTransparency = 0.9, BorderSizePixel = 0}, Frame2)
           fn3("UICorner", {CornerRadius = UDim.new(1, 0)}, Frame4)
@@ -1188,7 +1188,7 @@ if true then
             tbl25[1] = UICorner4
             tbl25[2] = UIGradient3
             local Frame6 = fn24("Frame", tbl25)
-            fn24("TextLabel", {Parent = Frame6, Position = UDim2.new(0, 18, 0, 0), Size = UDim2.new(0, 190, 1, 0), BackgroundTransparency = 1, Font = tbl7.FontTitle, Text = "Tam HUB", TextColor3 = tbl7.ChampagneGold, TextSize = 17, TextXAlignment = Enum.TextXAlignment.Left, ZIndex = 53})
+            fn24("TextLabel", {Parent = Frame6, Position = UDim2.new(0, 18, 0, 0), Size = UDim2.new(0, 190, 1, 0), BackgroundTransparency = 1, Font = tbl7.FontTitle, Text = "Banana Cat HUB Crack by Tam", TextColor3 = tbl7.ChampagneGold, TextSize = 17, TextXAlignment = Enum.TextXAlignment.Left, ZIndex = 53})
             local tbl26 = {Parent = Frame6, Position = UDim2.new(0, 195, 0.5, -11), Size = UDim2.new(0, 80, 0, 22), BackgroundColor3 = Color3.fromRGB(16, 38, 28), BackgroundTransparency = 0.3, ZIndex = 53}
             local UICorner5 = fn24("UICorner", {CornerRadius = UDim.new(1, 0)})
             local UIStroke2 = fn24("UIStroke", {Color = tbl7.EmeraldMint, Thickness = 1, Transparency = 0.4})
@@ -19123,7 +19123,7 @@ if true then
                   local str13 = name2 .. ("||" .. ("\nLevel : " .. (str10 .. ("\nRace : " .. (str11 .. (" [" .. (str6 .. ("]" .. ("\nFruits : " .. str12)))))))))
                   local tbl15 = {username = "Tam HUB", avatar_url = "https://i.pinimg.com/736x/5c/56/b1/5c56b155aa6c7736f192b47787d4052a.jpg", allowed_mentions = {parse = {}}}
                   local embeds = {}
-                  local tbl16 = {author = {name = "Tam HUB  •  PLAYER PROFILE", icon_url = "https://i.pinimg.com/736x/5c/56/b1/5c56b155aa6c7736f192b47787d4052a.jpg"}, title = "Account Overview", description = "Username : ||" .. str13, color = 16776960}
+                  local tbl16 = {author = {name = "BANANACAT HUB  •  PLAYER PROFILE", icon_url = "https://i.pinimg.com/736x/5c/56/b1/5c56b155aa6c7736f192b47787d4052a.jpg"}, title = "Account Overview", description = "Username : ||" .. str13, color = 16776960}
                   local fields = {}
                   local tbl17 = {name = "Melee", value = fn39(tbl10), inline = false}
                   local tbl18 = {name = "Inventory Fruit", value = fn39(tbl11), inline = false}
@@ -19132,7 +19132,7 @@ if true then
                   fields[2] = tbl18
                   fields[3] = tbl19
                   tbl16.fields = fields
-                  tbl16.footer = {text = "TamCAT HUB  •  Player Stats", icon_url = "https://i.pinimg.com/736x/5c/56/b1/5c56b155aa6c7736f192b47787d4052a.jpg"}
+                  tbl16.footer = {text = "BANANACAT HUB  •  Player Stats", icon_url = "https://i.pinimg.com/736x/5c/56/b1/5c56b155aa6c7736f192b47787d4052a.jpg"}
                   tbl16.timestamp = os.date("!%Y-%m-%dT%H:%M:%SZ")
                   embeds[1] = tbl16
                   tbl15.embeds = embeds
