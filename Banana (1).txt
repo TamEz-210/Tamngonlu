@@ -7966,17 +7966,41 @@ SectionShopAbilities.CreateButton({ Title = "Soru [ $100,000 Beli ]" }, function
 	game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("BuyHaki", "Soru")
 end)
 PageStatusAndServer = Main.CreatePage({ Page_Name = "Status And Server", Page_Title = "Status And Server" })
--- ===================== Day Status (v4) =====================
 do
 	local Players = game:GetService("Players")
 	local lp = Players.LocalPlayer
 	local env = getgenv()
 
-	local UI_KEY = "Show Day Status"
-	local BLUE = Color3.fromRGB(70, 140, 255)
-	local BG = Color3.fromRGB(10, 14, 26)
+	local UI_KEY = "Show TopiHub Status UI"
+	local PURPLE = Color3.fromRGB(150, 90, 255)
+	local BG = Color3.fromRGB(18, 12, 30)
 
-	-- 1) Chuỗi ưu tiên (mỗi lúc chỉ 1 cái chạy, chiếm StackFarm = false)
+	local function tr(s)
+		local T = getgenv().TopiTranslator
+		if T and T.Translate then
+			local ok, r = pcall(T.Translate, s)
+			if ok and type(r) == "string" then
+				return r
+			end
+		end
+		return s
+	end
+	local function fmt(key, arg)
+		return (tr(key):gsub("{}", function()
+			return tostring(arg)
+		end))
+	end
+	local function actLabel(act)
+		local head, rest = act:match("^(Start Farm) : (.+)$")
+		if not head then
+			head, rest = act:match("^(Farm Material) : (.+)$")
+		end
+		if head then
+			return tr(head) .. " : " .. tr(rest)
+		end
+		return tr(act)
+	end
+
 	local CHAIN = {
 		"Auto New World",
 		"Collect Chest When Server Spawn God's Chalice or Fist of Darkness",
@@ -7986,12 +8010,10 @@ do
 		"Auto Elite Hunter", "Auto Factory", "Auto Pirate Raid", "Teleport To Fruit",
 		"Auto Quest Dojo Trainer",
 	}
-	-- 2) Nhóm bị chặn bởi StackFarmOther (bị tạm dừng khi chuỗi ưu tiên đang chạy)
 	local GATED_OTHER = {
 		"Auto Secret Quest", "Auto Fishing", "Auto Accept Quest Fishing",
 		"Auto Attack All Mob and Boss", "Auto Chest", "Kill Mob",
 	}
-	-- 3) Nhóm farm chạy vòng lặp riêng (bật = đang chạy)
 	local INDEPENDENT = {
 		"Auto Quest Dragon Hunter", "Auto Collect Berry", "Auto Chest Hop",
 		"Auto Buy Chip and Attack Law", "Auto UP Observation V2", "Farm Observation",
@@ -8012,8 +8034,6 @@ do
 		"Auto Collect Bone", "Auto Collect Egg",
 	}
 
-	-- ---------- Owner của chuỗi ưu tiên ----------
-	-- Gọi ngay sau dòng `StackFarm = false` của từng nhánh: BananaOwner("Tên toggle")
 	local owner
 	function env.BananaOwner(name)
 		owner = name
@@ -8053,7 +8073,6 @@ do
 		end
 	end
 
-	-- ---------- Theo dõi di chuyển (fly) / đánh mob ----------
 	local lastMoveCF, lastMoveT = nil, 0
 	local lastBoatCF, lastBoatT = nil, 0
 	local lastMob, lastMobT = nil, 0
@@ -8115,7 +8134,6 @@ do
 		end
 	end
 
-	-- Các hàm được định nghĩa muộn nên bọc dần trong vòng lặp (chỉ bọc 1 lần cho mỗi hàm)
 	local wTo, wBackup, wSize, wClick, wShoot, wDetect, wBoat
 	local function hookMovement()
 		if type(toTarget) == "function" and toTarget ~= wTo then
@@ -8148,7 +8166,6 @@ do
 		end
 	end
 
-	-- Tên đảo gần điểm đến nhất
 	local locCache, locT = {}, 0
 	local function placeName(cf)
 		if typeof(cf) ~= "CFrame" then
@@ -8180,7 +8197,6 @@ do
 		return string.format("%d, %d, %d", math.floor(pos.X), math.floor(pos.Y), math.floor(pos.Z))
 	end
 
-	-- ---------- Tính toggle farm đang HOẠT ĐỘNG ----------
 	local function on(k)
 		return Settings[k] == true
 	end
@@ -8190,7 +8206,6 @@ do
 		local stackFarm = StackFarm ~= false
 		local stackOther = StackFarmOther ~= false
 
-		-- Chuỗi ưu tiên đang chiếm quyền: chỉ hiện đúng nhánh đang chạy
 		if not stackFarm or not stackOther then
 			local name = owner
 			if not (name and on(name)) then
@@ -8207,7 +8222,6 @@ do
 			end
 		end
 
-		-- Level farm: chỉ chạy khi StackFarm đang mở
 		if stackFarm and on("Start Farm") then
 			if on("Farm Material") then
 				out[#out + 1] = "Farm Material : " .. tostring(Settings["Select Material"] or "?")
@@ -8219,7 +8233,6 @@ do
 			end
 		end
 
-		-- Nhóm bị tạm dừng khi chuỗi ưu tiên chạy
 		if stackOther then
 			for _, k in ipairs(GATED_OTHER) do
 				if on(k) then
@@ -8228,7 +8241,6 @@ do
 			end
 		end
 
-		-- Nhóm chạy vòng lặp riêng
 		for _, k in ipairs(INDEPENDENT) do
 			if on(k) then
 				out[#out + 1] = k
@@ -8239,50 +8251,45 @@ do
 
 	local function autoStatus(active)
 		if hopDepth > 0 then
-			return "Hopping server..."
+			return tr("Hopping server...")
 		end
 		if tick() < teleportUntil then
-			return "Teleporting..."
+			return tr("Teleporting...")
 		end
 		local char = lp.Character
 		local hum = char and char:FindFirstChildOfClass("Humanoid")
 		if not hum or hum.Health <= 0 then
-			return "Waiting for respawn..."
+			return tr("Waiting for respawn...")
 		end
 
 		local now = tick()
 		local act = active[1]
-		local suffix = act and (" | " .. act) or ""
+		local suffix = act and (" | " .. actLabel(act)) or ""
 
-		-- Đang đánh mob / boss (mọi chế độ farm): ghi rõ tên
 		if lastMob and now - lastMobT < 1.5 then
-			return "Fighting " .. lastMob .. suffix
+			return fmt("Fighting {}", tr(lastMob)) .. suffix
 		end
-		-- Đang lái thuyền
 		if lastBoatCF and now - lastBoatT < 1.5 then
-			return "Sailing boat to " .. placeName(lastBoatCF) .. suffix
+			return fmt("Sailing boat to {}", tr(placeName(lastBoatCF))) .. suffix
 		end
-		-- Đang bay/tween tới điểm đến
 		if lastMoveCF and now - lastMoveT < 1.0 then
-			local find = (lastFind and now - lastFindT < 2) and (" (find " .. lastFind .. ")") or ""
-			return "Traveling to " .. placeName(lastMoveCF) .. find .. suffix
+			local find = (lastFind and now - lastFindT < 2) and (" (" .. fmt("find {}", tr(lastFind)) .. ")") or ""
+			return fmt("Traveling to {}", tr(placeName(lastMoveCF))) .. find .. suffix
 		end
 
-		-- Không di chuyển / không đánh: mô tả việc đang làm
 		if not act then
-			return "Idle"
+			return tr("Idle")
 		end
 		if string.sub(act, 1, 10) == "Start Farm" then
 			local okQ, quest = pcall(GetQuestTitle)
 			if okQ and quest then
-				return act .. " | waiting mob : " .. string.sub(tostring(quest), 1, 50)
+				return actLabel(act) .. " | " .. fmt("waiting mob : {}", string.sub(tostring(quest), 1, 50))
 			end
-			return act .. " | taking quest..."
+			return actLabel(act) .. " | " .. tr("taking quest...")
 		end
-		return "Running : " .. act
+		return fmt("Running : {}", actLabel(act))
 	end
 
-	-- ---------- UI ----------
 	local function getParent()
 		if gethui then
 			local ok, ui = pcall(gethui)
@@ -8300,18 +8307,20 @@ do
 	end
 
 	local parent = getParent()
-	local old = parent:FindFirstChild("BananaCatStatusUI")
-	if old then
-		old:Destroy()
+	for _, n in ipairs({ "BananaCatStatusUI", "TopiHubStatusUI" }) do
+		local old = parent:FindFirstChild(n)
+		if old then
+			old:Destroy()
+		end
 	end
 
 	local gui = Instance.new("ScreenGui")
-	gui.Name = "BananaCatStatusUI"
+	gui.Name = "TopiHubStatusUI"
 	gui.ResetOnSpawn = false
 	gui.IgnoreGuiInset = true
 	gui.DisplayOrder = 999
 	gui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
-	gui.Enabled = Settings[UI_KEY] ~= false
+	gui.Enabled = Settings[UI_KEY] == true
 	gui.Parent = parent
 
 	local frame = Instance.new("Frame")
@@ -8332,7 +8341,7 @@ do
 	corner.CornerRadius = UDim.new(0, 16)
 	corner.Parent = frame
 	local stroke = Instance.new("UIStroke")
-	stroke.Color = BLUE
+	stroke.Color = PURPLE
 	stroke.Thickness = 2
 	stroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
 	stroke.Parent = frame
@@ -8363,14 +8372,18 @@ do
 		return l
 	end
 
-	makeLabel("Day Status", BLUE, 20, 1)
+	local titleLabel = makeLabel(tr("TopiHub Status"), PURPLE, 20, 1)
 	local statusLabel = makeLabel("Status : ...", Color3.fromRGB(255, 255, 255), 18, 2)
 
 	local lastStatus
 	local function refresh()
 		local active = computeActive()
-		local text = (override and tick() < overrideUntil) and override or autoStatus(active)
-		local st = "Status : " .. text
+		local text = (override and tick() < overrideUntil) and tr(override) or autoStatus(active)
+		local st = tr("Status") .. " : " .. text
+		local title = tr("TopiHub Status")
+		if titleLabel.Text ~= title then
+			titleLabel.Text = title
+		end
 		if st ~= lastStatus then
 			lastStatus = st
 			statusLabel.Text = st
@@ -8386,19 +8399,12 @@ do
 		end
 	end)
 
-	-- ---------- Toggle ở đầu tab Status And Server ----------
-	local SectionStatusUI = PageStatusAndServer.CreateSection("Day Status")
-	SectionStatusUI.CreateToggle({
-		Title = "Show Day Status",
-		Desc = "Show what the script is doing at the top of the screen",
-		Default = Settings[UI_KEY] ~= false,
-	}, function(v)
+	env.TopiHubStatusUIDefault = Settings[UI_KEY] == true
+	env.SetTopiHubStatusUI = function(v)
 		SaveSettings(UI_KEY, v)
 		gui.Enabled = v
-	end)
+	end
 end
--- ===================== end Day Status =====================
-
 SectionStatus = PageStatusAndServer.CreateSection("Status")
 TimerLabel = SectionStatus.CreateLabel({ Title = "Timer" })
 TimerServerLabel = SectionStatus.CreateLabel({ Title = "Timer Server" })
@@ -14019,6 +14025,14 @@ end
 task.wait(1)
 SettingFarmMain = Main.CreatePage({ Page_Name = "Setting Farm", Page_Title = "Setting Farm" })
 SettingFarmMainSection = SettingFarmMain.CreateSection("Setting Farm")
+SettingFarmMainSection.CreateToggle({
+	Title = "Show TopiHub Status UI",
+	Desc = "Show what the script is doing at the top of the screen",
+	Default = getgenv().TopiHubStatusUIDefault == true,
+}, function(v)
+	getgenv().SetTopiHubStatusUI(v)
+end)
+
 local Q, d =
 	false,
 	SettingFarmMainSection.CreateDropdown(
@@ -14033,14 +14047,6 @@ local Q, d =
 			SaveSettings("Select Weapon", I)
 		end
 	)
-SettingFarmMainSection.CreateToggle(
-	{ Title = "Super Attack [Beta]", Desc = "Separate toggle setting", Default = Settings["Super Attack"] or false },
-	function(I)
-	elseif SelectFastAttackMode == "AnDepZai Fast" then
-		FireCooldown = 0.02
-		SaveSettings("Super Attack", I)
-	end
-)
 SettingFarmMainSection.CreateToggle(
 	{ Title = "Attack No Animation ", Desc = nil, Default = Settings["Attack No Animation "] or true },
 	function(I)
