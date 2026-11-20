@@ -7966,13 +7966,13 @@ SectionShopAbilities.CreateButton({ Title = "Soru [ $100,000 Beli ]" }, function
 	game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("BuyHaki", "Soru")
 end)
 PageStatusAndServer = Main.CreatePage({ Page_Name = "Status And Server", Page_Title = "Status And Server" })
--- ===================== BananaCat Status UI (v4) =====================
+-- ===================== Day Status (v4) =====================
 do
 	local Players = game:GetService("Players")
 	local lp = Players.LocalPlayer
 	local env = getgenv()
 
-	local UI_KEY = "Show Day Status UI"
+	local UI_KEY = "Show Day Status"
 	local BLUE = Color3.fromRGB(70, 140, 255)
 	local BG = Color3.fromRGB(10, 14, 26)
 
@@ -8363,7 +8363,7 @@ do
 		return l
 	end
 
-	makeLabel("BananaCat Status", BLUE, 20, 1)
+	makeLabel("Day Status", BLUE, 20, 1)
 	local statusLabel = makeLabel("Status : ...", Color3.fromRGB(255, 255, 255), 18, 2)
 
 	local lastStatus
@@ -8387,9 +8387,9 @@ do
 	end)
 
 	-- ---------- Toggle ở đầu tab Status And Server ----------
-	local SectionStatusUI = PageStatusAndServer.CreateSection("Day Status UI")
+	local SectionStatusUI = PageStatusAndServer.CreateSection("Day Status")
 	SectionStatusUI.CreateToggle({
-		Title = "Show Day Status UI",
+		Title = "Show Day Status",
 		Desc = "Show what the script is doing at the top of the screen",
 		Default = Settings[UI_KEY] ~= false,
 	}, function(v)
@@ -8397,7 +8397,7 @@ do
 		gui.Enabled = v
 	end)
 end
--- ===================== end BananaCat Status UI =====================
+-- ===================== end Day Status =====================
 
 SectionStatus = PageStatusAndServer.CreateSection("Status")
 TimerLabel = SectionStatus.CreateLabel({ Title = "Timer" })
