@@ -1216,7 +1216,7 @@ local uiOk, uiErr = pcall(function()
 		ImageLabel.ImageColor3 = t1.UIColor["Border Color"]
 		ImageLabel.ImageTransparency = 1
 		ImageLabel.ImageColor3 = t1.UIColor["Title Text Color"]
-		TextLabel.Text = "<font color=\"rgb(" .. (tostring(t4.Getcolor(t1.UIColor["Title Text Color"])[1]) .. "," .. tostring(t4.Getcolor(t1.UIColor["Title Text Color"])[2]) .. "," .. tostring(t4.Getcolor(t1.UIColor["Title Text Color"])[3])) .. ")\">" .. (p5.Title or "Day Hub") .. " </font> " .. (p5.Desc or "- Blox Fruits [free]")
+		TextLabel.Text = "<font color=\"rgb(" .. (tostring(t4.Getcolor(t1.UIColor["Title Text Color"])[1]) .. "," .. tostring(t4.Getcolor(t1.UIColor["Title Text Color"])[2]) .. "," .. tostring(t4.Getcolor(t1.UIColor["Title Text Color"])[3])) .. ")\">" .. (p5.Title or "Day Hub") .. " </font> " .. (p5.Desc or "- Blox Fruits [Premium]")
 	
 		local ImageLabel3 = Instance.new("ImageLabel")
 	
@@ -1296,7 +1296,7 @@ local uiOk, uiErr = pcall(function()
 		TextLabel.TextWrapped = true
 		TextLabel.TextXAlignment = Enum.TextXAlignment.Center
 		TextLabel.TextColor3 = t1.UIColor["GUI Text Color"]
-		TextLabel.Text = "<font color=\"rgb(" .. (tostring(t4.Getcolor(t1.UIColor["Title Text Color"])[1]) .. "," .. tostring(t4.Getcolor(t1.UIColor["Title Text Color"])[2]) .. "," .. tostring(t4.Getcolor(t1.UIColor["Title Text Color"])[3])) .. ")\">Day Hub </font> - Blox Fruits [Free]"
+		TextLabel.Text = "<font color=\"rgb(" .. (tostring(t4.Getcolor(t1.UIColor["Title Text Color"])[1]) .. "," .. tostring(t4.Getcolor(t1.UIColor["Title Text Color"])[2]) .. "," .. tostring(t4.Getcolor(t1.UIColor["Title Text Color"])[3])) .. ")\">Day Hub </font> - Blox Fruits [Premium]"
 		Frame4.Name = "Background1"
 		Frame4.Parent = Frame7
 		Frame4.Position = UDim2.new(0, 5, 0, 0)
