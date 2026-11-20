@@ -7971,9 +7971,9 @@ do
 	local lp = Players.LocalPlayer
 	local env = getgenv()
 
-	local UI_KEY = "Show TopiHub Status UI"
-	local PURPLE = Color3.fromRGB(150, 90, 255)
-	local BG = Color3.fromRGB(18, 12, 30)
+	local UI_KEY = "Show Dayhub Status UI"
+	local WHITE = Color3.fromRGB(255, 255, 255)
+	local BG = Color3.fromRGB(0, 0, 0)
 
 	local function tr(s)
 		local T = getgenv().TopiTranslator
@@ -8307,7 +8307,7 @@ do
 	end
 
 	local parent = getParent()
-	for _, n in ipairs({ "BananaCatStatusUI", "TopiHubStatusUI" }) do
+	for _, n in ipairs({ "BananaCatStatusUI", "TopiHubStatusUI", "DayhubStatusUI" }) do
 		local old = parent:FindFirstChild(n)
 		if old then
 			old:Destroy()
@@ -8315,7 +8315,7 @@ do
 	end
 
 	local gui = Instance.new("ScreenGui")
-	gui.Name = "TopiHubStatusUI"
+	gui.Name = "DayhubStatusUI"
 	gui.ResetOnSpawn = false
 	gui.IgnoreGuiInset = true
 	gui.DisplayOrder = 999
@@ -8341,7 +8341,7 @@ do
 	corner.CornerRadius = UDim.new(0, 16)
 	corner.Parent = frame
 	local stroke = Instance.new("UIStroke")
-	stroke.Color = PURPLE
+	stroke.Color = WHITE
 	stroke.Thickness = 2
 	stroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
 	stroke.Parent = frame
@@ -8372,7 +8372,7 @@ do
 		return l
 	end
 
-	local titleLabel = makeLabel(tr("TopiHub Status"), PURPLE, 20, 1)
+	local titleLabel = makeLabel(tr("Dayhub Status"), WHITE, 20, 1)
 	local statusLabel = makeLabel("Status : ...", Color3.fromRGB(255, 255, 255), 18, 2)
 
 	local lastStatus
@@ -8380,7 +8380,7 @@ do
 		local active = computeActive()
 		local text = (override and tick() < overrideUntil) and tr(override) or autoStatus(active)
 		local st = tr("Status") .. " : " .. text
-		local title = tr("TopiHub Status")
+		local title = tr("Dayhub Status")
 		if titleLabel.Text ~= title then
 			titleLabel.Text = title
 		end
@@ -8399,8 +8399,8 @@ do
 		end
 	end)
 
-	env.TopiHubStatusUIDefault = Settings[UI_KEY] == true
-	env.SetTopiHubStatusUI = function(v)
+	env.DayhubStatusUIDefault = Settings[UI_KEY] == true
+	env.SetDayhubStatusUI = function(v)
 		SaveSettings(UI_KEY, v)
 		gui.Enabled = v
 	end
@@ -14026,11 +14026,11 @@ task.wait(1)
 SettingFarmMain = Main.CreatePage({ Page_Name = "Setting Farm", Page_Title = "Setting Farm" })
 SettingFarmMainSection = SettingFarmMain.CreateSection("Setting Farm")
 SettingFarmMainSection.CreateToggle({
-	Title = "Show TopiHub Status UI",
+	Title = "Show Dayhub Status UI",
 	Desc = "Show what the script is doing at the top of the screen",
-	Default = getgenv().TopiHubStatusUIDefault == true,
+	Default = getgenv().DayhubStatusUIDefault == true,
 }, function(v)
-	getgenv().SetTopiHubStatusUI(v)
+	getgenv().SetDayhubStatusUI(v)
 end)
 
 local Q, d =
