@@ -1216,7 +1216,7 @@ local uiOk, uiErr = pcall(function()
 		ImageLabel.ImageColor3 = t1.UIColor["Border Color"]
 		ImageLabel.ImageTransparency = 1
 		ImageLabel.ImageColor3 = t1.UIColor["Title Text Color"]
-		TextLabel.Text = "<font color=\"rgb(" .. (tostring(t4.Getcolor(t1.UIColor["Title Text Color"])[1]) .. "," .. tostring(t4.Getcolor(t1.UIColor["Title Text Color"])[2]) .. "," .. tostring(t4.Getcolor(t1.UIColor["Title Text Color"])[3])) .. ")\">" .. (p5.Title or "Day Hub") .. " </font> " .. (p5.Desc or "- Blox Fruits [Freemium]")
+		TextLabel.Text = "<font color=\"rgb(" .. (tostring(t4.Getcolor(t1.UIColor["Title Text Color"])[1]) .. "," .. tostring(t4.Getcolor(t1.UIColor["Title Text Color"])[2]) .. "," .. tostring(t4.Getcolor(t1.UIColor["Title Text Color"])[3])) .. ")\">" .. (p5.Title or "Day Hub") .. " </font> " .. (p5.Desc or "- Blox Fruits [Premium]")
 	
 		local ImageLabel3 = Instance.new("ImageLabel")
 	
@@ -1296,7 +1296,7 @@ local uiOk, uiErr = pcall(function()
 		TextLabel.TextWrapped = true
 		TextLabel.TextXAlignment = Enum.TextXAlignment.Center
 		TextLabel.TextColor3 = t1.UIColor["GUI Text Color"]
-		TextLabel.Text = "<font color=\"rgb(" .. (tostring(t4.Getcolor(t1.UIColor["Title Text Color"])[1]) .. "," .. tostring(t4.Getcolor(t1.UIColor["Title Text Color"])[2]) .. "," .. tostring(t4.Getcolor(t1.UIColor["Title Text Color"])[3])) .. ")\">Day Hub </font> - Blox Fruits [Freemium]"
+		TextLabel.Text = "<font color=\"rgb(" .. (tostring(t4.Getcolor(t1.UIColor["Title Text Color"])[1]) .. "," .. tostring(t4.Getcolor(t1.UIColor["Title Text Color"])[2]) .. "," .. tostring(t4.Getcolor(t1.UIColor["Title Text Color"])[3])) .. ")\">Day Hub </font> - Blox Fruits [Premium]"
 		Frame4.Name = "Background1"
 		Frame4.Parent = Frame7
 		Frame4.Position = UDim2.new(0, 5, 0, 0)
@@ -7205,7 +7205,7 @@ local uiOk, uiErr = pcall(function()
 		}
 	end
 	t3.CreateNoti({
-		Title = "Notification",
+		Title = "Thông báo",
 		Desc = "🇻🇳 xin chào ae🇻🇳",
 		ShowTime = 10
 	}, true)
@@ -7244,7 +7244,7 @@ getgenv().TopiTranslator = (function()
 
 	local function notify(desc)
 		pcall(function()
-			A.CreateNoti({ Title = "Auto Translate", Description = desc })
+			A.CreateNoti({ Title = "Tự động dịch", Description = desc })
 		end)
 	end
 
@@ -7347,14 +7347,11 @@ getgenv().TopiTranslator = (function()
 	end
 
 	local function isTopiGui(g)
-		if not g:IsA("ScreenGui") then
-			return false
-		end
-		-- Ho tro ca Fluent/Topi UI va giao dien Day Hub dang duoc Banana su dung.
-		local name = g.Name
-		return name:sub(1, 7) == "TopiUI_"
-			or name == "Day Hub GUI"
-			or name == "SB_UI"
+		return g:IsA("ScreenGui") and (
+			g.Name:sub(1, 7) == "TopiUI_"
+			or g.Name == "Day Hub GUI"
+			or g.Name == "Day Hub Notification"
+		)
 	end
 	local watched = setmetatable({}, weak)
 	local function ensureAttached()
@@ -7402,7 +7399,7 @@ getgenv().TopiTranslator = (function()
 
 	T.Langs = { Vietnamese = "vi", Japanese = "jp", Thai = "th", Chinese = "cn" }
 	T.LangList = { "Vietnamese", "Japanese", "Thai", "Chinese" }
-	T.LangName, T.Code = "Vietnamese", "vi" -- mac dinh tieng Viet, tranh loadLang(nil)
+	T.LangName, T.Code = nil, nil
 
 	local function cachePath(code)
 		return CACHE_DIR .. "/" .. code .. ".json"
@@ -7544,19 +7541,14 @@ getgenv().TopiTranslator = (function()
 	return T
 end)()
 
--- Neu nguoi choi da bat Auto Translate tu lan truoc, tu khoi dong lai tieng Viet.
-if Settings and Settings["Auto Translate"] == true then
-	task.defer(function()
-		pcall(function()
-			getgenv().TopiTranslator.SetEnabled(true)
-		end)
-	end)
-end
+-- Tự động bật tiếng Việt cho toàn bộ giao diện.
+TopiTranslator.SelectLang("Vietnamese")
+TopiTranslator.SetEnabled(true)
 
-Main = guardUI(A.CreateMain({ Title = "Blox Fruit", Desc = " - Blox Fruit By wzarii" }), "Main")
-PageShop = Main.CreatePage({ Page_Name = "Shop", Page_Title = "Shop" })
+Main = guardUI(A.CreateMain({ Title = "Trái Ác Quỷ", Desc = " - Trái Ác Quỷ By wzarii" }), "Main")
+PageShop = Main.CreatePage({ Page_Name = "Cửa hàng", Page_Title = "Cửa hàng" })
 getgenv().Options = A.Options
-SectionShopMisc = PageShop.CreateSection("Misc Shop")
+SectionShopMisc = PageShop.CreateSection("Cửa hàng linh tinh")
 function Remote(a, s, X)
 	if not a and X then
 		game.ReplicatedStorage.Remotes.CommF_:InvokeServer(s, true)
@@ -7663,48 +7655,48 @@ REDEEM_CODES = {
 	"CODESLIDE",
 	"fruitconcepts",
 }
-SectionShopMisc.CreateButton({ Title = "Redeem Code" }, function()
+SectionShopMisc.CreateButton({ Title = "Nhập mã" }, function()
 	LPH_ATTRIBUTES(VM(NONE))
 	for _, v in REDEEM_CODES do
 		game.ReplicatedStorage.Remotes.Redeem:InvokeServer(v)
 	end
 end)
 
-SectionShopMisc.CreateButton({ Title = "Teleport Old World" }, function()
+SectionShopMisc.CreateButton({ Title = "Dịch chuyển đến Biển 1" }, function()
 	game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer(unpack({ [1] = "TravelMain" }))
 end)
 
-SectionShopMisc.CreateButton({ Title = "Teleport New World" }, function()
+SectionShopMisc.CreateButton({ Title = "Dịch chuyển đến Biển 2" }, function()
 	game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer(unpack({ [1] = "TravelDressrosa" }))
 end)
 
-SectionShopMisc.CreateButton({ Title = "Teleport Thid Sea" }, function()
+SectionShopMisc.CreateButton({ Title = "Dịch chuyển đến Biển 3" }, function()
 	game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer(unpack({ [1] = "TravelZou" }))
 end)
 
-SectionShopMisc.CreateButton({ Title = "Buy Dual Flintlock" }, function()
+SectionShopMisc.CreateButton({ Title = "Mua Dual Flintlock" }, function()
 	game.ReplicatedStorage.Remotes.CommF_:InvokeServer("BuyItem", "Dual Flintlock")
 end)
 
-SectionShopMisc.CreateButton({ Title = "Reroll Race" }, function()
+SectionShopMisc.CreateButton({ Title = "Đổi tộc" }, function()
 	game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("BlackbeardReward", "Reroll", "2")
 end)
 
-SectionShopMisc.CreateButton({ Title = "Reset Stats" }, function()
+SectionShopMisc.CreateButton({ Title = "Đặt lại chỉ số" }, function()
 	game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("BlackbeardReward", "Refund", "1")
 	game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("BlackbeardReward", "Refund", "2")
 end)
 
-SectionShopMisc.CreateButton({ Title = "Buy Race Cyborg" }, function()
+SectionShopMisc.CreateButton({ Title = "Mua tộc Cyborg" }, function()
 	game.ReplicatedStorage.Remotes.CommF_:InvokeServer("CyborgTrainer", "Buy")
 end)
 
-SectionShopMisc.CreateButton({ Title = "Buy Race Ghoul" }, function()
+SectionShopMisc.CreateButton({ Title = "Mua tộc Ghoul" }, function()
 	game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("Ectoplasm", "BuyCheck", 4)
 	game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("Ectoplasm", "Change", 4)
 end)
 
-SectionShopFighting = PageShop.CreateSection("Fighting Shop")
+SectionShopFighting = PageShop.CreateSection("Cửa hàng võ thuật")
 local g = {}
 getgenv().notsave = g
 local G = {
@@ -7749,7 +7741,7 @@ function DetectNpc(f)
 	return l, E
 end
 
-SectionShopFighting.CreateToggle({ Title = "Black Leg", Desc = nil, Default = false }, function(f)
+SectionShopFighting.CreateToggle({ Title = "Chân Đen", Desc = nil, Default = false }, function(f)
 	if f then
 		spawn(function()
 			while g["Black Leg"] and (task.wait()) do
@@ -7769,7 +7761,7 @@ SectionShopFighting.CreateToggle({ Title = "Black Leg", Desc = nil, Default = fa
 	g["Black Leg"] = f
 end)
 
-SectionShopFighting.CreateToggle({ Title = "Fishman Karate", Desc = nil, Default = Settings["Buy Fishman Karate"] == true }, function(f)
+SectionShopFighting.CreateToggle({ Title = "Karate Người Cá", Desc = nil, Default = Settings["Buy Fishman Karate"] == true }, function(f)
 	g["Fishman Karate"] = f
 	SaveSettings("Buy Fishman Karate", f)
 	if not f then
@@ -7803,7 +7795,7 @@ SectionShopFighting.CreateToggle({ Title = "Fishman Karate", Desc = nil, Default
 	end)
 end)
 
-SectionShopFighting.CreateToggle({ Title = "Electro", Desc = nil, Default = Settings["Buy Electro"] == true }, function(f)
+SectionShopFighting.CreateToggle({ Title = "Điện", Desc = nil, Default = Settings["Buy Electro"] == true }, function(f)
 	g.Electro = f
 	SaveSettings("Buy Electro", f)
 	if not f then
@@ -7834,7 +7826,7 @@ SectionShopFighting.CreateToggle({ Title = "Electro", Desc = nil, Default = Sett
 	end)
 end)
 
-SectionShopFighting.CreateToggle({ Title = "Dragon Breath", Desc = nil, Default = false }, function(f)
+SectionShopFighting.CreateToggle({ Title = "Hơi Thở Rồng", Desc = nil, Default = false }, function(f)
 	if f then
 		spawn(function()
 			while g.DragonClaw and (task.wait()) do
@@ -7852,7 +7844,7 @@ SectionShopFighting.CreateToggle({ Title = "Dragon Breath", Desc = nil, Default 
 	g.DragonClaw = f
 end)
 
-SectionShopFighting.CreateToggle({ Title = "SuperHuman", Desc = nil, Default = false }, function(f)
+SectionShopFighting.CreateToggle({ Title = "Siêu Nhân", Desc = nil, Default = false }, function(f)
 	if f then
 		spawn(function()
 			while g.SuperHuman and (task.wait()) do
@@ -7869,7 +7861,7 @@ SectionShopFighting.CreateToggle({ Title = "SuperHuman", Desc = nil, Default = f
 	g.SuperHuman = f
 end)
 
-SectionShopFighting.CreateToggle({ Title = "Death Step", Desc = nil, Default = false }, function(f)
+SectionShopFighting.CreateToggle({ Title = "Bước Tử Thần", Desc = nil, Default = false }, function(f)
 	if f then
 		spawn(function()
 			while g["Death Step"] and (task.wait()) do
@@ -7886,7 +7878,7 @@ SectionShopFighting.CreateToggle({ Title = "Death Step", Desc = nil, Default = f
 	g["Death Step"] = f
 end)
 
-SectionShopFighting.CreateToggle({ Title = "Sharkman Karate", Desc = nil, Default = false }, function(f)
+SectionShopFighting.CreateToggle({ Title = "Karate Cá Mập", Desc = nil, Default = false }, function(f)
 	if f then
 		spawn(function()
 			while g["Sharkman Karate"] and (task.wait()) do
@@ -7903,7 +7895,7 @@ SectionShopFighting.CreateToggle({ Title = "Sharkman Karate", Desc = nil, Defaul
 	g["Sharkman Karate"] = f
 end)
 
-SectionShopFighting.CreateToggle({ Title = "Electric Claw", Desc = nil, Default = false }, function(f)
+SectionShopFighting.CreateToggle({ Title = "Vuốt Điện", Desc = nil, Default = false }, function(f)
 	if f then
 		spawn(function()
 			while g["Electric Claw"] and (task.wait()) do
@@ -7920,7 +7912,7 @@ SectionShopFighting.CreateToggle({ Title = "Electric Claw", Desc = nil, Default 
 	g["Electric Claw"] = f
 end)
 
-SectionShopFighting.CreateToggle({ Title = "Dragon Talon", Desc = nil, Default = false }, function(f)
+SectionShopFighting.CreateToggle({ Title = "Móng Vuốt Rồng", Desc = nil, Default = false }, function(f)
 	if f then
 		spawn(function()
 			while g["Dragon Talon"] and (task.wait()) do
@@ -7936,7 +7928,7 @@ SectionShopFighting.CreateToggle({ Title = "Dragon Talon", Desc = nil, Default =
 	end
 	g["Dragon Talon"] = f
 end)
-SectionShopFighting.CreateToggle({ Title = "God Human", Desc = nil, Default = false }, function(f)
+SectionShopFighting.CreateToggle({ Title = "Nhân Thần", Desc = nil, Default = false }, function(f)
 	if f then
 		spawn(function()
 			while g["God Human"] and (task.wait()) do
@@ -7952,7 +7944,7 @@ SectionShopFighting.CreateToggle({ Title = "God Human", Desc = nil, Default = fa
 	end
 	g["God Human"] = f
 end)
-SectionShopFighting.CreateToggle({ Title = "Sanguine Art", Desc = nil, Default = false }, function(f)
+SectionShopFighting.CreateToggle({ Title = "Nghệ Thuật Huyết Nguyệt", Desc = nil, Default = false }, function(f)
 	if f then
 		spawn(function()
 			while g["Sanguine Art"] and (task.wait()) do
@@ -7968,20 +7960,20 @@ SectionShopFighting.CreateToggle({ Title = "Sanguine Art", Desc = nil, Default =
 	end
 	g["Sanguine Art"] = f
 end)
-SectionShopAbilities = PageShop.CreateSection("Abilities Shop")
-SectionShopAbilities.CreateButton({ Title = "Skyjump [ $10,000 Beli ]" }, function()
+SectionShopAbilities = PageShop.CreateSection("Cửa hàng kỹ năng")
+SectionShopAbilities.CreateButton({ Title = "Nhảy trên không [10.000 Beli]" }, function()
 	game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("BuyHaki", "Geppo")
 end)
-SectionShopAbilities.CreateButton({ Title = "Buso Haki [ $25,000 Beli ]" }, function()
+SectionShopAbilities.CreateButton({ Title = "Haki Vũ Trang [25.000 Beli]" }, function()
 	game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("BuyHaki", "Buso")
 end)
-SectionShopAbilities.CreateButton({ Title = "Observation haki [ $750,000 Beli ]" }, function()
+SectionShopAbilities.CreateButton({ Title = "Haki Quan Sát [750.000 Beli]" }, function()
 	game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("KenTalk", "Buy")
 end)
-SectionShopAbilities.CreateButton({ Title = "Soru [ $100,000 Beli ]" }, function()
+SectionShopAbilities.CreateButton({ Title = "Soru [100.000 Beli]" }, function()
 	game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("BuyHaki", "Soru")
 end)
-PageStatusAndServer = Main.CreatePage({ Page_Name = "Status And Server", Page_Title = "Status And Server" })
+PageStatusAndServer = Main.CreatePage({ Page_Name = "Trạng thái và máy chủ", Page_Title = "Trạng thái và máy chủ" })
 do
 	local Players = game:GetService("Players")
 	local lp = Players.LocalPlayer
@@ -8421,17 +8413,17 @@ do
 		gui.Enabled = v
 	end
 end
-SectionStatus = PageStatusAndServer.CreateSection("Status")
-TimerLabel = SectionStatus.CreateLabel({ Title = "Timer" })
-TimerServerLabel = SectionStatus.CreateLabel({ Title = "Timer Server" })
-NextTimerServerLabel = SectionStatus.CreateLabel({ Title = "Next Time Spawn Fist of Darkness or God's Chalice" })
+SectionStatus = PageStatusAndServer.CreateSection("Trạng thái")
+TimerLabel = SectionStatus.CreateLabel({ Title = "Đồng hồ đếm giờ" })
+TimerServerLabel = SectionStatus.CreateLabel({ Title = "Thời gian máy chủ" })
+NextTimerServerLabel = SectionStatus.CreateLabel({ Title = "Next Thời gian Spawn Fist of Darkness or God's Chalice" })
 StatusEliteHunter = SectionStatus.CreateLabel({ Title = "Elite" })
-StatusTyrant = SectionStatus.CreateLabel({ Title = "Eyes Summon Tyrant" })
-StatusKatakuri = SectionStatus.CreateLabel({ Title = "Summon Katakuri" })
-Statusspy = SectionStatus.CreateLabel({ Title = "Status SPY" })
+StatusTyrant = SectionStatus.CreateLabel({ Title = "Eyes Triệu hồi Tyrant" })
+StatusKatakuri = SectionStatus.CreateLabel({ Title = "Triệu hồi Katakuri" })
+Statusspy = SectionStatus.CreateLabel({ Title = "Trạng thái SPY" })
 StatusMirage = SectionStatus.CreateLabel({ Title = "Mirage" })
-StatusNormalStock = SectionStatus.CreateLabel({ Title = "Normal Fruit Stock" })
-StatusMirageStock = SectionStatus.CreateLabel({ Title = "Mirage Fruit Stock" })
+StatusNormalStock = SectionStatus.CreateLabel({ Title = "Kho trái thường" })
+StatusMirageStock = SectionStatus.CreateLabel({ Title = "Kho trái Mirage" })
 -- Normal and Mirage fruit stock checkers. Sort by price: cheapest first, most expensive last.
 task.spawn(function()
     local CommF = game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("CommF_")
@@ -8491,12 +8483,12 @@ task.spawn(function()
         task.wait(30)
     end
 end)
-StatusPrehistoricIsland = SectionStatus.CreateLabel({ Title = "Prehistoric Island" })
-StatusFrozenDimension = SectionStatus.CreateLabel({ Title = "Frozen Dimension" })
-StatusMoon = SectionStatus.CreateLabel({ Title = "Moon" })
-StatusGear = SectionStatus.CreateLabel({ Title = "Acient One Status" })
-SectionServer = PageStatusAndServer.CreateSection("Server")
-SectionServer.CreateButton({ Title = "Open Gui Server Browser (Low Player and Ping)" }, function()
+StatusPrehistoricIsland = SectionStatus.CreateLabel({ Title = "Đảo Tiền Sử" })
+StatusFrozenDimension = SectionStatus.CreateLabel({ Title = "Không Gian Băng Giá" })
+StatusMoon = SectionStatus.CreateLabel({ Title = "Mặt trăng" })
+StatusGear = SectionStatus.CreateLabel({ Title = "Acient One Trạng thái" })
+SectionServer = PageStatusAndServer.CreateSection("Máy chủ")
+SectionServer.CreateButton({ Title = "Mở trình duyệt máy chủ (ít người và ping thấp)" }, function()
 	local G = game:GetService("HttpService")
 	game:GetService("TeleportService")
 	local f, K = game:GetService("Players"), game:GetService("TweenService")
@@ -9369,15 +9361,15 @@ SectionServer.CreateButton({ Title = "Open Gui Server Browser (Low Player and Pi
 		L(2, true)
 	end)
 end)
-StatusPlaceId = SectionServer.CreateLabel({ Title = "PlaceId: " .. game.PlaceId })
+StatusPlaceId = SectionServer.CreateLabel({ Title = "Mã địa điểm: " .. game.PlaceId })
 local G = ""
 SectionServer.CreateBox(
-	{ Title = "Input JobId Normal And JobId BananaCat", Placeholder = "Type here", Number = false, Default = nil },
+	{ Title = "Nhập JobId thường và JobId BananaCat", Placeholder = "Type here", Number = false, Default = nil },
 	function(f)
 		G = f
 	end
 )
-SectionServer.CreateToggle({ Title = "Spam Join", Desc = nil, Default = Settings["Spam Join"] or false }, function(f)
+SectionServer.CreateToggle({ Title = "Vào máy chủ liên tục", Desc = nil, Default = Settings["Spam Join"] or false }, function(f)
 	SaveSettings("Spam Join", f)
 end)
 if not (bit32 or bit) then
@@ -9418,7 +9410,7 @@ function teleportSmart(K)
 		end)
 	end
 end
-SectionServer.CreateButton({ Title = "Join JobId" }, function()
+SectionServer.CreateButton({ Title = "Vào máy chủ bằng JobId" }, function()
 	if Settings["Spam Join"] then
 		while task.wait() do
 			local K, R, R = G, f()
@@ -9433,7 +9425,7 @@ SectionServer.CreateButton({ Title = "Join JobId" }, function()
 			:InvokeServer("teleport", (function() if m(G, "BananaCat-") then return (R(G)) else return K end end)())
 	end
 end)
-SectionServer.CreateButton({ Title = "Copy JobId" }, function()
+SectionServer.CreateButton({ Title = "Sao chép JobId" }, function()
 	setclipboard(tostring(game.JobId))
 end)
 local G, K = {}, {}
@@ -9733,7 +9725,7 @@ function EliteHopStep()
 	-- API khong co server nao -> hop ngau nhien nhu cu
 	HopServer(nil, stop)
 end
-SectionServer.CreateButton({ Title = "Hop Server" }, function()
+SectionServer.CreateButton({ Title = "Đổi máy chủ" }, function()
 	HopServer()
 end)
 function HopLessAll()
@@ -9805,7 +9797,7 @@ function HopLessAll()
 		pcall(HopServerLess)
 	end
 end
-SectionServer.CreateButton({ Title = "Hop Server Less People" }, function()
+SectionServer.CreateButton({ Title = "Đổi máy chủ ít người" }, function()
 	HopLessAll()
 end)
 function MoonTextureId()
@@ -10085,34 +10077,24 @@ spawn(function()
 		end
 	end
 end)
-LocalPlayerMain = Main.CreatePage({ Page_Name = "LocalPlayer", Page_Title = "LocalPlayer" })
-SectionLocalPlayerMain = LocalPlayerMain.CreateSection("Local Player")
+LocalPlayerMain = Main.CreatePage({ Page_Name = "Người chơi", Page_Title = "Người chơi" })
+SectionLocalPlayerMain = LocalPlayerMain.CreateSection("Người chơi")
 SectionLocalPlayerMain.CreateToggle(
 	{
-		Title = "Auto Translate",
-		Desc = "It may take a bit longer to translate the first time.",
-		Default = Settings["Auto Translate"] or false,
+		Title = "Tự động dịch",
+		Desc = "It may take a bit longer to translate the first Thời gian.",
+		Default = true,
 	},
 	function(K)
 		SaveSettings("Auto Translate", K)
 		TopiTranslator.SetEnabled(K)
 	end
 )
-SectionLocalPlayerMain.CreateButton({ Title = "Stop Tween" }, function()
+SectionLocalPlayerMain.CreateButton({ Title = "Dừng di chuyển" }, function()
 	getgenv().noclip = false
 	TweenManager.CancelCurrent()
 end)
-SectionLocalPlayerMain.CreateButton({ Title = "Show/Hide Floating Stop Tween" }, function()
-local handler3 = function()
-            require(game:GetService("ReplicatedStorage").Modules.LastInput).IsMobile = function()
-                return true
-            end
-
-            wait(0.5)
-            Runtime.localPlayer2.Character.Humanoid.Health = 0
-        end
-        
-SectionLocalPlayerMain.CreateButton({ Title = "Load config in Web" }, function()
+SectionLocalPlayerMain.CreateButton({ Title = "Tải cấu hình từ web" }, function()
 	local K = game:GetService("HttpService")
 	game:GetService("RunService")
 	local R, m, E = "https://cfg.banana-hub.xyz", getgenv().Key, game.Players.LocalPlayer.Name
@@ -10164,7 +10146,7 @@ SectionLocalPlayerMain.CreateButton({ Title = "Load config in Web" }, function()
 	end
 end)
 SectionLocalPlayerMain.CreateButton(
-	{ Title = "Push Data To Web ( just push when join game,if push again plz rejoin )" },
+	{ Title = "Push Data To Web ( just push when Vào game,if push again plz rejoin )" },
 	function()
 		local K, R = game:GetService("HttpService"), "https://cfg.banana-hub.xyz"
 		function BuildSchema()
@@ -10319,7 +10301,7 @@ SectionLocalPlayerMain.CreateButton(
 	end
 )
 local K = require(game.ReplicatedStorage:WaitForChild("Controllers"):WaitForChild("UI"):WaitForChild("Inventory"))
-SectionLocalPlayerMain.CreateButton({ Title = "Show Item" }, function()
+SectionLocalPlayerMain.CreateButton({ Title = "Hiện vật phẩm" }, function()
 	if not game:GetService("CoreGui").ExperienceChat.bubbleChat:FindFirstChild("Right") then
 		local R, m, E = game.Players.LocalPlayer, game:GetService("CoreGui"), game:GetService("ReplicatedStorage")
 		if not K.IsOpen then
@@ -10531,25 +10513,25 @@ SectionLocalPlayerMain.CreateButton({ Title = "Show Item" }, function()
 		end
 	end
 end)
-SectionLocalPlayerMain.CreateButton({ Title = "Open Devil Fruit Shop" }, function()
+SectionLocalPlayerMain.CreateButton({ Title = "Mở cửa hàng Trái Ác Quỷ" }, function()
 	local K = require(game.ReplicatedStorage.Controllers.UI.FruitShop)
 	K.init()
 	K:Open()
 end)
-SectionLocalPlayerMain.CreateButton({ Title = "Open Devil Fruit Shop Mirage" }, function()
+SectionLocalPlayerMain.CreateButton({ Title = "Mở cửa hàng Trái Ác Quỷ Mirage" }, function()
 	local K = require(game.ReplicatedStorage.Controllers.UI.FruitShop)
 	K.init()
 	K:Open("AdvancedFruitDealer")
 end)
-SectionLocalPlayerMain.CreateButton({ Title = "Open Title" }, function()
+SectionLocalPlayerMain.CreateButton({ Title = "Mở danh hiệu" }, function()
 	game:GetService("Players").LocalPlayer.PlayerGui.Main.Titles.Visible = true
 end)
-SectionLocalPlayerMain.CreateButton({ Title = "Open Color" }, function()
+SectionLocalPlayerMain.CreateButton({ Title = "Mở màu Haki" }, function()
 	game:GetService("Players").LocalPlayer.PlayerGui.Main.Colors.Visible = true
 end)
 SectionLocalPlayerMain.CreateDropdown(
 	{
-		Title = "Select Stats",
+		Title = "Chọn chỉ số",
 		List = PrepareMultiSelectList(
 			{ Melee = false, Defense = false, Sword = false, Gun = false, ["Demon Fruit"] = false },
 			Settings["Select Stats"]
@@ -10563,7 +10545,7 @@ SectionLocalPlayerMain.CreateDropdown(
 	end
 )
 SectionLocalPlayerMain.CreateToggle(
-	{ Title = "Auto Stats", Desc = nil, Default = Settings["Auto Stats"] or false },
+	{ Title = "Tự động cộng chỉ số", Desc = nil, Default = Settings["Auto Stats"] or false },
 	function(K)
 		spawn(function()
 			while Settings["Auto Stats"] and (task.wait(0.3)) do
@@ -10586,7 +10568,7 @@ SectionLocalPlayerMain.CreateToggle(
 )
 SectionLocalPlayerMain.CreateDropdown(
 	{
-		Title = "Select Team",
+		Title = "Chọn phe",
 		List = { "Pirate", "Marine" },
 		Search = true,
 		Selected = false,
@@ -10597,14 +10579,14 @@ SectionLocalPlayerMain.CreateDropdown(
 	end
 )
 SectionLocalPlayerMain.CreateDropdown(
-	{ Title = "Change Team", List = { "Pirates", "Marines" }, Search = true, Selected = false, Default = nil },
+	{ Title = "Đổi phe", List = { "Pirates", "Marines" }, Search = true, Selected = false, Default = nil },
 	function(K)
 		if K then
 			game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer(unpack({ [1] = "SetTeam", [2] = K }))
 		end
 	end
 )
-SectionLocalPlayerMain.CreateToggle({ Title = "Noclip", Desc = nil, Default = Settings.Noclip or false }, function(K)
+SectionLocalPlayerMain.CreateToggle({ Title = "Đi xuyên tường", Desc = nil, Default = Settings.Noclip or false }, function(K)
 	SaveSettings("Noclip", K)
 end)
 local K
@@ -10753,27 +10735,27 @@ for l, Q in next, E, nil do
 	table.insert(b, l)
 end
 SectionLocalPlayerMain.CreateDropdown(
-	{ Title = "Select Npc", List = R, Search = true, Selected = false, Default = nil },
+	{ Title = "Chọn NPC", List = R, Search = true, Selected = false, Default = nil },
 	function(l)
 		g["Select Npc"] = l
 	end
 )
-SectionLocalPlayerMain.CreateToggle({ Title = "Teleport To Npc", Desc = nil, Default = false }, function(l)
+SectionLocalPlayerMain.CreateToggle({ Title = "Dịch chuyển đến NPC", Desc = nil, Default = false }, function(l)
 	g["Teleport To Npc"] = l
 end)
 SectionLocalPlayerMain.CreateDropdown(
-	{ Title = "Select Island", List = b, Search = true, Selected = false, Default = nil },
+	{ Title = "Chọn đảo", List = b, Search = true, Selected = false, Default = nil },
 	function(l)
 		g["Select Island"] = l
 	end
 )
-SectionLocalPlayerMain.CreateToggle({ Title = "Teleport To Island", Desc = nil, Default = false }, function(l)
+SectionLocalPlayerMain.CreateToggle({ Title = "Dịch chuyển đến đảo", Desc = nil, Default = false }, function(l)
 	g["Teleport To Island"] = l
 end)
-SectionLocalPlayerMain.CreateToggle({ Title = "Teleport Mirage", Desc = nil, Default = false }, function(l)
+SectionLocalPlayerMain.CreateToggle({ Title = "Dịch chuyển đến đảo Mirage", Desc = nil, Default = false }, function(l)
 	g["Teleport Mirage"] = l
 end)
-SectionLocalPlayerMain.CreateToggle({ Title = "Teleport Prehistoric Island", Desc = nil, Default = false }, function(l)
+SectionLocalPlayerMain.CreateToggle({ Title = "Dịch chuyển đến đảo Tiền Sử", Desc = nil, Default = false }, function(l)
 	g["Teleport Prehistoric Island"] = l
 end)
 function DetectPrehistoricIsland()
@@ -14049,11 +14031,11 @@ function BringMob(Q)
 	end
 end
 task.wait(1)
-SettingFarmMain = Main.CreatePage({ Page_Name = "Setting Farm", Page_Title = "Setting Farm" })
-SettingFarmMainSection = SettingFarmMain.CreateSection("Setting Farm")
+SettingFarmMain = Main.CreatePage({ Page_Name = "Cài đặt cày", Page_Title = "Cài đặt cày" })
+SettingFarmMainSection = SettingFarmMain.CreateSection("Cài đặt cày")
 SettingFarmMainSection.CreateToggle({
-	Title = "Show Dayhub Status UI",
-	Desc = "Show what the script is doing at the top of the screen",
+	Title = "Hiện giao diện trạng thái Day Hub",
+	Desc = "Hiện what the script is doing at the top of the screen",
 	Default = getgenv().DayhubStatusUIDefault == true,
 }, function(v)
 	getgenv().SetDayhubStatusUI(v)
@@ -14063,7 +14045,7 @@ local Q, d =
 	false,
 	SettingFarmMainSection.CreateDropdown(
 		{
-			Title = "Select Weapon",
+			Title = "Chọn vũ khí",
 			List = { "Melee", "Sword", "Blox Fruit" },
 			Search = true,
 			Selected = false,
@@ -14074,14 +14056,14 @@ local Q, d =
 		end
 	)
 SettingFarmMainSection.CreateToggle(
-	{ Title = "Attack No Animation ", Desc = nil, Default = Settings["Attack No Animation "] or true },
+	{ Title = "Tấn công không hiệu ứng", Desc = nil, Default = Settings["Attack No Animation "] or true },
 	function(I)
 		SaveSettings("Attack No Animation ", I)
 	end
 )
 SettingFarmMainSection.CreateToggle(
 	{
-		Title = "Kill Aura Only Raid And Volcano",
+		Title = "Vòng sát thương chỉ trong Đột kích và Núi lửa",
 		Desc = nil,
 		Default = Settings["Kill Aura Only Raid And Volcano"] or false,
 	},
@@ -14090,13 +14072,13 @@ SettingFarmMainSection.CreateToggle(
 	end
 )
 SettingFarmMainSection.CreateSlider(
-	{ Title = "Time Delay Kill", Min = 0, Max = 5, Default = Settings["Time Delay Kill"] or 5, Precise = true },
+	{ Title = "Thời gian chờ giữa các lần diệt", Min = 0, Max = 5, Default = Settings["Time Delay Kill"] or 5, Precise = true },
 	function(I)
 		SaveSettings("Time Delay Kill", I)
 	end
 )
 SettingFarmMainSection.CreateToggle(
-	{ Title = "Auto Click", Desc = nil, Default = Settings["Auto Click"] or false },
+	{ Title = "Tự động nhấp", Desc = nil, Default = Settings["Auto Click"] or false },
 	function(I)
 		if I then
 			spawn(function()
@@ -14278,7 +14260,7 @@ do
 	end
 
 	SettingFarmMainSection.CreateToggle(
-		{ Title = "Aura T-rex", Desc = nil, Default = Settings["Aura T-rex"] or false },
+		{ Title = "Hào quang T-Rex", Desc = nil, Default = Settings["Aura T-rex"] or false },
 		function(I)
 			SaveSettings("Aura T-rex", I)
 			if I then
@@ -14290,7 +14272,7 @@ do
 	)
 end
 SettingFarmMainSection.CreateToggle(
-	{ Title = "Kill Aura With DragonStorm", Desc = nil, Default = Settings["Kill Aura With DragonStorm"] or false },
+	{ Title = "Diệt Aura With DragonStorm", Desc = nil, Default = Settings["Kill Aura With DragonStorm"] or false },
 	function(I)
 		if I and not getgenv().__DSAuraRunning then
 			getgenv().__DSAuraRunning = true
@@ -14342,7 +14324,7 @@ function FFCMatch(m, I)
 	return nil
 end
 SettingFarmMainSection.CreateToggle(
-	{ Title = "Auto Turn On Buso", Desc = nil, Default = Settings["Auto Turn On Buso"] or true },
+	{ Title = "Tự bật Haki Vũ Trang", Desc = nil, Default = Settings["Auto Turn On Buso"] or true },
 	function(m)
 		if m then
 			spawn(function()
@@ -14360,7 +14342,7 @@ SettingFarmMainSection.CreateToggle(
 	end
 )
 SettingFarmMainSection.CreateToggle(
-	{ Title = "Auto Turn On Observation", Desc = nil, Default = Settings["Auto Turn On Observation"] or false },
+	{ Title = "Tự bật Haki Quan Sát", Desc = nil, Default = Settings["Auto Turn On Observation"] or false },
 	function(m)
 		if m then
 			spawn(function()
@@ -14386,7 +14368,7 @@ function TurnOnV4()
 	end
 end
 local m = SettingFarmMainSection.CreateToggle(
-	{ Title = "Auto Turn On V4", Desc = nil, Default = Settings["Auto Turn On V4"] or false },
+	{ Title = "Tự bật V4", Desc = nil, Default = Settings["Auto Turn On V4"] or false },
 	function(I)
 		if I then
 			spawn(function()
@@ -14399,7 +14381,7 @@ local m = SettingFarmMainSection.CreateToggle(
 	end
 )
 SettingFarmMainSection.CreateToggle(
-	{ Title = "Auto Turn On V3", Desc = nil, Default = Settings["Auto Turn On V3"] or false },
+	{ Title = "Tự bật V3", Desc = nil, Default = Settings["Auto Turn On V3"] or false },
 	function(I)
 		if I then
 			spawn(function()
@@ -14413,7 +14395,7 @@ SettingFarmMainSection.CreateToggle(
 	end
 )
 SettingFarmMainSection.CreateToggle(
-	{ Title = "Auto Dodge Skill Mobs", Desc = nil, Default = Settings["Auto Dodge Skill Mobs"] or false },
+	{ Title = "Tự né kỹ năng của quái", Desc = nil, Default = Settings["Auto Dodge Skill Mobs"] or false },
 	function(I)
 		SaveSettings("Auto Dodge Skill Mobs", I)
 	end
@@ -14451,20 +14433,20 @@ game:GetService("Workspace").Enemies.DescendantAdded:Connect(function(descendant
 	end
 end)
 SettingFarmMainSection.CreateToggle(
-	{ Title = "Teleport Y if low health", Desc = nil, Default = Settings["Teleport Y"] or false },
+	{ Title = "Dịch chuyển lên cao khi ít máu", Desc = nil, Default = Settings["Teleport Y"] or false },
 	function(I)
 		SaveSettings("Teleport Y", I)
 	end
 )
 SettingFarmMainSection.CreateSlider(
-	{ Title = "% Health Player", Min = 0, Max = 100, Default = Settings["% Health Player"] or 40, Precise = true },
+	{ Title = "Phần trăm máu người chơi", Min = 0, Max = 100, Default = Settings["% Health Player"] or 40, Precise = true },
 	function(I)
 		SaveSettings("% Health Player", I)
 	end
 )
 SettingFarmMainSection.CreateSlider(
 	{
-		Title = "Distance Teleport Y",
+		Title = "Độ cao dịch chuyển Y",
 		Min = 0,
 		Max = 10000,
 		Default = Settings["Distance Teleport Y"] or 800,
@@ -14475,7 +14457,7 @@ SettingFarmMainSection.CreateSlider(
 	end
 )
 SettingFarmMainSection.CreateToggle(
-	{ Title = "Tween Safe if have Items", Desc = nil, Default = Settings["Tween Safe if have Items"] or false },
+	{ Title = "Di chuyển an toàn khi có vật phẩm", Desc = nil, Default = Settings["Tween Safe if have Items"] or false },
 	function(I)
 		if I then
 			spawn(function()
@@ -14505,45 +14487,45 @@ SettingFarmMainSection.CreateToggle(
 	end
 )
 SettingFarmMainSection.CreateSlider(
-	{ Title = "Time Hop Server", Min = 0, Max = 60, Default = Settings["Time Hop Server"] or 10, Precise = true },
+	{ Title = "Thời gian đổi máy chủ", Min = 0, Max = 60, Default = Settings["Time Hop Server"] or 10, Precise = true },
 	function(I)
 		SaveSettings("Time Hop Server", I)
 	end
 )
 SettingFarmMainSection.CreateToggle(
-	{ Title = "Use Portal Teleport", Desc = nil, Default = Settings["Use Portal Teleport"] or false },
+	{ Title = "Dùng cổng để dịch chuyển", Desc = nil, Default = Settings["Use Portal Teleport"] or false },
 	function(I)
 		SaveSettings("Use Portal Teleport", I)
 	end
 )
 SettingFarmMainSection.CreateSlider(
-	{ Title = "Bring Mob Count", Min = 2, Max = 6, Default = Settings["Bring Mob Count"] or 2, Precise = true },
+	{ Title = "Số lượng quái kéo về", Min = 2, Max = 6, Default = Settings["Bring Mob Count"] or 2, Precise = true },
 	function(I)
 		SaveSettings("Bring Mob Count", I)
 	end
 )
 SettingFarmMainSection.CreateToggle(
-	{ Title = "Bring Mob", Desc = nil, Default = Settings["Bring Mob"] or true },
+	{ Title = "Kéo quái", Desc = nil, Default = Settings["Bring Mob"] or true },
 	function(I)
 		SaveSettings("Bring Mob", I)
 	end
 )
 SettingFarmMainSection.CreateToggle(
-	{ Title = "Reset Teleport [ Beta ]", Desc = nil, Default = Settings["Reset Teleport"] or false },
+	{ Title = "Đặt lại dịch chuyển [Thử nghiệm]", Desc = nil, Default = Settings["Reset Teleport"] or false },
 	function(I)
 		SaveSettings("Reset Teleport", I)
 	end
 )
 SettingFarmMainSection.CreateToggle(
-	{ Title = "Use Submarine Teleport", Desc = nil, Default = Settings["Use Submarine Teleport"] or false },
+	{ Title = "Dùng tàu ngầm để dịch chuyển", Desc = nil, Default = Settings["Use Submarine Teleport"] or false },
 	function(I)
 		SaveSettings("Use Submarine Teleport", I)
 	end
 )
 SettingFarmMainSection.CreateToggle(
 	{
-		Title = "Use Boat Tween",
-		Desc = "Tween xa: mua GrandBrigade o Boat Dealer gan nhat, lai thuyen toi cach dich 500 stud roi nhay xuong. Toc do thuyen = Value Speed Tween Boat",
+		Title = "Di chuyển bằng thuyền",
+		Desc = "Tween xa: mua GrandBrigade o Thuyền Dealer gan nhat, lai thuyen toi cach dich 500 stud roi nhay xuong. Toc do thuyen = Value Tốc độ di chuyểnBoat",
 		Default = Settings["Use Boat Tween"] or false,
 	},
 	function(I)
@@ -14554,17 +14536,17 @@ SettingFarmMainSection.CreateToggle(
 	end
 )
 SettingFarmMainSection.CreateSlider(
-	{ Title = "Speed Tween ", Min = 0, Max = 1000, Default = Settings["Speed Tween "] or 300, Precise = true },
+	{ Title = "Tốc độ di chuyển", Min = 0, Max = 1000, Default = Settings["Speed Tween "] or 300, Precise = true },
 	function(I)
 		SaveSettings("Speed Tween ", I)
 	end
 )
 SettingFarmMainSection.CreateLabel({
-	Title = "Recommended: 350. If you\226\128\153re farming spots close to each other, use a higher speed",
+	Title = "Recommended: 350. If you\226\128\153re farming spots close to each other, Dùng a higher Tốc độ",
 })
 SettingSkillMain =
-	Main.CreatePage({ Page_Name = "Hold and Select Skill", Page_Title = "Setting Hold and Select Skill" })
-SelectSkillsSection = SettingSkillMain.CreateSection("Select Skills")
+	Main.CreatePage({ Page_Name = "Giữ và chọn kỹ năng", Page_Title = "Cài đặt Hold and Chọn Kỹ năng" })
+SelectSkillsSection = SettingSkillMain.CreateSection("Chọn kỹ năng")
 local function I(_, o)
 	local V, N = "Select Skills " .. _, {}
 	for y, y in ipairs(o) do
@@ -14583,7 +14565,7 @@ I("Melee", { "Z", "X", "C" })
 I("Sword", { "Z", "X" })
 I("Gun", { "Z", "X" })
 I("Blox Fruit", { "Z", "X", "C", "V", "F" })
-HoldSkillsSection = SettingSkillMain.CreateSection("Hold Skills")
+HoldSkillsSection = SettingSkillMain.CreateSection("Giữ kỹ năng")
 local function _(o, V)
 	local N = {}
 	for y, y in ipairs(V) do
@@ -14596,14 +14578,14 @@ local function _(o, V)
 			Precise = true,
 		}
 	end
-	HoldSkillsSection.CreateDropdown({ Title = "Set Delay " .. o, List = N, Slider = true }, function(V, V)
+	HoldSkillsSection.CreateDropdown({ Title = "Đặt thời gian chờ" .. o, List = N, Slider = true }, function(V, V)
 		if V and V.KeyName then
 			SaveSettings("Skill " .. V.KeyName .. " " .. o, V.Default)
 		end
 	end)
 end
 HoldSkillsSection.CreateToggle(
-	{ Title = "Use skill fast dont hold", Desc = nil, Default = Settings["Use skill fast dont hold"] or false },
+	{ Title = "Dùng kỹ năng nhanh, không giữ", Desc = nil, Default = Settings["Use skill fast dont hold"] or false },
 	function(o)
 		SaveSettings("Use skill fast dont hold", o)
 	end
@@ -14926,11 +14908,11 @@ do
 		running = false
 	end
 end
-FarmMain = Main.CreatePage({ Page_Name = "Farming", Page_Title = "Farming" })
-SettingAutoFarmSection = FarmMain.CreateSection("Setting Farm")
+FarmMain = Main.CreatePage({ Page_Name = "Cày tự động", Page_Title = "Cày tự động" })
+SettingAutoFarmSection = FarmMain.CreateSection("Cài đặt cày")
 SettingAutoFarmSection.CreateDropdown(
 	{
-		Title = "Select Method Farm",
+		Title = "Chọn cách cày",
 		List = { "Level Farm", "Farm Bones", "Farm Katakuri", "Farm Tyrant of the Skies", "Aura Farm" },
 		Search = false,
 		Selected = false,
@@ -14942,7 +14924,7 @@ SettingAutoFarmSection.CreateDropdown(
 )
 SettingAutoFarmSection.CreateSlider(
 	{
-		Title = "Distance Farm Aura",
+		Title = "Khoảng cách cày bằng hào quang",
 		Min = 0,
 		Max = 1000,
 		Default = Settings["Distance Farm Aura"] or 300,
@@ -14953,20 +14935,20 @@ SettingAutoFarmSection.CreateSlider(
 	end
 )
 SettingAutoFarmSection.CreateToggle(
-	{ Title = "Ignore Attack Katakuri", Desc = nil, Default = Settings["Ignore Attack Katakuri"] or false },
+	{ Title = "Bỏ qua tấn công Katakuri", Desc = nil, Default = Settings["Ignore Attack Katakuri"] or false },
 	function(o)
 		SaveSettings("Ignore Attack Katakuri", o)
 	end
 )
 SettingAutoFarmSection.CreateToggle(
-	{ Title = "Hop Find Katakuri", Desc = nil, Default = Settings["Hop Find Katakuri"] or false },
+	{ Title = "Đổi máy chủ tìm Katakuri", Desc = nil, Default = Settings["Hop Find Katakuri"] or false },
 	function(o)
 		SaveSettings("Hop Find Katakuri", o)
 	end
 )
 SettingAutoFarmSection.CreateToggle(
 	{
-		Title = "Auto Quest [Katakuri/Bone/Tyrant]",
+		Title = "Tự động Nhiệm vụ [Katakuri/Xương/Tyrant]",
 		Desc = nil,
 		Default = Settings["Auto Quest [Katakuri/Bone/Tyrant]"] or false,
 	},
@@ -14975,13 +14957,13 @@ SettingAutoFarmSection.CreateToggle(
 	end
 )
 local o = SettingAutoFarmSection.CreateToggle(
-	{ Title = "Start Farm", Desc = nil, Default = Settings["Start Farm"] or false },
+	{ Title = "Bắt đầu cày", Desc = nil, Default = Settings["Start Farm"] or false },
 	function(V)
 		SaveSettings("Start Farm", V)
 	end
 )
 getgenv().BuddhaFarmToggle = SettingAutoFarmSection.CreateToggle(
-	{ Title = "Use Buddha with farming", Desc = nil, Default = Settings["Use Buddha with farming"] or false },
+	{ Title = "Dùng Phật khi cày", Desc = nil, Default = Settings["Use Buddha with farming"] or false },
 	function(V)
 		SaveSettings("Use Buddha with farming", V)
 		if not V then
@@ -14997,7 +14979,7 @@ getgenv().BuddhaFarmToggle = SettingAutoFarmSection.CreateToggle(
 			local fruit = getgenv().BuddhaCurrentFruit()
 			if fruit ~= "Buddha-Buddha" then
 				A.CreateNoti({
-					Title = "Tam Notification",
+					Title = "Thông báo Tâm",
 					Desc = fruit and ("Player is using fruit " .. fruit .. ", not Buddha")
 						or "Player has no fruit equipped, not Buddha",
 					ShowTime = 5,
@@ -15010,10 +14992,10 @@ getgenv().BuddhaFarmToggle = SettingAutoFarmSection.CreateToggle(
 		end)
 	end
 )
-MasteryFarmSection = FarmMain.CreateSection("Mastery Farm")
+MasteryFarmSection = FarmMain.CreateSection("Cày thông thạo")
 MasteryFarmSection.CreateDropdown(
 	{
-		Title = "Select Method Farm Mastery",
+		Title = "Chọn cách cày thông thạo",
 		List = { "Blox Fruit", "Gun" },
 		Search = true,
 		Selected = false,
@@ -15024,24 +15006,24 @@ MasteryFarmSection.CreateDropdown(
 	end
 )
 MasteryFarmSection.CreateSlider(
-	{ Title = "Health %", Min = 0, Max = 100, Default = Settings["Health %"] or 40, Precise = true },
+	{ Title = "Phần trăm máu", Min = 0, Max = 100, Default = Settings["Health %"] or 40, Precise = true },
 	function(V)
 		SaveSettings("Health %", V)
 	end
 )
 MasteryFarmSection.CreateToggle(
-	{ Title = "Farm Mastery", Desc = nil, Default = Settings["Farm Mastery"] or false },
+	{ Title = "Cày thông thạo", Desc = nil, Default = Settings["Farm Mastery"] or false },
 	function(V)
 		SaveSettings("Farm Mastery", V)
 		if V and not Settings["Start Farm"] then
-			A.CreateNoti({ Title = "Tam Notification", Desc = "Turn On Start Farm Plz", ShowTime = 5 })
+			A.CreateNoti({ Title = "Thông báo Tâm", Desc = "Turn On Bắt đầu cày Plz", ShowTime = 5 })
 		end
 	end
 )
-FarmingMaterialSection = FarmMain.CreateSection("Farming Material")
+FarmingMaterialSection = FarmMain.CreateSection("Cày nguyên liệu")
 FarmingMaterialSection.CreateDropdown(
 	{
-		Title = "Select Material",
+		Title = "Chọn nguyên liệu",
 		List = TableMaterials,
 		Search = true,
 		Selected = false,
@@ -15052,11 +15034,11 @@ FarmingMaterialSection.CreateDropdown(
 	end
 )
 FarmingMaterialSection.CreateToggle(
-	{ Title = "Farm Material", Desc = nil, Default = Settings["Farm Material"] or false },
+	{ Title = "Cày nguyên liệu", Desc = nil, Default = Settings["Farm Material"] or false },
 	function(V)
 		SaveSettings("Farm Material", V)
 		if V and not Settings["Start Farm"] then
-			A.CreateNoti({ Title = "Tam Notification", Desc = "Turn On Start Farm Plz", ShowTime = 5 })
+			A.CreateNoti({ Title = "Thông báo Tâm", Desc = "Turn On Bắt đầu cày Plz", ShowTime = 5 })
 		end
 	end
 )
@@ -15959,16 +15941,16 @@ spawn(function()
 		end
 	end
 end)
-stackFarmMain = Main.CreatePage({ Page_Name = "Stack Farming", Page_Title = "Stack Farming" })
-AutoWorldSection = stackFarmMain.CreateSection("Auto World")
+stackFarmMain = Main.CreatePage({ Page_Name = "Cày kết hợp", Page_Title = "Stack Cày tự động" })
+AutoWorldSection = stackFarmMain.CreateSection("Tự động chuyển thế giới")
 AutoWorldSection.CreateToggle(
-	{ Title = "Auto New World", Desc = nil, Default = Settings["Auto New World"] or false },
+	{ Title = "Tự sang Biển 2", Desc = nil, Default = Settings["Auto New World"] or false },
 	function(f)
 		SaveSettings("Auto New World", f)
 	end
 )
 AutoWorldSection.CreateToggle(
-	{ Title = "Auto Third World", Desc = nil, Default = Settings["Auto Third World"] or false },
+	{ Title = "Tự sang Biển 3", Desc = nil, Default = Settings["Auto Third World"] or false },
 	function(f)
 		SaveSettings("Auto Third World", f)
 	end
@@ -16041,10 +16023,10 @@ function getGift()
 		end
 	end
 end
-StackDevilFruitSection = stackFarmMain.CreateSection("Devil Fruit")
+StackDevilFruitSection = stackFarmMain.CreateSection("Ác Quỷ Trái")
 StackDevilFruitSection.CreateToggle(
 	{
-		Title = "Collect Chest When Server Spawn\10God's Chalice or Fist of Darkness",
+		Title = "Nhặt Rương When Máy chủ Spawn\10God's Chalice or Fist of Darkness",
 		Desc = nil,
 		Default = Settings["Collect Chest When Server Spawn God's Chalice or Fist of Darkness"] or false,
 	},
@@ -16053,14 +16035,14 @@ StackDevilFruitSection.CreateToggle(
 	end
 )
 StackDevilFruitSection.CreateToggle(
-	{ Title = "Teleport To Fruit", Desc = nil, Default = Settings["Teleport To Fruit"] or false },
+	{ Title = "Dịch chuyển đến trái", Desc = nil, Default = Settings["Teleport To Fruit"] or false },
 	function(f)
 		SaveSettings("Teleport To Fruit", f)
 	end
 )
 StackDevilFruitSection.CreateToggle(
 	{
-		Title = "Teleport To Fruit [ Hop Server ]",
+		Title = "Dịch chuyển đến trái [Đổi máy chủ]",
 		Desc = nil,
 		Default = Settings["Teleport To Fruit [ Hop Server ]"] or false,
 	},
@@ -16068,30 +16050,30 @@ StackDevilFruitSection.CreateToggle(
 		SaveSettings("Teleport To Fruit [ Hop Server ]", f)
 	end
 )
-EventGameSection = stackFarmMain.CreateSection("Event Game")
+EventGameSection = stackFarmMain.CreateSection("Sự kiện trò chơi")
 EventGameSection.CreateToggle(
-	{ Title = "Auto Factory", Desc = nil, Default = Settings["Auto Factory"] or false },
+	{ Title = "Tự động Nhà Máy", Desc = nil, Default = Settings["Auto Factory"] or false },
 	function(f)
 		SaveSettings("Auto Factory", f)
 	end
 )
 EventGameSection.CreateToggle(
-	{ Title = "Auto Pirate Raid", Desc = nil, Default = Settings["Auto Pirate Raid"] or false },
+	{ Title = "Tự động Đột kích Hải Tặc", Desc = nil, Default = Settings["Auto Pirate Raid"] or false },
 	function(f)
 		SaveSettings("Auto Pirate Raid", f)
 	end
 )
-BossRipIndraSection = stackFarmMain.CreateSection("Boss Rip Indra")
+BossRipIndraSection = stackFarmMain.CreateSection("Trùm Rip Indra")
 BossRipIndraSection.CreateToggle(
-	{ Title = "Auto Elite Hunter", Desc = nil, Default = Settings["Auto Elite Hunter"] or false },
+	{ Title = "Tự động săn Elite", Desc = nil, Default = Settings["Auto Elite Hunter"] or false },
 	function(f)
 		SaveSettings("Auto Elite Hunter", f)
 	end
 )
 BossRipIndraSection.CreateToggle(
 	{
-		Title = "Hop Server Elite Hunter",
-		Desc = "Hop khi khong co Elite / Chen (God's Chalice) / rip_indra",
+		Title = "Đổi máy chủ săn Elite",
+		Desc = "Đổi máy chủ khi khong co Elite / Chen (God's Chalice) / rip_indra",
 		Default = Settings["Hop Server Elite Hunter"] or false,
 	},
 	function(f)
@@ -16099,51 +16081,51 @@ BossRipIndraSection.CreateToggle(
 	end
 )
 BossRipIndraSection.CreateToggle(
-	{ Title = "Auto Touch Pad Haki", Desc = nil, Default = Settings["Auto Touch Pad Haki"] or false },
+	{ Title = "Tự chạm nút Haki", Desc = nil, Default = Settings["Auto Touch Pad Haki"] or false },
 	function(f)
 		SaveSettings("Auto Touch Pad Haki", f)
 	end
 )
 BossRipIndraSection.CreateToggle(
-	{ Title = "Auto Summon Rip Indra", Desc = nil, Default = Settings["Auto Summon Rip Indra"] or false },
+	{ Title = "Tự triệu hồi Rip Indra", Desc = nil, Default = Settings["Auto Summon Rip Indra"] or false },
 	function(f)
 		SaveSettings("Auto Summon Rip Indra", f)
 	end
 )
 BossRipIndraSection.CreateToggle(
-	{ Title = "Attack Rip Indra", Desc = nil, Default = Settings["Attack Rip Indra"] or false },
+	{ Title = "Tấn công Rip Indra", Desc = nil, Default = Settings["Attack Rip Indra"] or false },
 	function(f)
 		SaveSettings("Attack Rip Indra", f)
 	end
 )
-BossSoulReaperSection = stackFarmMain.CreateSection("Boss Soul Reaper")
+BossSoulReaperSection = stackFarmMain.CreateSection("Trùm Soul Reaper")
 BossSoulReaperSection.CreateToggle(
-	{ Title = "Attack Soul Reaper", Desc = nil, Default = Settings["Attack Soul Reaper"] or false },
+	{ Title = "Tấn công Soul Reaper", Desc = nil, Default = Settings["Attack Soul Reaper"] or false },
 	function(f)
 		SaveSettings("Attack Soul Reaper", f)
 	end
 )
 BossSoulReaperSection.CreateToggle(
-	{ Title = "Summon Soul Reaper", Desc = nil, Default = Settings["Summon Soul Reaper"] or false },
+	{ Title = "Triệu hồi Soul Reaper", Desc = nil, Default = Settings["Summon Soul Reaper"] or false },
 	function(f)
 		if f and not Settings["Attack Soul Reaper"] then
-			A.CreateNoti({ Title = "Tam Notification", Desc = "Turn On Attack Soul Reaper Plz", ShowTime = 5 })
+			A.CreateNoti({ Title = "Thông báo Tâm", Desc = "Turn On Tấn công Soul Reaper Plz", ShowTime = 5 })
 		end
 		SaveSettings("Summon Soul Reaper", f)
 	end
 )
-BossDoughKingSection = stackFarmMain.CreateSection("Boss Dough King")
+BossDoughKingSection = stackFarmMain.CreateSection("Trùm Dough King")
 BossDoughKingSection.CreateToggle(
-	{ Title = "Attack Dough King", Desc = nil, Default = Settings["Attack Dough King"] or false },
+	{ Title = "Tấn công Dough King", Desc = nil, Default = Settings["Attack Dough King"] or false },
 	function(f)
 		SaveSettings("Attack Dough King", f)
 	end
 )
 BossDoughKingSection.CreateToggle(
-	{ Title = "Summon Dough King", Desc = nil, Default = Settings["Summon Dough King"] or false },
+	{ Title = "Triệu hồi Dough King", Desc = nil, Default = Settings["Summon Dough King"] or false },
 	function(f)
 		if f and not Settings["Attack Dough King"] then
-			A.CreateNoti({ Title = "Tam Notification", Desc = "Turn On Attack Dough King Plz", ShowTime = 5 })
+			A.CreateNoti({ Title = "Thông báo Tâm", Desc = "Turn On Tấn công Dough King Plz", ShowTime = 5 })
 		end
 		if f then
 			spawn(function()
@@ -16158,35 +16140,35 @@ BossDoughKingSection.CreateToggle(
 	end
 )
 BossDoughKingSection.CreateToggle(
-	{ Title = "Hop Find Dough King", Desc = nil, Default = Settings["Hop Find Dough King"] or false },
+	{ Title = "Đổi máy chủ tìm Dough King", Desc = nil, Default = Settings["Hop Find Dough King"] or false },
 	function(f)
 		if f and not Settings["Attack Dough King"] then
-			A.CreateNoti({ Title = "Tam Notification", Desc = "Turn On Attack Dough King Plz", ShowTime = 5 })
+			A.CreateNoti({ Title = "Thông báo Tâm", Desc = "Turn On Tấn công Dough King Plz", ShowTime = 5 })
 		end
 		SaveSettings("Hop Find Dough King", f)
 	end
 )
-BossDarkbeardSection = stackFarmMain.CreateSection("Boss Darkbeard")
+BossDarkbeardSection = stackFarmMain.CreateSection("Trùm Darkbeard")
 BossDarkbeardSection.CreateToggle(
-	{ Title = "Attack Darkbeard", Desc = nil, Default = Settings["Attack Darkbeard"] or false },
+	{ Title = "Tấn công Darkbeard", Desc = nil, Default = Settings["Attack Darkbeard"] or false },
 	function(f)
 		SaveSettings("Attack Darkbeard", f)
 	end
 )
 BossDarkbeardSection.CreateToggle(
-	{ Title = "Summon Darkbeard", Desc = nil, Default = Settings["Summon Darkbeard"] or false },
+	{ Title = "Triệu hồi Darkbeard", Desc = nil, Default = Settings["Summon Darkbeard"] or false },
 	function(f)
 		if f and not Settings["Attack Darkbeard"] then
-			A.CreateNoti({ Title = "Tam Notification", Desc = "Turn On Attack Darkbeard Plz", ShowTime = 5 })
+			A.CreateNoti({ Title = "Thông báo Tâm", Desc = "Turn On Tấn công Darkbeard Plz", ShowTime = 5 })
 		end
 		SaveSettings("Summon Darkbeard", f)
 	end
 )
 BossDarkbeardSection.CreateToggle(
-	{ Title = "Hop Find Darkbeard", Desc = nil, Default = Settings["Hop Find Darkbeard"] or false },
+	{ Title = "Đổi máy chủ tìm Darkbeard", Desc = nil, Default = Settings["Hop Find Darkbeard"] or false },
 	function(f)
 		if f and not Settings["Attack Darkbeard"] then
-			A.CreateNoti({ Title = "Tam Notification", Desc = "Turn On Attack Darkbeard Plz", ShowTime = 5 })
+			A.CreateNoti({ Title = "Thông báo Tâm", Desc = "Turn On Tấn công Darkbeard Plz", ShowTime = 5 })
 		end
 		SaveSettings("Hop Find Darkbeard", f)
 	end
@@ -17021,7 +17003,7 @@ task.spawn(function()
 										return
 									else
 										A.CreateNoti({
-											Title = "Tam Notification",
+											Title = "Thông báo Tâm",
 											Desc = "Waiting Elite Hunter",
 											ShowTime = 5,
 										})
@@ -17186,7 +17168,7 @@ task.spawn(function()
 		end
 	end
 end)
-FarmotherMain = Main.CreatePage({ Page_Name = "Farming Other", Page_Title = "Farming Other" })
+FarmotherMain = Main.CreatePage({ Page_Name = "Cày khác", Page_Title = "Cày tự động Other" })
 
 do
 	localPlayer = t or game.Players.LocalPlayer
@@ -17229,7 +17211,7 @@ do
 		end
 		if A and A.CreateNoti then
 			pcall(function()
-				A.CreateNoti({ Title = "Tam Notification", Desc = text, ShowTime = (extra and extra.Duration) or 5 })
+				A.CreateNoti({ Title = "Thông báo Tâm", Desc = text, ShowTime = (extra and extra.Duration) or 5 })
 			end)
 		else
 			pcall(function()
@@ -17341,11 +17323,11 @@ do
 end
 
 
-HiddenEventSection = FarmotherMain.CreateSection("Secret Quest")
-StatusHiddenProgress = HiddenEventSection.CreateLabel({ Title = "Secret Quest : 0/39 Quests" })
-StatusHiddenQuest = HiddenEventSection.CreateLabel({ Title = "Title Quest : ..." })
-StatusHiddenStep = HiddenEventSection.CreateLabel({ Title = "Doing Quest : None" })
-StatusHiddenBoss = HiddenEventSection.CreateLabel({ Title = "Title Awakened Boss : None" })
+HiddenEventSection = FarmotherMain.CreateSection("Nhiệm vụ bí mật")
+StatusHiddenProgress = HiddenEventSection.CreateLabel({ Title = "Nhiệm vụ bí mật: 0/39" })
+StatusHiddenQuest = HiddenEventSection.CreateLabel({ Title = "Danh hiệu nhiệm vụ: ..." })
+StatusHiddenStep = HiddenEventSection.CreateLabel({ Title = "Nhiệm vụ đang làm: Không có" })
+StatusHiddenBoss = HiddenEventSection.CreateLabel({ Title = "Danh hiệu trùm thức tỉnh: Không có" })
 
 
 	HiddenEvent = {
@@ -23286,8 +23268,8 @@ StatusHiddenBoss = HiddenEventSection.CreateLabel({ Title = "Title Awakened Boss
 
 
 HiddenEventSection.CreateToggle({
-	Title = "Hop Server For Secret Quest",
-	Desc = "Hop khi không có quest / giờ chết",
+	Title = "Đổi máy chủ For Nhiệm vụ bí mật",
+	Desc = "Đổi máy chủ khi không có Nhiệm vụ / giờ chết",
 	Default = Settings["Hop Server For Secret Quest"] or false,
 }, function(v)
 	SaveSettings("Hop Server For Secret Quest", v)
@@ -23298,8 +23280,8 @@ if Settings["Hidden Hop Dead Hour"] == nil then
 end
 
 HiddenEventSection.CreateToggle({
-	Title = "Auto Secret Quest",
-	Desc = "Auto complete 39 Sea 1 secret quests (Hidden Event)",
+	Title = "Tự làm nhiệm vụ bí mật",
+	Desc = "Tự động complete 39 Sea 1 secret quests (Hidden Event)",
 	Default = Settings["Auto Secret Quest"] or false,
 }, function(arg)
 	if arg and not Place_Id.sea1() then
@@ -23564,9 +23546,9 @@ function BuyMeleeGate(melee)
 end
 
 print("[BananaCat] Secret Quest (39) module loaded — section ở đầu Farming Other")
-FishingSection = FarmotherMain.CreateSection("Fishing")
+FishingSection = FarmotherMain.CreateSection("Câu cá")
 FishingSection.CreateToggle(
-	{ Title = "Change Size Reel", Desc = nil, Default = Settings["Change Size Reel"] or false },
+	{ Title = "Đổi Size Reel", Desc = nil, Default = Settings["Change Size Reel"] or false },
 	function(V)
 		if V then
 			spawn(function()
@@ -23585,7 +23567,7 @@ FishingSection.CreateToggle(
 )
 FishingSection.CreateToggle(
 	{
-		Title = "Auto Slap Battle",
+		Title = "Tự động Slap Battle",
 		Desc = "There\226\128\153s still a chance of a misclick",
 		Default = Settings["Auto Slap Battle"] or false,
 	},
@@ -23651,7 +23633,7 @@ if _ then
 	)
 end
 LocalPositionPlantSeed = FishingSection.CreateLabel({ Title = R })
-FishingSection.CreateButton({ Title = "Save Position Fishing" }, function()
+FishingSection.CreateButton({ Title = "Lưu vị trí câu cá" }, function()
 	local _ = t.Character and (t.Character:FindFirstChild("HumanoidRootPart"))
 	if not _ then
 		return
@@ -23676,7 +23658,7 @@ for _, V in next, require(game:GetService("ReplicatedStorage").FishReplicated.Ba
 	table.insert(a, _)
 end
 FishingSection.CreateDropdown(
-	{ Title = "Select Bait", List = a, Search = true, Selected = false, Default = Settings["Select Bait"] or nil },
+	{ Title = "Chọn mồi câu", List = a, Search = true, Selected = false, Default = Settings["Select Bait"] or nil },
 	function(_)
 		SaveSettings("Select Bait", _)
 	end
@@ -23829,10 +23811,10 @@ if okz and typeof(execc) == "string" then
 	end
 end
 ElevateIdentity()
-StatusFishingLabel = FishingSection.CreateLabel({ Title = "Status Fishing :" })
+StatusFishingLabel = FishingSection.CreateLabel({ Title = "Trạng thái câu cá:" })
 FishingSection.CreateToggle(
 	{
-		Title = "Auto Tween To Event Fishing Spot",
+		Title = "Tự động Tween To Event Câu cá Spot",
 		Desc = nil,
 		Default = Settings["Auto Tween To Event Fishing Spot"] or false,
 	},
@@ -23851,7 +23833,7 @@ function CheckChestplr()
 	return X
 end
 FishingSection.CreateToggle(
-	{ Title = "Auto Fishing", Desc = nil, Default = Settings["Auto Fishing"] or false },
+	{ Title = "Tự động câu cá", Desc = nil, Default = Settings["Auto Fishing"] or false },
 	function(X)
 		if X then
 			spawn(function()
@@ -23933,7 +23915,7 @@ FishingSection.CreateToggle(
 )
 local X = require(game.ReplicatedStorage.JobsReplicated)
 FishingSection.CreateToggle(
-	{ Title = "Auto Sell Fishing", Desc = nil, Default = Settings["Auto Sell Fishing"] or false },
+	{ Title = "Tự bán cá", Desc = nil, Default = Settings["Auto Sell Fishing"] or false },
 	function(_)
 		if _ then
 			spawn(function()
@@ -23951,7 +23933,7 @@ FishingSection.CreateToggle(
 	end
 )
 FishingSection.CreateToggle(
-	{ Title = "Auto Open Chest", Desc = nil, Default = Settings["Auto Open Chest"] or false },
+	{ Title = "Tự mở rương", Desc = nil, Default = Settings["Auto Open Chest"] or false },
 	function(_)
 		if _ then
 			spawn(function()
@@ -24001,7 +23983,7 @@ function DetectQuestFishing()
 end
 FishingSection.CreateDropdown(
 	{
-		Title = "Select Quest Fishing",
+		Title = "Chọn nhiệm vụ câu cá",
 		List = PrepareMultiSelectList(_, Settings["Select Quest Fishing"]),
 		Search = true,
 		Selected = true,
@@ -24012,7 +23994,7 @@ FishingSection.CreateDropdown(
 	end
 )
 FishingSection.CreateToggle(
-	{ Title = "Auto Accept Quest Fishing", Desc = nil, Default = Settings["Auto Accept Quest Fishing"] or false },
+	{ Title = "Tự nhận nhiệm vụ câu cá", Desc = nil, Default = Settings["Auto Accept Quest Fishing"] or false },
 	function(_)
 		if _ then
 			spawn(function()
@@ -24048,7 +24030,7 @@ FishingSection.CreateToggle(
 		SaveSettings("Auto Accept Quest Fishing", _)
 	end
 )
-QuestDragonSection = FarmotherMain.CreateSection("Quest Dragon")
+QuestDragonSection = FarmotherMain.CreateSection("Nhiệm vụ Rồng")
 function QuestDojoTrainer()
 	return game:GetService("ReplicatedStorage")
 		:WaitForChild("Modules")
@@ -24056,7 +24038,7 @@ function QuestDojoTrainer()
 		:WaitForChild("RF/InteractDragonQuest")
 		:InvokeServer(unpack({ [1] = { NPC = "Dojo Trainer", Command = "RequestQuest" } }))
 end
-AttackAllMobSection = FarmotherMain.CreateSection("Attack All Mobs")
+AttackAllMobSection = FarmotherMain.CreateSection("Tấn công tất cả quái")
 function DetectAllMob()
 	local X, _, V = next, game:GetService("Workspace").Enemies:GetChildren()
 	for y, y in X, _, V do
@@ -24072,7 +24054,7 @@ function DetectAllMob()
 	end
 end
 AttackAllMobSection.CreateToggle(
-	{ Title = "Auto Attack All Mob and Boss", Desc = nil, Default = Settings["Auto Attack All Mob and Boss"] or false },
+	{ Title = "Tự tấn công tất cả quái và trùm", Desc = nil, Default = Settings["Auto Attack All Mob and Boss"] or false },
 	function(X)
 		spawn(function()
 			while Settings["Auto Attack All Mob and Boss"] and (wait()) do
@@ -24212,7 +24194,7 @@ function AutoQuestDojo()
 				getgenv().QuestTrainer = { BeltName = "Red", CountKillMob = 0 }
 			else
 				A.CreateNoti({
-					Title = "Tam Notification",
+					Title = "Thông báo Tâm",
 					Desc = "That's enough training for today... Come back tomorrow and we can continue.\10 or dont support Belt Currently",
 					ShowTime = 5,
 				})
@@ -24447,7 +24429,7 @@ function AutoQuestDojo()
 	end
 end
 QuestDragonSection.CreateToggle(
-	{ Title = "Auto Quest Dojo Trainer", Desc = nil, Default = Settings["Auto Quest Dojo Trainer"] or false },
+	{ Title = "Tự làm nhiệm vụ Võ Đường", Desc = nil, Default = Settings["Auto Quest Dojo Trainer"] or false },
 	function(y)
 		if y then
 			spawn(function()
@@ -24699,7 +24681,7 @@ function AutoDragonHunter()
 	end
 end
 QuestDragonSection.CreateToggle(
-	{ Title = "Auto Quest Dragon Hunter", Desc = nil, Default = Settings["Auto Quest Dragon Hunter"] or false },
+	{ Title = "Tự làm nhiệm vụ Thợ Săn Rồng", Desc = nil, Default = Settings["Auto Quest Dragon Hunter"] or false },
 	function(y)
 		if y then
 			spawn(function()
@@ -24813,15 +24795,15 @@ function GetCFrameSpawnBerry()
 	end
 	return C
 end
-BerrySection = FarmotherMain.CreateSection("Berry")
+BerrySection = FarmotherMain.CreateSection("Quả mọng")
 BerrySection.CreateToggle(
-	{ Title = "Hop Find Berry", Desc = nil, Default = Settings["Hop Find Berry"] or false },
+	{ Title = "Đổi máy chủ tìm quả mọng", Desc = nil, Default = Settings["Hop Find Berry"] or false },
 	function(y)
 		SaveSettings("Hop Find Berry", y)
 	end
 )
 BerrySection.CreateToggle(
-	{ Title = "Auto Collect Berry", Desc = nil, Default = Settings["Auto Collect Berry"] or false },
+	{ Title = "Tự nhặt quả mọng", Desc = nil, Default = Settings["Auto Collect Berry"] or false },
 	function(y)
 		if y then
 			spawn(function()
@@ -24840,7 +24822,7 @@ BerrySection.CreateToggle(
 								end
 							end
 						else
-							A.CreateNoti({ Title = "Tam Notification", Desc = "Waiting Berry spawn", ShowTime = 5 })
+							A.CreateNoti({ Title = "Thông báo Tâm", Desc = "Waiting Quả mọng spawn", ShowTime = 5 })
 							if Settings["Hop Find Berry"] then
 								HopServer()
 							end
@@ -24853,10 +24835,10 @@ BerrySection.CreateToggle(
 		SaveSettings("Auto Collect Berry", y)
 	end
 )
-FarmChestSection = FarmotherMain.CreateSection("Farm Chest")
+FarmChestSection = FarmotherMain.CreateSection("Cày rương")
 FarmChestSection.CreateSlider(
 	{
-		Title = "Value Collect Chest to Hop",
+		Title = "Value Nhặt Rương to Đổi máy chủ",
 		Min = 0,
 		Max = 100,
 		Default = Settings["Value Collect Chest to Hop"] or 20,
@@ -24938,19 +24920,19 @@ function AutoChest()
 	end
 end
 FarmChestSection.CreateToggle(
-	{ Title = "Auto Chest Hop", Desc = nil, Default = Settings["Auto Chest Hop"] or false },
+	{ Title = "Tự nhặt rương rồi đổi máy chủ", Desc = nil, Default = Settings["Auto Chest Hop"] or false },
 	function(y)
 		SaveSettings("Auto Chest Hop", y)
 	end
 )
 FarmChestSection.CreateToggle(
-	{ Title = "Use Method Teleport [ Risk ]", Desc = nil, Default = Settings["Use Method Teleport"] or false },
+	{ Title = "Dùng Cách Dịch chuyển [ Risk ]", Desc = nil, Default = Settings["Use Method Teleport"] or false },
 	function(y)
 		SaveSettings("Use Method Teleport", y)
 	end
 )
 FarmChestSection.CreateToggle(
-	{ Title = "Auto Chest", Desc = nil, Default = Settings["Auto Chest"] or false },
+	{ Title = "Tự nhặt rương", Desc = nil, Default = Settings["Auto Chest"] or false },
 	function(y)
 		if y then
 			spawn(function()
@@ -24967,9 +24949,9 @@ FarmChestSection.CreateToggle(
 		SaveSettings("Auto Chest", y)
 	end
 )
-RaidLawSection = FarmotherMain.CreateSection("Raid Law")
+RaidLawSection = FarmotherMain.CreateSection("Đột kích Law")
 RaidLawSection.CreateToggle(
-	{ Title = "Auto Buy Chip and Attack Law", Desc = nil, Default = Settings["Auto Buy Chip and Attack Law"] or false },
+	{ Title = "Tự mua chip và đánh Law", Desc = nil, Default = Settings["Auto Buy Chip and Attack Law"] or false },
 	function(y)
 		if y then
 			spawn(function()
@@ -25011,8 +24993,8 @@ RaidLawSection.CreateToggle(
 		SaveSettings("Auto Buy Chip and Attack Law", y)
 	end
 )
-FarmObservationSection = FarmotherMain.CreateSection("Farm Observation")
-KenLevelLabel = FarmObservationSection.CreateLabel({ Title = "Ken Level : ..." })
+FarmObservationSection = FarmotherMain.CreateSection("Cày Haki Quan Sát")
+KenLevelLabel = FarmObservationSection.CreateLabel({ Title = "Cấp Haki Quan Sát: ..." })
 _G.__KenLevelToken = (_G.__KenLevelToken or 0) + 1
 local __kenToken = _G.__KenLevelToken
 task.spawn(function()
@@ -25172,7 +25154,7 @@ function ObservationV2()
 					equiptool(NameWeapon(Settings["Select Weapon"]))
 				until not IsMobAlive(y) or not Settings["Auto UP Observation V2"]
 			else
-				A.CreateNoti({ Title = "Tam Notification", Desc = "Waiting Boss Captain Elephant", ShowTime = 5 })
+				A.CreateNoti({ Title = "Thông báo Tâm", Desc = "Waiting Trùm Captain Elephant", ShowTime = 5 })
 				wait(5)
 			end
 		elseif t:DistanceFromCharacter(Vector3.new(-12441.5908203125, 331.4884948730469, -7676.197265625)) < 10 then
@@ -25207,7 +25189,7 @@ function ObservationV2()
 								0
 							)
 						else
-							A.CreateNoti({ Title = "Tam Notification", Desc = "Wating Fruit", ShowTime = 5 })
+							A.CreateNoti({ Title = "Thông báo Tâm", Desc = "Wating Trái", ShowTime = 5 })
 							wait(3)
 						end
 					end
@@ -25242,7 +25224,7 @@ function ObservationV2()
 	end
 end
 FarmObservationSection.CreateToggle(
-	{ Title = "Auto UP Observation V2", Desc = nil, Default = Settings["Auto UP Observation V2"] or false },
+	{ Title = "Tự nâng Haki Quan Sát V2", Desc = nil, Default = Settings["Auto UP Observation V2"] or false },
 	function(y)
 		if y then
 			spawn(function()
@@ -25257,7 +25239,7 @@ FarmObservationSection.CreateToggle(
 	end
 )
 FarmObservationSection.CreateToggle(
-	{ Title = "Farm Observation", Desc = nil, Default = Settings["Farm Observation"] or false },
+	{ Title = "Cày Haki Quan Sát", Desc = nil, Default = Settings["Farm Observation"] or false },
 	function(y)
 		if y then
 			spawn(function()
@@ -25273,18 +25255,18 @@ FarmObservationSection.CreateToggle(
 )
 FarmObservationSection.CreateToggle(
 	{
-		Title = "Farm Observation [ Hop Server ]",
+		Title = "Cày Haki Quan Sát [ Đổi máy chủ ]",
 		Desc = nil,
 		Default = Settings["Farm Observation [ Hop Server ]"] or false,
 	},
 	function(y)
 		if y and not Settings["Farm Observation"] then
-			A.CreateNoti({ Title = "Tam Notification", Desc = "Turn On Farm Observation plz", ShowTime = 5 })
+			A.CreateNoti({ Title = "Thông báo Tâm", Desc = "Turn On Cày Haki Quan Sát plz", ShowTime = 5 })
 		end
 		SaveSettings("Farm Observation [ Hop Server ]", y)
 	end
 )
-AutoKillMobSection = FarmotherMain.CreateSection("Auto Kill Mob")
+AutoKillMobSection = FarmotherMain.CreateSection("Tự động diệt quái")
 function TableMob()
 	local y, P, Y, H, C = {}, {}, next, require(game:GetService("ReplicatedStorage").Quests)
 	for J, J in Y, H, C do
@@ -25320,7 +25302,7 @@ function TableMob()
 end
 AutoKillMobSection.CreateDropdown(
 	{
-		Title = "Select Mob",
+		Title = "Chọn quái",
 		List = PrepareMultiSelectList(TableMob(), Settings["Select Mob"]),
 		Search = true,
 		Selected = true,
@@ -25387,7 +25369,7 @@ function FarmSelectMob()
 		until not IsMobAlive(P) or not Settings["Kill Mob"] or not StackFarmOther
 	end
 end
-AutoKillMobSection.CreateToggle({ Title = "Kill Mob", Desc = nil, Default = Settings["Kill Mob"] or false }, function(y)
+AutoKillMobSection.CreateToggle({ Title = "Diệt quái", Desc = nil, Default = Settings["Kill Mob"] or false }, function(y)
 	if y then
 		spawn(function()
 			while Settings["Kill Mob"] and (task.wait(0.1)) do
@@ -25402,7 +25384,7 @@ AutoKillMobSection.CreateToggle({ Title = "Kill Mob", Desc = nil, Default = Sett
 	end
 	SaveSettings("Kill Mob", y)
 end)
-AutoKillBossSection = FarmotherMain.CreateSection("Auto Boss")
+AutoKillBossSection = FarmotherMain.CreateSection("Tự động đánh trùm")
 local y = {
 	"Gorilla King",
 	"Bobby",
@@ -25460,7 +25442,7 @@ function TableBoss()
 end
 local y = AutoKillBossSection.CreateDropdown(
 	{
-		Title = "Select Boss",
+		Title = "Chọn trùm",
 		List = TableBoss(),
 		Search = true,
 		Selected = false,
@@ -25470,7 +25452,7 @@ local y = AutoKillBossSection.CreateDropdown(
 		SaveSettings("Select Boss", P)
 	end
 )
-AutoKillBossSection.CreateButton({ Title = "Refresh Boss" }, function()
+AutoKillBossSection.CreateButton({ Title = "Làm mới danh sách trùm" }, function()
 	y:GetNewList(TableBoss())
 end)
 function AutoKillBoss()
@@ -25493,7 +25475,7 @@ function AutoKillBoss()
 	end
 end
 AutoKillBossSection.CreateToggle(
-	{ Title = "Kill Boss", Desc = nil, Default = Settings["Kill Boss"] or false },
+	{ Title = "Diệt trùm", Desc = nil, Default = Settings["Kill Boss"] or false },
 	function(y)
 		spawn(function()
 			while Settings["Kill Boss"] and (wait()) do
@@ -25506,37 +25488,37 @@ AutoKillBossSection.CreateToggle(
 	end
 )
 AutoKillBossSection.CreateToggle(
-	{ Title = "Kill All Boss", Desc = nil, Default = Settings["Kill All Boss"] or false },
+	{ Title = "Diệt tất cả trùm", Desc = nil, Default = Settings["Kill All Boss"] or false },
 	function(y)
 		if y and not Settings["Kill Boss"] then
-			A.CreateNoti({ Title = "Tam Notification", Desc = "Turn On Kill Boss plz", ShowTime = 5 })
+			A.CreateNoti({ Title = "Thông báo Tâm", Desc = "Turn On Diệt trùm plz", ShowTime = 5 })
 		end
 		SaveSettings("Kill All Boss", y)
 	end
 )
 AutoKillBossSection.CreateToggle(
-	{ Title = "Hop Server Find Boss", Desc = nil, Default = Settings["Hop Server Find Boss"] or false },
+	{ Title = "Đổi máy chủ tìm trùm", Desc = nil, Default = Settings["Hop Server Find Boss"] or false },
 	function(y)
 		SaveSettings("Hop Server Find Boss", y)
 	end
 )
-DFRaidMain = Main.CreatePage({ Page_Name = "Fruit and Raid, Dungeon", Page_Title = "Fruit and Raid and Dungeon Tab" })
-DevilFruitSection = DFRaidMain.CreateSection("Devil Fruit")
+DFRaidMain = Main.CreatePage({ Page_Name = "Trái Ác Quỷ, Đột kích và Hầm ngục", Page_Title = "Trái and Đột kích and Hầm ngục Tab" })
+DevilFruitSection = DFRaidMain.CreateSection("Ác Quỷ Trái")
 DevilFruitSection.CreateToggle(
-	{ Title = "Random Devil Fruit", Desc = nil, Default = Settings["Random Devil Fruit"] or false },
+	{ Title = "Quay Trái Ác Quỷ", Desc = nil, Default = Settings["Random Devil Fruit"] or false },
 	function(y)
 		SaveSettings("Random Devil Fruit", y)
 	end
 )
 DevilFruitSection.CreateToggle(
-	{ Title = "Auto Store Fruit", Desc = nil, Default = Settings["Auto Store Fruit"] or false },
+	{ Title = "Tự cất trái", Desc = nil, Default = Settings["Auto Store Fruit"] or false },
 	function(y)
 		SaveSettings("Auto Store Fruit", y)
 	end
 )
 DevilFruitSection.CreateDropdown(
 	{
-		Title = "Blox Fruit Sniper Shop",
+		Title = "Trái Ác Quỷ Sniper Shop",
 		List = PrepareMultiSelectList(TableDevilFruit, Settings["Blox Fruit Sniper Shop"]),
 		Search = true,
 		Selected = true,
@@ -25547,12 +25529,12 @@ DevilFruitSection.CreateDropdown(
 	end
 )
 DevilFruitSection.CreateToggle(
-	{ Title = "Buy Blox Fruit Sniper Shop", Desc = nil, Default = Settings["Buy Blox Fruit Sniper Shop"] or false },
+	{ Title = "Mua trái tại cửa hàng Sniper", Desc = nil, Default = Settings["Buy Blox Fruit Sniper Shop"] or false },
 	function(y)
 		SaveSettings("Buy Blox Fruit Sniper Shop", y)
 	end
 )
-RaidsSection = DFRaidMain.CreateSection("Raids")
+RaidsSection = DFRaidMain.CreateSection("Đột kích")
 g, b, s, R = {}, next, require(game.ReplicatedStorage.Raids)
 for y, y in b, s, R do
 	for b, b in next, y, nil do
@@ -25560,14 +25542,14 @@ for y, y in b, s, R do
 	end
 end
 RaidsSection.CreateDropdown(
-	{ Title = "Select Raid", List = g, Search = true, Selected = false, Default = Settings["Select Raid"] or nil },
+	{ Title = "Chọn Đột kích", List = g, Search = true, Selected = false, Default = Settings["Select Raid"] or nil },
 	function(b)
 		SaveSettings("Select Raid", b)
 	end
 )
 RaidsSection.CreateToggle(
 	{
-		Title = "Get Fruit In Inventory Low Beli",
+		Title = "Get Trái In Inventory Low Beli",
 		Desc = nil,
 		Default = Settings["Get Fruit In Inventory Low Beli"] or false,
 	},
@@ -25724,7 +25706,7 @@ function IsRaidKillAuraActive()
 	end)
 	return ok and res or false
 end
-RaidsSection.CreateToggle({ Title = "Auto Raid", Desc = nil, Default = Settings["Auto Raid"] or false }, function(b)
+RaidsSection.CreateToggle({ Title = "Tự động Đột kích", Desc = nil, Default = Settings["Auto Raid"] or false }, function(b)
 	if b then
 		spawn(function()
 			while Settings["Auto Raid"] and (task.wait()) do
@@ -25845,10 +25827,10 @@ RaidsSection.CreateToggle({ Title = "Auto Raid", Desc = nil, Default = Settings[
 	SaveSettings("Auto Raid", b)
 end)
 RaidsSection.CreateToggle(
-	{ Title = "Kill Aura Raid", Desc = "Island 4-5: kill any mob within 300 studs while farming (needs Auto Raid / Auto Multi Raid)", Default = Settings["Kill Aura Raid"] or false },
+	{ Title = "Vòng sát thương Đột kích", Desc = "Đảo 4-5: Diệt any Quái within 300 studs while farming (needs Tự động Đột kích / Tự động Đột kích nhiều người)", Default = Settings["Kill Aura Raid"] or false },
 	function(b)
 		if b and not (Settings["Auto Raid"] or Settings["Auto Multi Raid"]) then
-			A.CreateNoti({ Title = "Tam Notification", Desc = "Turn On Auto Raid Plz", ShowTime = 5 })
+			A.CreateNoti({ Title = "Thông báo Tâm", Desc = "Turn On Tự động Đột kích Plz", ShowTime = 5 })
 		end
 		SaveSettings("Kill Aura Raid", b)
 		if b and not getgenv().__KillAuraRaidRunning then
@@ -25874,135 +25856,21 @@ RaidsSection.CreateToggle(
 	end
 )
 RaidsSection.CreateToggle(
-	{ Title = "Hop Sever Raid", Desc = nil, Default = Settings["Hop Sever Raid"] or false },
+	{ Title = "Đổi máy chủ Đột kích", Desc = nil, Default = Settings["Hop Sever Raid"] or false },
 	function(b)
 		if b and not Settings["Auto Raid"] then
-			A.CreateNoti({ Title = "Tam Notification", Desc = "Turn On Auto Raid Plz", ShowTime = 5 })
+			A.CreateNoti({ Title = "Thông báo Tâm", Desc = "Turn On Tự động Đột kích Plz", ShowTime = 5 })
 		end
 		SaveSettings("Hop Sever Raid", b)
 	end
 )
 RaidsSection.CreateToggle(
-	{ Title = "Auto Awake Fruit", Desc = nil, Default = Settings["Auto Awake Fruit"] or false },
+	{ Title = "Tự thức tỉnh trái", Desc = nil, Default = Settings["Auto Awake Fruit"] or false },
 	function(b)
 		SaveSettings("Auto Awake Fruit", b)
 	end
 )
--- Imported Raid helpers from testraidmaru (1).txt
-local function DayGetRaidIslandByNumber(num)
-	local hrp = t.Character and t.Character:FindFirstChild("HumanoidRootPart")
-	if not hrp then return nil end
-	local locations = workspace:FindFirstChild("_WorldOrigin") and workspace._WorldOrigin:FindFirstChild("Locations")
-	if not locations then return nil end
-	local nearest, minDistance = nil, math.huge
-	for _, island in ipairs(locations:GetChildren()) do
-		if island.Name == "Island " .. tostring(num) then
-			local distance = (island.Position - hrp.Position).Magnitude
-			if distance < minDistance then
-				nearest, minDistance = island, distance
-			end
-		end
-	end
-	return nearest
-end
-
-local function DayGetNextRaidIsland()
-	for _, num in ipairs({5, 4, 3, 2, 1}) do
-		local island = DayGetRaidIslandByNumber(num)
-		if island and t:DistanceFromCharacter(island.Position) <= 4500 then
-			return island
-		end
-	end
-	return nil
-end
-
-local function DayRaidKillAura()
-	local island = DayGetNextRaidIsland()
-	if not island or (island.Name ~= "Island 4" and island.Name ~= "Island 5") then return end
-	for _, mob in ipairs(workspace.Enemies:GetChildren()) do
-		if IsMobAlive(mob) then
-			pcall(function()
-				sethiddenproperty(t, "SimulationRadius", math.huge)
-				local root = mob:FindFirstChild("HumanoidRootPart")
-				if root then root.CanCollide = false end
-				mob:BreakJoints()
-				mob.Humanoid.Health = 0
-			end)
-		end
-	end
-end
-
-RaidsSection.CreateToggle(
-	{ Title = "Auto Complete Raid [Safety]", Desc = nil, Default = Settings["Auto Complete Raid [Safety]"] or false },
-	function(enabled)
-		SaveSettings("Auto Complete Raid [Safety]", enabled)
-		if enabled and not getgenv().__DayAutoCompleteRaidRunning then
-			getgenv().__DayAutoCompleteRaidRunning = true
-			task.spawn(function()
-				while Settings["Auto Complete Raid [Safety]"] and task.wait(0.2) do
-					pcall(function()
-						local timer = t.PlayerGui.Main.TopHUDList.RaidTimer
-						if not timer.Visible or not CheckInRaid() then return end
-						local island = DayGetNextRaidIsland()
-					if not island then return end
-					DayRaidKillAura()
-					local hrp = t.Character and t.Character:FindFirstChild("HumanoidRootPart")
-					if not hrp then return end
-					for _, enemy in ipairs(workspace.Enemies:GetChildren()) do
-						local root = enemy:FindFirstChild("HumanoidRootPart")
-						local hum = enemy:FindFirstChildOfClass("Humanoid")
-						if root and hum and hum.Health > 0 and (root.Position - hrp.Position).Magnitude <= 1000 then
-							repeat
-								task.wait(0.1)
-								pcall(function() hum.Health = 0 end)
-							until not Settings["Auto Complete Raid [Safety]"] or not enemy.Parent or not hum.Parent or hum.Health <= 0
-						end
-					end
-				end)
-				end
-				getgenv().__DayAutoCompleteRaidRunning = false
-			end)
-		end
-	end
-)
-
-RaidsSection.CreateToggle(
-	{ Title = "Kill Aura", Desc = nil, Default = Settings["Raid Kill Aura"] or false },
-	function(enabled)
-		SaveSettings("Raid Kill Aura", enabled)
-		if enabled and not getgenv().__DayRaidKillAuraRunning then
-			getgenv().__DayRaidKillAuraRunning = true
-			task.spawn(function()
-				while Settings["Raid Kill Aura"] and task.wait(0.2) do
-					pcall(DayRaidKillAura)
-				end
-				getgenv().__DayRaidKillAuraRunning = false
-			end)
-		end
-	end
-)
-
-RaidsSection.CreateToggle(
-	{ Title = "Auto Next Island", Desc = nil, Default = Settings["Auto Next Island"] or false },
-	function(enabled)
-		SaveSettings("Auto Next Island", enabled)
-		if enabled and not getgenv().__DayAutoNextIslandRunning then
-			getgenv().__DayAutoNextIslandRunning = true
-			task.spawn(function()
-				while Settings["Auto Next Island"] and task.wait(0.5) do
-					pcall(function()
-						if not t.PlayerGui.Main.TopHUDList.RaidTimer.Visible then return end
-						local island = DayGetNextRaidIsland()
-						if island then toTarget(island.CFrame * CFrame.new(0, 50, 100)) end
-					end)
-				end
-				getgenv().__DayAutoNextIslandRunning = false
-			end)
-		end
-	end
-)
-
-MultiRaidsSection = DFRaidMain.CreateSection("Multi Raid")
+MultiRaidsSection = DFRaidMain.CreateSection("Đột kích nhiều người")
 function DetectNamePlayerMulti()
 	local b = {}
 	for E, E in pairs(game:GetService("Players"):GetChildren()) do
@@ -26014,7 +25882,7 @@ function DetectNamePlayerMulti()
 end
 DropdownSelectPlayerMultiRaid = MultiRaidsSection.CreateDropdown(
 	{
-		Title = "Select Player Multi Raid",
+		Title = "Chọn Người chơi Đột kích nhiều người",
 		List = PrepareMultiSelectList(DetectNamePlayerMulti(), Settings["Select Player Multi Raid"]),
 		Search = true,
 		Selected = true,
@@ -26024,17 +25892,17 @@ DropdownSelectPlayerMultiRaid = MultiRaidsSection.CreateDropdown(
 		SaveSettings("Select Player Multi Raid", b, E)
 	end
 )
-MultiRaidsSection.CreateButton({ Title = "Refresh Player" }, function()
+MultiRaidsSection.CreateButton({ Title = "Làm mới danh sách người chơi" }, function()
 	DropdownSelectPlayerMultiRaid:GetNewList(DetectNamePlayerMulti())
 end)
 MultiRaidsSection.CreateToggle(
-	{ Title = "Account Buy Chip", Desc = nil, Default = Settings["Account Buy Chip"] or false },
+	{ Title = "Account Mua Chip", Desc = nil, Default = Settings["Account Buy Chip"] or false },
 	function(b)
 		SaveSettings("Account Buy Chip", b)
 	end
 )
 MultiRaidsSection.CreateToggle(
-	{ Title = "Account Pick Slot Raid", Desc = nil, Default = Settings["Account Pick Slot Raid"] or false },
+	{ Title = "Account Pick Slot Đột kích", Desc = nil, Default = Settings["Account Pick Slot Raid"] or false },
 	function(b)
 		SaveSettings("Account Pick Slot Raid", b)
 	end
@@ -26160,7 +26028,7 @@ function Multiraid(b)
 	end
 end
 MultiRaidsSection.CreateToggle(
-	{ Title = "Auto Multi Raid", Desc = nil, Default = Settings["Auto Multi Raid"] or false },
+	{ Title = "Tự động Đột kích nhiều người", Desc = nil, Default = Settings["Auto Multi Raid"] or false },
 	function(b)
 		if b then
 			spawn(function()
@@ -26255,7 +26123,7 @@ function BuyFruitShop()
 		game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("PurchaseRawFruit", b)
 	end
 end
-DungeonJoinSection = DFRaidMain.CreateSection("Join Dungeon")
+DungeonJoinSection = DFRaidMain.CreateSection("Vào hầm ngục")
 function DetectNamePlayer()
 	local b = {}
 	for E, E in pairs(game:GetService("Players"):GetChildren()) do
@@ -26267,7 +26135,7 @@ function DetectNamePlayer()
 end
 DropdownDropdownSelectAccountJoin = DungeonJoinSection.CreateDropdown(
 	{
-		Title = "Select Account Join",
+		Title = "Chọn Account Vào",
 		List = DetectNamePlayer(),
 		Search = true,
 		Selected = false,
@@ -26277,7 +26145,7 @@ DropdownDropdownSelectAccountJoin = DungeonJoinSection.CreateDropdown(
 		SaveSettings("Select Account Join", b)
 	end
 )
-DungeonJoinSection.CreateButton({ Title = "Refresh Player" }, function()
+DungeonJoinSection.CreateButton({ Title = "Làm mới danh sách người chơi" }, function()
 	DropdownDropdownSelectAccountJoin:GetNewList(DetectNamePlayer())
 end)
 function DetectPadJoinDungeon(b)
@@ -26293,7 +26161,7 @@ function DetectPadJoinDungeon(b)
 end
 DungeonJoinSection.CreateSlider(
 	{
-		Title = "Min Player Join Dungeon",
+		Title = "Min Người chơi Vào hầm ngục",
 		Min = 0,
 		Max = 4,
 		Default = Settings["Min Player Join Dungeon"] or 2,
@@ -26305,7 +26173,7 @@ DungeonJoinSection.CreateSlider(
 )
 DungeonJoinSection.CreateDropdown(
 	{
-		Title = "Select Difficulty",
+		Title = "Chọn độ khó",
 		List = { "Normal", "Hard", "Challenge" },
 		Search = true,
 		Selected = false,
@@ -26317,8 +26185,8 @@ DungeonJoinSection.CreateDropdown(
 )
 DungeonJoinSection.CreateToggle(
 	{
-		Title = "Account Start Dungeon",
-		Desc = "Account Start Dungeon",
+		Title = "Account Start Hầm ngục",
+		Desc = "Account Start Hầm ngục",
 		Default = Settings["Account Start Dungeon"] or false,
 	},
 	function(b)
@@ -26326,7 +26194,7 @@ DungeonJoinSection.CreateToggle(
 	end
 )
 DungeonJoinSection.CreateToggle(
-	{ Title = "Auto Join Dungeon", Desc = "Auto Join Dungeon", Default = Settings["Auto Join Dungeon"] or false },
+	{ Title = "Tự vào hầm ngục", Desc = "Tự vào hầm ngục", Default = Settings["Auto Join Dungeon"] or false },
 	function(b)
 		spawn(function()
 			while Settings["Auto Join Dungeon"] and (task.wait()) do
@@ -26377,10 +26245,10 @@ DungeonJoinSection.CreateToggle(
 		SaveSettings("Auto Join Dungeon", b)
 	end
 )
-DungeonSection = DFRaidMain.CreateSection("Dungeon")
+DungeonSection = DFRaidMain.CreateSection("Hầm ngục")
 DungeonSection.CreateDropdown(
 	{
-		Title = "Select Weapon Dungeon",
+		Title = "Chọn vũ khí hầm ngục",
 		List = { "Melee", "Sword", "Blox Fruit", "Gun" },
 		Search = true,
 		Selected = false,
@@ -26530,7 +26398,7 @@ function IsSkillCooldown(b)
 end
 DungeonSection.CreateDropdown(
 	{
-		Title = "Select Card Priority",
+		Title = "Chọn ưu tiên thẻ",
 		List = TableCardpriority,
 		Search = true,
 		Priority = true,
@@ -26639,8 +26507,8 @@ function AutoPickDungeonCard()
 end
 DungeonSection.CreateToggle(
 	{
-		Title = "Auto Attack Dungeon",
-		Desc = "Auto Attack Mob and go next Floor",
+		Title = "Tự đánh trong hầm ngục",
+		Desc = "Tự động Tấn công Quái and go next Floor",
 		Default = Settings["Auto Attack Dungeon"] or false,
 	},
 	function(b)
@@ -26756,7 +26624,7 @@ DungeonSection.CreateToggle(
 	end
 )
 DungeonSection.CreateToggle(
-	{ Title = "Auto Pick Card Dungeon", Desc = nil, Default = Settings["Auto Pick Card Dungeon"] or false },
+	{ Title = "Tự chọn thẻ hầm ngục", Desc = nil, Default = Settings["Auto Pick Card Dungeon"] or false },
 	function(b)
 		SaveSettings("Auto Pick Card Dungeon", b)
 		if not b then
@@ -26785,11 +26653,11 @@ local b, E =
 		["Zone 6"] = CFrame.new(-32975.9921875, 0, 25963.7109375),
 	},
 	{ Melee = false, Sword = false, Gun = false, ["Blox Fruit"] = false }
-SeaEventTab = Main.CreatePage({ Page_Name = "Sea Event", Page_Title = "Sea Event Tab" })
-SettingSeaEventSection = SeaEventTab.CreateSection("Setting")
+SeaEventTab = Main.CreatePage({ Page_Name = "Sự kiện biển", Page_Title = "Sea Event Tab" })
+SettingSeaEventSection = SeaEventTab.CreateSection("Cài đặt")
 SettingSeaEventSection.CreateDropdown(
 	{
-		Title = "Select Zone",
+		Title = "Chọn khu vực",
 		List = { "Zone 1", "Zone 2", "Zone 3", "Zone 4", "Zone 5", "Zone 6" },
 		Search = true,
 		Selected = false,
@@ -26801,7 +26669,7 @@ SettingSeaEventSection.CreateDropdown(
 )
 SettingSeaEventSection.CreateDropdown(
 	{
-		Title = "Select Sea Events",
+		Title = "Chọn sự kiện biển",
 		List = PrepareMultiSelectList(
 			{
 				SeaBeast = false,
@@ -26823,7 +26691,7 @@ SettingSeaEventSection.CreateDropdown(
 )
 SettingSeaEventSection.CreateDropdown(
 	{
-		Title = "Select Boat",
+		Title = "Chọn thuyền",
 		List = { "Beast Hunter", "Guardian", "Lantern", "Seleigh", "Brigade", "GrandBrigade" },
 		Search = true,
 		Selected = false,
@@ -26835,7 +26703,7 @@ SettingSeaEventSection.CreateDropdown(
 )
 SettingSeaEventSection.CreateDropdown(
 	{
-		Title = "Select Weapons Use Skill",
+		Title = "Chọn vũ khí dùng kỹ năng",
 		List = PrepareMultiSelectList(E, Settings["Select Weapons Use Skill"]),
 		Search = true,
 		Selected = true,
@@ -26847,8 +26715,8 @@ SettingSeaEventSection.CreateDropdown(
 )
 SettingSeaEventSection.CreateToggle(
 	{
-		Title = "Use Dragonstorm For Sea Event",
-		Desc = "Only Farm Boat, Fish, TerrorShark and Sea beast",
+		Title = "Dùng Dragonstorm For Sea Event",
+		Desc = "Only Cày Thuyền, Fish, TerrorShark and Sea beast",
 		Default = Settings["Use Dragonstorm For Sea Event"] or false,
 	},
 	function(l)
@@ -26857,8 +26725,8 @@ SettingSeaEventSection.CreateToggle(
 )
 SettingSeaEventSection.CreateToggle(
 	{
-		Title = "Use Click M1 Skull Guitar For Sea Event",
-		Desc = "Only Farm Boat and Seabeast",
+		Title = "Dùng Click M1 Skull Guitar For Sea Event",
+		Desc = "Only Cày Thuyền and Seabeast",
 		Default = Settings["Use Click M1 Skull Guitar For Sea Event"] or false,
 	},
 	function(l)
@@ -26867,8 +26735,8 @@ SettingSeaEventSection.CreateToggle(
 )
 SettingSeaEventSection.CreateToggle(
 	{
-		Title = "Auto Change Dragonstorm With Skull Guitar",
-		Desc = "When Kill Boat and Fish and TerrorShark use Dragonstorm\10Kill Seabeast use Seabeast",
+		Title = "Tự động Đổi Dragonstorm With Skull Guitar",
+		Desc = "When Diệt Thuyền and Fish and TerrorShark Dùng Dragonstorm\10Diệt Seabeast Dùng Seabeast",
 		Default = Settings["Auto Change Dragonstorm With Skull Guitar"] or false,
 	},
 	function(l)
@@ -26877,7 +26745,7 @@ SettingSeaEventSection.CreateToggle(
 )
 SettingSeaEventSection.CreateToggle(
 	{
-		Title = "Auto Change Dragonstorm When Kill Boat",
+		Title = "Tự động Đổi Dragonstorm When Diệt Thuyền",
 		Desc = nil,
 		Default = Settings["Auto Change Dragonstorm When Kill Boat"] or false,
 	},
@@ -26887,7 +26755,7 @@ SettingSeaEventSection.CreateToggle(
 )
 SettingSeaEventSection.CreateToggle(
 	{
-		Title = "Use Click M1 Fruit For Sea Event",
+		Title = "Dùng Click M1 Trái For Sea Event",
 		Desc = nil,
 		Default = Settings["Use Click M1 Fruit For Sea Event"] or false,
 	},
@@ -26897,8 +26765,8 @@ SettingSeaEventSection.CreateToggle(
 )
 SettingSeaEventSection.CreateToggle(
 	{
-		Title = "Reset Character Buy Boat",
-		Desc = "if u spawn in tiki it will reset for buy boat",
+		Title = "Đặt lại Character Mua Thuyền",
+		Desc = "if u spawn in tiki it will Đặt lại for Mua Thuyền",
 		Default = Settings["Reset Character Buy Boat"] or false,
 	},
 	function(l)
@@ -26906,7 +26774,7 @@ SettingSeaEventSection.CreateToggle(
 	end
 )
 SettingSeaEventSection.CreateToggle(
-	{ Title = "Auto Dodge Skill Terrorshark", Desc = nil, Default = Settings["Auto Dodge Skill Terrorshark"] or false },
+	{ Title = "Tự động Dodge Kỹ năng Terrorshark", Desc = nil, Default = Settings["Auto Dodge Skill Terrorshark"] or false },
 	function(l)
 		SaveSettings("Auto Dodge Skill Terrorshark", l)
 	end
@@ -26959,8 +26827,8 @@ function AddAnimationSeabeastPlayed(y)
 end
 SettingSeaEventSection.CreateToggle(
 	{
-		Title = "Auto Dodge Skill Seabeast",
-		Desc = "Dodge Only Skill Kameha and waterbeam",
+		Title = "Tự động Dodge Kỹ năng Seabeast",
+		Desc = "Dodge Only Kỹ năng Kameha and waterbeam",
 		Default = Settings["Auto Dodge Skill Seabeast"] or false,
 	},
 	function(l)
@@ -26992,7 +26860,7 @@ SettingSeaEventSection.CreateToggle(
 )
 SettingSeaEventSection.CreateToggle(
 	{
-		Title = "Teleport Boat Other CFrame if Rough Sea",
+		Title = "Dịch chuyển Thuyền Other CFrame if Rough Sea",
 		Desc = nil,
 		Default = Settings["Teleport Boat Other CFrame if Rough Sea"] or false,
 	},
@@ -27002,8 +26870,8 @@ SettingSeaEventSection.CreateToggle(
 )
 SettingSeaEventSection.CreateToggle(
 	{
-		Title = "Tween Until Have Sea Event",
-		Desc = "When there's a sea event, it will stop to fight, and after finishing the fight, it will continue tweening",
+		Title = "Di chuyển cho đến khi có sự kiện biển",
+		Desc = "When there's a sea event, it will Dừng to fight, and after finishing the fight, it will continue tweening",
 		Default = Settings["Tween Until Have Sea Event"] or false,
 	},
 	function(l)
@@ -27011,7 +26879,7 @@ SettingSeaEventSection.CreateToggle(
 	end
 )
 SettingSeaEventSection.CreateToggle(
-	{ Title = "Will Back When over 10km", Desc = nil, Default = Settings["Will Back When over 10km"] or false },
+	{ Title = "Quay lại khi cách xa hơn 10 km", Desc = nil, Default = Settings["Will Back When over 10km"] or false },
 	function(l)
 		SaveSettings("Will Back When over 10km", l)
 	end
@@ -27610,7 +27478,7 @@ function WarnOnce(b, l)
 	end
 	getgenv().__BFWarned[b] = tick()
 	pcall(function()
-		A.CreateNoti({ Title = "Tam Notification", Desc = l, ShowTime = 5 })
+		A.CreateNoti({ Title = "Thông báo Tâm", Desc = l, ShowTime = 5 })
 	end)
 end
 -- Sea Beast: theo doi Submerge/Reappear/Death (theo ten animation) + HP text, de doi sea khi lan va bo ngay khi chet
@@ -28038,10 +27906,10 @@ function AutoSeabeast()
 			or SeaBeastShouldLeave(b)
 	end
 end
-FarmingSeaEventSection = SeaEventTab.CreateSection("Farming")
+FarmingSeaEventSection = SeaEventTab.CreateSection("Cày tự động")
 local b = FarmingSeaEventSection.CreateDropdown(
 	{
-		Title = "Select Owner Boat",
+		Title = "Chọn chủ thuyền",
 		List = DetectNamePlayer(),
 		Search = true,
 		Selected = false,
@@ -28051,12 +27919,12 @@ local b = FarmingSeaEventSection.CreateDropdown(
 		SaveSettings("Select Owner Boat", X)
 	end
 )
-FarmingSeaEventSection.CreateButton({ Title = "Refresh Player" }, function()
+FarmingSeaEventSection.CreateButton({ Title = "Làm mới danh sách người chơi" }, function()
 	b:GetNewList(DetectNamePlayer())
 end)
 local mb = FarmingSeaEventSection.CreateDropdown(
 	{
-		Title = "Select Muti Player Sea Event",
+		Title = "Chọn Muti Người chơi Sea Event",
 		List = PrepareMultiSelectList(DetectNamePlayerMulti(), Settings["Select Muti Player Sea Event"]),
 		Search = true,
 		Selected = true,
@@ -28066,17 +27934,17 @@ local mb = FarmingSeaEventSection.CreateDropdown(
 		SaveSettings("Select Muti Player Sea Event", n, on)
 	end
 )
-FarmingSeaEventSection.CreateButton({ Title = "Refresh Player Muti Sea" }, function()
+FarmingSeaEventSection.CreateButton({ Title = "Làm mới danh sách người chơi Muti Sea" }, function()
 	mb:GetNewList(PrepareMultiSelectList(DetectNamePlayerMulti(), Settings["Select Muti Player Sea Event"]))
 end)
 FarmingSeaEventSection.CreateToggle(
-	{ Title = "Muti Farm Sea Event", Desc = "Owner: doi cac acc da chon ngoi du vao phao roi moi di san", Default = Settings["Muti Farm Sea Event"] or false },
+	{ Title = "Muti Cày Sea Event", Desc = "Owner: doi cac acc da chon ngoi du vao phao roi moi di san", Default = Settings["Muti Farm Sea Event"] or false },
 	function(v)
 		SaveSettings("Muti Farm Sea Event", v)
 	end
 )
 FarmingSeaEventSection.CreateToggle(
-	{ Title = "Auto Sea Event With Friend", Desc = nil, Default = Settings["Auto Sea Event With Friend"] or false },
+	{ Title = "Tự động sự kiện biển With Friend", Desc = nil, Default = Settings["Auto Sea Event With Friend"] or false },
 	function(b)
 		SaveSettings("Auto Sea Event With Friend", b)
 	end
@@ -28099,13 +27967,13 @@ spawn(function()
 		end)
 end)
 FarmingSeaEventSection.CreateToggle(
-	{ Title = "Auto Repair Ur Ship", Desc = nil, Default = Settings["Auto Repair Ur Ship"] or false },
+	{ Title = "Tự động Repair Ur Ship", Desc = nil, Default = Settings["Auto Repair Ur Ship"] or false },
 	function(_)
 		SaveSettings("Auto Repair Ur Ship", _)
 	end
 )
 FarmingSeaEventSection.CreateToggle(
-	{ Title = "Auto Sea Event", Desc = nil, Default = Settings["Auto Sea Event"] or false },
+	{ Title = "Tự động sự kiện biển", Desc = nil, Default = Settings["Auto Sea Event"] or false },
 	function(_)
 		if _ then
 			getgenv().StopBoatSeaEvent = true
@@ -28138,7 +28006,7 @@ function DistanceFindLeviathan()
 	)
 end
 ToggleFindMirage = FarmingSeaEventSection.CreateToggle(
-	{ Title = "Auto Find Mirage", Desc = nil, Default = Settings["Auto Find Mirage"] or false },
+	{ Title = "Tự tìm đảo Mirage", Desc = nil, Default = Settings["Auto Find Mirage"] or false },
 	function(y)
 		spawn(function()
 			while Settings["Auto Find Mirage"] and (wait(0.1)) do
@@ -28209,7 +28077,7 @@ ToggleFindMirage = FarmingSeaEventSection.CreateToggle(
 							getgenv().TweenBoat:Pause()
 							getgenv().TweenBoat:Cancel()
 						end
-						A.CreateNoti({ Title = "Tam Notification", Desc = "Mirage Island Spawned", ShowTime = 5 })
+						A.CreateNoti({ Title = "Thông báo Tâm", Desc = "Mirage Đảo Spawned", ShowTime = 5 })
 						ToggleFindMirage:SetStage(false)
 						wait(5)
 					end
@@ -28219,16 +28087,16 @@ ToggleFindMirage = FarmingSeaEventSection.CreateToggle(
 		SaveSettings("Auto Find Mirage", y)
 	end
 )
-KitsuneEventSection = SeaEventTab.CreateSection("Kitsune Event")
+KitsuneEventSection = SeaEventTab.CreateSection("Sự kiện Kitsune")
 KitsuneEventSection.CreateToggle(
-	{ Title = "Teleport To Kitsune Island", Desc = nil, Default = Settings["Teleport To Kitsune Island"] or false },
+	{ Title = "Dịch chuyển đến đảo Kitsune", Desc = nil, Default = Settings["Teleport To Kitsune Island"] or false },
 	function(y)
 		SaveSettings("Teleport To Kitsune Island", y)
 	end
 )
 KitsuneEventSection.CreateToggle(
 	{
-		Title = "Hop Server [ Next Night or Near Full Moon > 2m ]",
+		Title = "Đổi máy chủ [ Next Night or Near Full Moon > 2m ]",
 		Desc = nil,
 		Default = Settings["Hop Server Kitsune Island"] or false,
 	},
@@ -28237,12 +28105,12 @@ KitsuneEventSection.CreateToggle(
 	end
 )
 KitsuneEventSection.CreateToggle(
-	{ Title = "Auto Spawn Kitsune Island", Desc = nil, Default = Settings["Auto Spawn Kitsune Island"] or false },
+	{ Title = "Tự xuất hiện đảo Kitsune", Desc = nil, Default = Settings["Auto Spawn Kitsune Island"] or false },
 	function(y)
 		if y then
 			A.CreateNoti({
-				Title = "Tam Notification",
-				Desc = "Turn On after Status Full Moon|( Will Full Moon In >= 0 Minutes )",
+				Title = "Thông báo Tâm",
+				Desc = "Turn On after Trạng thái Full Moon|( Will Full Moon In >= 0 Minutes )",
 				ShowTime = 5,
 			})
 		end
@@ -28250,13 +28118,13 @@ KitsuneEventSection.CreateToggle(
 	end
 )
 KitsuneEventSection.CreateToggle(
-	{ Title = "Auto Summon Soul Ember", Desc = nil, Default = Settings["Auto Summon Soul Ember"] or false },
+	{ Title = "Tự động Triệu hồi Soul Ember", Desc = nil, Default = Settings["Auto Summon Soul Ember"] or false },
 	function(y)
 		SaveSettings("Auto Summon Soul Ember", y)
 	end
 )
 KitsuneEventSection.CreateToggle(
-	{ Title = "Auto Collect Soul Ember", Desc = nil, Default = Settings["Auto Collect Soul Ember"] or false },
+	{ Title = "Tự nhặt Soul Ember", Desc = nil, Default = Settings["Auto Collect Soul Ember"] or false },
 	function(y)
 		SaveSettings("Auto Collect Soul Ember", y)
 	end
@@ -28268,7 +28136,7 @@ KitsuneEventSection.CreateSlider(
 	end
 )
 KitsuneEventSection.CreateToggle(
-	{ Title = "Auto Trade Azure Ember", Desc = nil, Default = Settings["Auto Trade Azure Ember"] or false },
+	{ Title = "Tự động Trade Azure Ember", Desc = nil, Default = Settings["Auto Trade Azure Ember"] or false },
 	function(y)
 		SaveSettings("Auto Trade Azure Ember", y)
 	end
@@ -28411,16 +28279,16 @@ spawn(function()
 		end)
 	end
 end)
-LeviathanEventSection = SeaEventTab.CreateSection("Leviathan Event")
-LeviathanEventSection.CreateButton({ Title = "Buy Spy" }, function()
+LeviathanEventSection = SeaEventTab.CreateSection("Sự kiện Leviathan")
+LeviathanEventSection.CreateButton({ Title = "Mua Spy" }, function()
 	local y = require(game.ReplicatedStorage.DialoguesList).Spy
 	require(game.ReplicatedStorage.DialogueController):Start(y)
 end)
-LeviathanEventSection.CreateButton({ Title = "Teleport your boat to current Position" }, function()
+LeviathanEventSection.CreateButton({ Title = "Dịch chuyển thuyền đến vị trí hiện tại" }, function()
 	checkboat().VehicleSeat.CFrame = t.Character.HumanoidRootPart.CFrame
 end)
 LeviathanEventSection.CreateToggle(
-	{ Title = "Auto Buy Spy", Desc = nil, Default = Settings["Auto Buy Spy"] or false },
+	{ Title = "Tự mua thông tin từ Spy", Desc = nil, Default = Settings["Auto Buy Spy"] or false },
 	function(y)
 		if y then
 			spawn(function()
@@ -28438,7 +28306,7 @@ LeviathanEventSection.CreateToggle(
 	end
 )
 LeviathanEventSection.CreateToggle(
-	{ Title = "Auto Buy Boat Beast Hunter", Desc = nil, Default = Settings["Auto Buy Boat Beast Hunter"] or false },
+	{ Title = "Tự mua thuyền Beast Hunter", Desc = nil, Default = Settings["Auto Buy Boat Beast Hunter"] or false },
 	function(y)
 		SaveSettings("Auto Buy Boat Beast Hunter", y)
 	end
@@ -28684,7 +28552,7 @@ function AutoFindLeviathan()
 			getgenv().TweenBoatBack:Pause()
 			getgenv().TweenBoatBack:Cancel()
 		end
-		A.CreateNoti({ Title = "Tam Notification", Desc = "Frozen Dimension Spawned", ShowTime = 5 })
+		A.CreateNoti({ Title = "Thông báo Tâm", Desc = "Không Gian Băng Giá Spawned", ShowTime = 5 })
 		if getgenv().RespawnLeviathan and Settings["Webhook Find Leviathan"] then
 			getgenv().RespawnLeviathan = false
 			WebhookFindLeviathan()
@@ -28806,7 +28674,7 @@ end
 getgenv().SpeedTeleportTiki = 70
 local s = LeviathanEventSection.CreateDropdown(
 	{
-		Title = "Select Owner Boat Find Leviathan",
+		Title = "Chọn chủ thuyền Tìm Leviathan",
 		List = DetectNamePlayer(),
 		Search = true,
 		Selected = false,
@@ -28816,7 +28684,7 @@ local s = LeviathanEventSection.CreateDropdown(
 		SaveSettings("Select Owner Boat Find Leviathan", g)
 	end
 )
-LeviathanEventSection.CreateButton({ Title = "Refresh Player" }, function()
+LeviathanEventSection.CreateButton({ Title = "Làm mới danh sách người chơi" }, function()
 	s:GetNewList(DetectNamePlayer())
 end)
 function checkboatMulti()
@@ -28837,7 +28705,7 @@ function checkboatMulti()
 	return false
 end
 LeviathanEventSection.CreateToggle(
-	{ Title = "Multi Find Leviathan", Desc = nil, Default = Settings["Multi Find Leviathan"] or false },
+	{ Title = "Multi Tìm Leviathan", Desc = nil, Default = Settings["Multi Find Leviathan"] or false },
 	function(s)
 		if s then
 			spawn(function()
@@ -28864,7 +28732,7 @@ LeviathanEventSection.CreateToggle(
 	end
 )
 LeviathanEventSection.CreateToggle(
-	{ Title = "Auto Find Leviathan", Desc = nil, Default = Settings["Auto Find Leviathan"] or false },
+	{ Title = "Tự tìm Leviathan", Desc = nil, Default = Settings["Auto Find Leviathan"] or false },
 	function(s)
 		if s then
 			spawn(function()
@@ -28882,7 +28750,7 @@ LeviathanEventSection.CreateToggle(
 	end
 )
 LeviathanEventSection.CreateToggle(
-	{ Title = "Auto Start Leviathan", Desc = nil, Default = Settings["Auto Start Leviathan"] or false },
+	{ Title = "Tự bắt đầu Leviathan", Desc = nil, Default = Settings["Auto Start Leviathan"] or false },
 	function(s)
 		if s then
 			spawn(function()
@@ -28913,7 +28781,7 @@ LeviathanEventSection.CreateToggle(
 	end
 )
 LeviathanEventSection.CreateToggle(
-	{ Title = "Auto Destroy IDK", Desc = nil, Default = Settings["Auto Destroy IDK"] or false },
+	{ Title = "Tự động Destroy IDK", Desc = nil, Default = Settings["Auto Destroy IDK"] or false },
 	function(s)
 		if s then
 			spawn(function()
@@ -28932,20 +28800,20 @@ LeviathanEventSection.CreateToggle(
 )
 LeviathanEventSection.CreateToggle(
 	{
-		Title = "Attack Multi Segments Leviathan",
+		Title = "Tấn công Multi Segments Leviathan",
 		Desc = "Please enable the damage counter so I can calculate the damage dealt to that segment.\10plz Turn on multi Segments first.",
 		Default = Settings["Attack Multi Segments Leviathan"] or false,
 	},
 	function(s)
 		if s and not Settings["Auto Attack Leviathan"] then
-			A.CreateNoti({ Title = "Tam Notification", Desc = "Turn On Auto Attack Leviathan, plz", ShowTime = 5 })
+			A.CreateNoti({ Title = "Thông báo Tâm", Desc = "Turn On Tự tấn công Leviathan, plz", ShowTime = 5 })
 		end
 		SaveSettings("Attack Multi Segments Leviathan", s)
 	end
 )
 LeviathanEventSection.CreateSlider(
 	{
-		Title = "Value Damage Multi Segments",
+		Title = "Mức sát thương nhiều bộ phận",
 		Min = 0,
 		Max = 1000000,
 		Default = Settings["Value Damage Multi Segments"] or 30000,
@@ -29206,7 +29074,7 @@ function DriveBoatToHydra()
 	end
 end
 LeviathanEventSection.CreateToggle(
-	{ Title = "Auto Attack Leviathan", Desc = nil, Default = Settings["Auto Attack Leviathan"] or false },
+	{ Title = "Tự tấn công Leviathan", Desc = nil, Default = Settings["Auto Attack Leviathan"] or false },
 	function(b)
 		if b then
 			spawn(function()
@@ -29224,20 +29092,20 @@ LeviathanEventSection.CreateToggle(
 	end
 )
 LeviathanEventSection.CreateToggle(
-	{ Title = "Use M1 Dragonstorm Leviathan", Desc = nil, Default = Settings["Use M1 Dragonstorm Leviathan"] or false },
+	{ Title = "Dùng M1 Dragonstorm Leviathan", Desc = nil, Default = Settings["Use M1 Dragonstorm Leviathan"] or false },
 	function(b)
 		SaveSettings("Use M1 Dragonstorm Leviathan", b)
 	end
 )
 LeviathanEventSection.CreateToggle(
-	{ Title = "Use Click M1 Fruit Leviathan", Desc = nil, Default = Settings["Use Click M1 Fruit Leviathan"] or false },
+	{ Title = "Dùng Click M1 Trái Leviathan", Desc = nil, Default = Settings["Use Click M1 Fruit Leviathan"] or false },
 	function(b)
 		SaveSettings("Use Click M1 Fruit Leviathan", b)
 	end
 )
 LeviathanEventSection.CreateToggle(
 	{
-		Title = "Use Click M1 Skull Guitar Leviathan",
+		Title = "Dùng Click M1 Skull Guitar Leviathan",
 		Desc = nil,
 		Default = Settings["Use Click M1 Skull Guitar Leviathan"] or false,
 	},
@@ -29247,7 +29115,7 @@ LeviathanEventSection.CreateToggle(
 )
 local b = LeviathanEventSection.CreateDropdown(
 	{
-		Title = "Select Owner Boat Beast Hunter Shoot Heart",
+		Title = "Chọn chủ thuyền Beast Hunter Shoot Heart",
 		List = DetectNamePlayer(),
 		Search = true,
 		Selected = false,
@@ -29257,11 +29125,11 @@ local b = LeviathanEventSection.CreateDropdown(
 		SaveSettings("Select Owner Boat Beast Hunter", X)
 	end
 )
-LeviathanEventSection.CreateButton({ Title = "Refresh Player" }, function()
+LeviathanEventSection.CreateButton({ Title = "Làm mới danh sách người chơi" }, function()
 	b:GetNewList(DetectNamePlayer())
 end)
 LeviathanEventSection.CreateToggle(
-	{ Title = "Use Your Boat Beast Hunter", Desc = nil, Default = Settings["Use Your Boat Beast Hunter"] or false },
+	{ Title = "Dùng Your Thuyền Beast Hunter", Desc = nil, Default = Settings["Use Your Boat Beast Hunter"] or false },
 	function(b)
 		SaveSettings("Use Your Boat Beast Hunter", b)
 	end
@@ -29318,14 +29186,14 @@ function ShootHeartLeviathan()
 				toTarget(b.Harpoon.Seat.CFrame)
 			end
 		else
-			A.CreateNoti({ Title = "Tam Notification", Desc = "Successfully Fire Shoot Heart Leviathan", ShowTime = 5 })
+			A.CreateNoti({ Title = "Thông báo Tâm", Desc = "Successfully Fire Shoot Heart Leviathan", ShowTime = 5 })
 			wait(5)
 		end
 	end
 end
 LeviathanEventSection.CreateToggle(
 	{
-		Title = "Auto Fire Shoot Heart Leviathan",
+		Title = "Tự động Fire Shoot Heart Leviathan",
 		Desc = nil,
 		Default = Settings["Auto Fire Shoot Heart Leviathan"] or false,
 	},
@@ -29346,7 +29214,7 @@ LeviathanEventSection.CreateToggle(
 	end
 )
 LeviathanEventSection.CreateToggle(
-	{ Title = "Teleport Frozen Dimension", Desc = nil, Default = Settings["Teleport Frozen Dimension"] or false },
+	{ Title = "Dịch chuyển đến Frozen Dimension", Desc = nil, Default = Settings["Teleport Frozen Dimension"] or false },
 	function(b)
 		if b then
 			spawn(function()
@@ -29368,7 +29236,7 @@ LeviathanEventSection.CreateToggle(
 )
 LeviathanEventSection.CreateToggle(
 	{
-		Title = "Tween Boat To Frozen Dimension",
+		Title = "Tween Thuyền To Không Gian Băng Giá",
 		Desc = nil,
 		Default = Settings["Tween Boat To Frozen Dimension"] or false,
 	},
@@ -29415,7 +29283,7 @@ LeviathanEventSection.CreateToggle(
 )
 LeviathanEventSection.CreateSlider(
 	{
-		Title = "Speed Boat Auto Drive",
+		Title = "Tốc độ Thuyền Tự động Drive",
 		Min = 0,
 		Max = 500,
 		Default = Settings["Speed Boat Auto Drive"] or 300,
@@ -29426,7 +29294,7 @@ LeviathanEventSection.CreateSlider(
 	end
 )
 LeviathanEventSection.CreateToggle(
-	{ Title = "Drive Boat To Tiki", Desc = nil, Default = Settings["Drive Boat To Tiki"] or false },
+	{ Title = "Drive Thuyền To Tiki", Desc = nil, Default = Settings["Drive Boat To Tiki"] or false },
 	function(b)
 		_G.autoDrive = b
 		if b then
@@ -29441,7 +29309,7 @@ LeviathanEventSection.CreateToggle(
 	end
 )
 LeviathanEventSection.CreateToggle(
-	{ Title = "Drive Boat To Hydra", Desc = nil, Default = Settings["Drive Boat To Hydra"] or false },
+	{ Title = "Drive Thuyền To Hydra", Desc = nil, Default = Settings["Drive Boat To Hydra"] or false },
 	function(b)
 		_G.autoDrive = b
 		if b then
@@ -29455,7 +29323,7 @@ LeviathanEventSection.CreateToggle(
 		SaveSettings("Drive Boat To Hydra", b)
 	end
 )
-BoatSettingSection = SeaEventTab.CreateSection("Boat Setting")
+BoatSettingSection = SeaEventTab.CreateSection("Cài đặt thuyền")
 local b = table.find({ Enum.Platform.IOS, Enum.Platform.Android }, game:GetService("UserInputService"):GetPlatform())
 FLYING = false
 QEfly = true
@@ -29690,7 +29558,7 @@ local function X(I, _)
 		end
 	end)
 end
-BoatSettingSection.CreateToggle({ Title = "Fly Boat", Desc = nil, Default = Settings["Fly Boat"] or false }, function(s)
+BoatSettingSection.CreateToggle({ Title = "Bay thuyền", Desc = nil, Default = Settings["Fly Boat"] or false }, function(s)
 	if s then
 		spawn(function()
 			while Settings["Fly Boat"] and (wait(0.1)) do
@@ -29720,14 +29588,14 @@ BoatSettingSection.CreateToggle({ Title = "Fly Boat", Desc = nil, Default = Sett
 end)
 R = Settings["Value Speed Fly Boat"]
 BoatSettingSection.CreateSlider(
-	{ Title = "Value Speed Boat", Min = 0, Max = 500, Default = Settings["Value Speed Boat"] or 200, Precise = true },
+	{ Title = "Value Tốc độ Thuyền", Min = 0, Max = 500, Default = Settings["Value Speed Boat"] or 200, Precise = true },
 	function(b)
 		SaveSettings("Value Speed Boat", b)
 	end
 )
 BoatSettingSection.CreateSlider(
 	{
-		Title = "Value Speed Tween Boat",
+		Title = "Value Tốc độ di chuyểnBoat",
 		Min = 50,
 		Max = 2000,
 		Default = tonumber(Settings["Value Speed Tween Boat"]) or 350,
@@ -29743,7 +29611,7 @@ BoatSettingSection.CreateSlider(
 )
 BoatSettingSection.CreateSlider(
 	{
-		Title = "Value Speed Fly Boat",
+		Title = "Value Tốc độ Bay thuyền",
 		Min = 0,
 		Max = 10,
 		Default = Settings["Value Speed Fly Boat"] or 3,
@@ -29770,7 +29638,7 @@ function ChangeSpeedBoat()
 	end
 end
 BoatSettingSection.CreateToggle(
-	{ Title = "Change Speed Boat", Desc = nil, Default = Settings["Change Speed Boat"] or false },
+	{ Title = "Đổi tốc độ thuyền", Desc = nil, Default = Settings["Change Speed Boat"] or false },
 	function(b)
 		if b then
 			spawn(function()
@@ -29785,8 +29653,8 @@ BoatSettingSection.CreateToggle(
 		SaveSettings("Change Speed Boat", b)
 	end
 )
-RaceMain = Main.CreatePage({ Page_Name = "Upgrade Race", Page_Title = "Upgrade Race Tab" })
-RaceDracoSection = RaceMain.CreateSection("Race Draco")
+RaceMain = Main.CreatePage({ Page_Name = "Nâng cấp tộc", Page_Title = "Nâng cấp Tộc Tab" })
+RaceDracoSection = RaceMain.CreateSection("Tộc Draco")
 function DetectGearUp(b)
 	local s = require(game:GetService("Players").LocalPlayer.PlayerGui.TempleGui.LocalScriptTemple.Buttons)
 	b = b or (game.ReplicatedStorage.Remotes.CommF_:InvokeServer("TempleClock", "Check"))
@@ -29890,11 +29758,11 @@ end
 local b = { "V2InProgress", "V3InProgress", "V2TurnInReady", "V3TurnInReady" }
 function AutoUpgradeRaceDraco()
 	if game.Players.LocalPlayer.Data.Race.Value ~= "Draco" then
-		A.CreateNoti({ Title = "Tam Notification", Desc = "Change Race Draco plz", ShowTime = 5 })
+		A.CreateNoti({ Title = "Thông báo Tâm", Desc = "Đổi Tộc Draco plz", ShowTime = 5 })
 		wait(5)
 		return
 	elseif DetectItemPlr("Primordial Reign") then
-		A.CreateNoti({ Title = "Tam Notification", Desc = "Done V3 Draco", ShowTime = 5 })
+		A.CreateNoti({ Title = "Thông báo Tâm", Desc = "Done V3 Draco", ShowTime = 5 })
 		wait(5)
 		return
 	end
@@ -30023,7 +29891,7 @@ function AutoUpgradeRaceDraco()
 	end
 end
 RaceDracoSection.CreateToggle(
-	{ Title = "Auto Upgrade Race V2-V3 Draco", Desc = nil, Default = Settings["Auto Upgrade Race V2-V3 Draco"] or false },
+	{ Title = "Tự động Nâng cấp Tộc V2-V3 Draco", Desc = nil, Default = Settings["Auto Upgrade Race V2-V3 Draco"] or false },
 	function(b)
 		if b then
 			spawn(function()
@@ -30105,9 +29973,9 @@ function CheckModelTrialDraco()
 	end
 	return b
 end
-getgenv().StatusGearDraco = RaceDracoSection.CreateLabel({ Title = "Acient One Draco Status" })
+getgenv().StatusGearDraco = RaceDracoSection.CreateLabel({ Title = "Acient One Draco Trạng thái" })
 ToggleAutoTrialDraco = RaceDracoSection.CreateToggle(
-	{ Title = "Auto Trial Draco", Desc = nil, Default = Settings["Auto Trial Draco"] or false },
+	{ Title = "Tự làm thử thách Draco", Desc = nil, Default = Settings["Auto Trial Draco"] or false },
 	function(b)
 		if b then
 			spawn(function()
@@ -30154,7 +30022,7 @@ ToggleAutoTrialDraco = RaceDracoSection.CreateToggle(
 							end
 						else
 							if getgenv().DoneTrialDraco then
-								A.CreateNoti({ Title = "Tam Notification", Desc = "Done Trial", ShowTime = 5 })
+								A.CreateNoti({ Title = "Thông báo Tâm", Desc = "Done Thử thách", ShowTime = 5 })
 								getgenv().DoneTrialDraco = false
 								ToggleAutoTrialDraco:SetStage(false)
 								return
@@ -30171,8 +30039,8 @@ ToggleAutoTrialDraco = RaceDracoSection.CreateToggle(
 								end
 							else
 								A.CreateNoti({
-									Title = "Tam Notification",
-									Desc = "Not have Prehistoric Island",
+									Title = "Thông báo Tâm",
+									Desc = "Not have Đảo Tiền Sử",
 									ShowTime = 5,
 								})
 								wait(5)
@@ -30910,8 +30778,8 @@ function FullyDraco()
 end
 RaceDracoSection.CreateToggle(
 	{
-		Title = "Fully Trial Draco",
-		Desc = "Auto Craft and Auto Find and Auto Attack and Fix\10 Auto Trial and auto Train Race and Buy Gear and Choose Gear",
+		Title = "Fully Thử thách Draco",
+		Desc = "Tự động Chế tạo and Tự động Tìm and Tự động Tấn công and Fix\10 Tự làm thử thách and Tự động Train Tộc and Mua Gear and Chọn Gear",
 		Default = Settings["Fully Trial Draco"] or false,
 	},
 	function(g)
@@ -30932,7 +30800,7 @@ RaceDracoSection.CreateToggle(
 )
 RaceDracoSection.CreateToggle(
 	{
-		Title = "Ignore Craft Volcanic Magnet [ Fully Draco ]",
+		Title = "Ignore Chế tạo Volcanic Magnet [ Fully Draco ]",
 		Desc = nil,
 		Default = Settings["Ignore Craft Volcanic Magnet Draco"] or false,
 	},
@@ -30941,7 +30809,7 @@ RaceDracoSection.CreateToggle(
 	end
 )
 RaceDracoSection.CreateToggle(
-	{ Title = "Auto Buy Gear Draco", Desc = nil, Default = Settings["Auto Buy Gear Draco"] or false },
+	{ Title = "Tự động Mua Gear Draco", Desc = nil, Default = Settings["Auto Buy Gear Draco"] or false },
 	function(g)
 		if g then
 			spawn(function()
@@ -30956,7 +30824,7 @@ RaceDracoSection.CreateToggle(
 	end
 )
 RaceDracoSection.CreateToggle(
-	{ Title = "Auto Finish Train Draco Quest", Desc = nil, Default = Settings["Auto Finish Train Draco Quest"] or false },
+	{ Title = "Tự động Finish Train Draco Nhiệm vụ", Desc = nil, Default = Settings["Auto Finish Train Draco Quest"] or false },
 	function(g)
 		if g then
 			spawn(function()
@@ -31018,7 +30886,7 @@ RaceDracoSection.CreateToggle(
 		SaveSettings("Auto Finish Train Draco Quest", g)
 	end
 )
-RaceNormalSection = RaceMain.CreateSection("Race Normal")
+RaceNormalSection = RaceMain.CreateSection("Tộc thường")
 function AutoMinkV2()
 	local g = GetNearestChest()
 	if g then
@@ -31180,7 +31048,7 @@ end
 function UpgradeRaceV2AndV3()
 	local m = CheckRace()
 	if m == " V3" then
-		A.CreateNoti({ Title = "Tam Notification", Desc = "Done V3", ShowTime = 5 })
+		A.CreateNoti({ Title = "Thông báo Tâm", Desc = "Done V3", ShowTime = 5 })
 		wait(5)
 		return
 	end
@@ -31190,7 +31058,7 @@ function UpgradeRaceV2AndV3()
 	end
 	if m == " V1" then
 		if t.Data.Beli.Value < 500000 then
-			A.CreateNoti({ Title = "Tam Notification", Desc = "Beli >= 500k", ShowTime = 5 })
+			A.CreateNoti({ Title = "Thông báo Tâm", Desc = "Beli >= 500k", ShowTime = 5 })
 			wait(5)
 			return
 		end
@@ -31272,7 +31140,7 @@ function UpgradeRaceV2AndV3()
 			game.ReplicatedStorage.Remotes.CommF_:InvokeServer("Wenlocktoad", "3")
 			return
 		elseif l == -1 then
-			A.CreateNoti({ Title = "Tam Notification", Desc = "Beli >= 2m", ShowTime = 5 })
+			A.CreateNoti({ Title = "Thông báo Tâm", Desc = "Beli >= 2m", ShowTime = 5 })
 			wait(5)
 			return
 		end
@@ -31300,7 +31168,7 @@ function UpgradeRaceV2AndV3()
 					end
 				end
 			else
-				A.CreateNoti({ Title = "Tam Notification", Desc = "Waiting Boss Spawn", ShowTime = 5 })
+				A.CreateNoti({ Title = "Thông báo Tâm", Desc = "Waiting Trùm Spawn", ShowTime = 5 })
 				wait(5)
 			end
 		elseif l == "Mink V2" then
@@ -31398,7 +31266,7 @@ function UpgradeRaceV2AndV3()
 	end
 end
 RaceNormalSection.CreateToggle(
-	{ Title = "Auto Upgrade Race V2-V3", Desc = nil, Default = Settings["Auto Upgrade Race V2-V3"] or false },
+	{ Title = "Tự động Nâng cấp Tộc V2-V3", Desc = nil, Default = Settings["Auto Upgrade Race V2-V3"] or false },
 	function(g)
 		if g then
 			spawn(function()
@@ -31437,17 +31305,17 @@ function DetectkeyCyborg(l)
 	end
 end
 ToggleAutoGetFullyCyborg = RaceNormalSection.CreateToggle(
-	{ Title = "Auto Get Fully Cyborg", Desc = nil, Default = Settings["Auto Get Fully Cyborg"] or false },
+	{ Title = "Tự động Get Fully Cyborg", Desc = nil, Default = Settings["Auto Get Fully Cyborg"] or false },
 	function(l)
 		SaveSettings("Auto Get Fully Cyborg", l)
 		if l and not Settings["Auto Get Cyborg"] then
-			A.CreateNoti({ Title = "Tam Notification", Desc = "Turn On Auto Get Cyborg plz", ShowTime = 5 })
+			A.CreateNoti({ Title = "Thông báo Tâm", Desc = "Turn On Tự động Get Cyborg plz", ShowTime = 5 })
 		end
 	end
 )
 RaceNormalSection.CreateToggle(
 	{
-		Title = "Auto Get Cyborg Hop Collect Chest",
+		Title = "Tự động Get Cyborg Đổi máy chủ Nhặt Rương",
 		Desc = nil,
 		Default = Settings["Auto Get Cyborg Hop Collect Chest"] or false,
 	},
@@ -31457,7 +31325,7 @@ RaceNormalSection.CreateToggle(
 )
 function GetCyborg()
 	if game.ReplicatedStorage.Remotes.CommF_:InvokeServer("CyborgTrainer", "Check") == 2 then
-		A.CreateNoti({ Title = "Tam Notification", Desc = "Plz Turn Off", ShowTime = 5 })
+		A.CreateNoti({ Title = "Thông báo Tâm", Desc = "Plz Turn Off", ShowTime = 5 })
 		wait(5)
 		return
 	end
@@ -31586,7 +31454,7 @@ function GetCyborg()
 	end
 end
 RaceNormalSection.CreateToggle(
-	{ Title = "Auto Get Cyborg", Desc = nil, Default = Settings["Auto Get Cyborg"] or false },
+	{ Title = "Tự động Get Cyborg", Desc = nil, Default = Settings["Auto Get Cyborg"] or false },
 	function(g)
 		if g then
 			spawn(function()
@@ -31613,7 +31481,7 @@ function GetRaceGhoul()
 		or game.ReplicatedStorage.Remotes.CommF_:InvokeServer("Ectoplasm", "BuyCheck", 4, true) == 2
 		or game.ReplicatedStorage.Remotes.CommF_:InvokeServer("Ectoplasm", "Change", 4, true) == 1
 	then
-		A.CreateNoti({ Title = "Tam Notification", Desc = "Plz Turn Off", ShowTime = 5 })
+		A.CreateNoti({ Title = "Thông báo Tâm", Desc = "Plz Turn Off", ShowTime = 5 })
 		wait(5)
 		return
 	end
@@ -31723,19 +31591,19 @@ function GetRaceGhoul()
 			if Settings["Hop Server Get Ghoul"] then
 				SpecialHop("Cursed Captain")
 			end
-			A.CreateNoti({ Title = "Tam Notification", Desc = "Wating Boss Spawn", ShowTime = 5 })
+			A.CreateNoti({ Title = "Thông báo Tâm", Desc = "Wating Trùm Spawn", ShowTime = 5 })
 			wait(5)
 		end
 	end
 end
 RaceNormalSection.CreateToggle(
-	{ Title = "Hop Server Find Boss Cursed Captain", Desc = nil, Default = Settings["Hop Server Get Ghoul"] or false },
+	{ Title = "Đổi máy chủ tìm trùm Cursed Captain", Desc = nil, Default = Settings["Hop Server Get Ghoul"] or false },
 	function(g)
 		SaveSettings("Hop Server Get Ghoul", g)
 	end
 )
 RaceNormalSection.CreateToggle(
-	{ Title = "Auto Get Ghoul", Desc = nil, Default = Settings["Auto Get Ghoul"] or false },
+	{ Title = "Tự động Get Ghoul", Desc = nil, Default = Settings["Auto Get Ghoul"] or false },
 	function(g)
 		if g then
 			spawn(function()
@@ -31752,8 +31620,8 @@ RaceNormalSection.CreateToggle(
 		SaveSettings("Auto Get Ghoul", g)
 	end
 )
-RaceV4Section = RaceMain.CreateSection("Race V4")
-RaceV4Section.CreateToggle({ Title = "No Frog", Desc = nil, Default = Settings["No Frog"] or false }, function(g)
+RaceV4Section = RaceMain.CreateSection("Tộc V4")
+RaceV4Section.CreateToggle({ Title = "Không dùng ếch", Desc = nil, Default = Settings["No Frog"] or false }, function(g)
 	if g then
 		local R = game.Lighting
 		R.FogEnd = 100000
@@ -31766,7 +31634,7 @@ RaceV4Section.CreateToggle({ Title = "No Frog", Desc = nil, Default = Settings["
 	SaveSettings("No Frog", g)
 end)
 RaceV4Section.CreateToggle(
-	{ Title = "Teleport Acient Clock", Desc = nil, Default = Settings["Teleport Acient Clock"] or false },
+	{ Title = "Dịch chuyển Acient Clock", Desc = nil, Default = Settings["Teleport Acient Clock"] or false },
 	function(g)
 		if g then
 			spawn(function()
@@ -31890,7 +31758,7 @@ function CollectBlueGear()
 end
 function PullLeverV4()
 	if not CheckItemInventory("Valkyrie Helm") or not CheckItemInventory("Mirror Fractal") then
-		A.CreateNoti({ Title = "Tam Notification", Desc = "Not Valkyrie Helm or not Mirror Fractal", ShowTime = 5 })
+		A.CreateNoti({ Title = "Thông báo Tâm", Desc = "Not Valkyrie Helm or not Mirror Fractal", ShowTime = 5 })
 		wait(5)
 		return
 	end
@@ -31958,13 +31826,13 @@ function PullLeverV4()
 				fireproximityprompt(l.Lever.Prompt.ProximityPrompt, 1)
 			end
 		else
-			A.CreateNoti({ Title = "Tam Notification", Desc = "Done Pull Lever", ShowTime = 5 })
+			A.CreateNoti({ Title = "Thông báo Tâm", Desc = "Done Pull Lever", ShowTime = 5 })
 			wait(5)
 		end
 	end
 end
 RaceV4Section.CreateToggle(
-	{ Title = "Auto Buy Gear", Desc = nil, Default = Settings["Auto Buy Gear"] or false },
+	{ Title = "Tự động Mua Gear", Desc = nil, Default = Settings["Auto Buy Gear"] or false },
 	function(g)
 		if g then
 			spawn(function()
@@ -31980,7 +31848,7 @@ RaceV4Section.CreateToggle(
 )
 RaceV4Section.CreateDropdown(
 	{
-		Title = "Select Gear V4",
+		Title = "Chọn Gear V4",
 		List = { "Alpha", "Omega" },
 		Search = false,
 		Selected = false,
@@ -31991,7 +31859,7 @@ RaceV4Section.CreateDropdown(
 	end
 )
 getgenv().ToggleAutoChooseGears = RaceV4Section.CreateToggle(
-	{ Title = "Auto Choose Gears", Desc = nil, Default = Settings["Auto Choose Gears"] or false },
+	{ Title = "Tự động Chọn Gears", Desc = nil, Default = Settings["Auto Choose Gears"] or false },
 	function(g)
 		if g then
 			spawn(function()
@@ -32009,7 +31877,7 @@ getgenv().ToggleAutoChooseGears = RaceV4Section.CreateToggle(
 	end
 )
 RaceV4Section.CreateToggle(
-	{ Title = "Auto Finish Train Quest", Desc = nil, Default = Settings["Auto Finish Train Quest"] or false },
+	{ Title = "Tự động Finish Train Nhiệm vụ", Desc = nil, Default = Settings["Auto Finish Train Quest"] or false },
 	function(g)
 		if g then
 			spawn(function()
@@ -32078,14 +31946,14 @@ RaceV4Section.CreateToggle(
 	end
 )
 RaceV4Section.CreateToggle(
-	{ Title = "Stack Train With Trial Race", Desc = nil, Default = Settings["Stack Train With Trial Race"] or false },
+	{ Title = "Stack Train With Thử thách Tộc", Desc = nil, Default = Settings["Stack Train With Trial Race"] or false },
 	function(g)
 		SaveSettings("Stack Train With Trial Race", g)
 	end
 )
 getgenv().TurnOffHOPSVPullAndTrial = RaceV4Section.CreateToggle(
 	{
-		Title = "Hop Server [Trial Or Pull Lever]",
+		Title = "Đổi máy chủ [Thử thách Or Pull Lever]",
 		Desc = nil,
 		Default = Settings["Hop Server [Trial Or Pull Lever]"] or false,
 	},
@@ -32094,7 +31962,7 @@ getgenv().TurnOffHOPSVPullAndTrial = RaceV4Section.CreateToggle(
 	end
 )
 RaceV4Section.CreateToggle(
-	{ Title = "Auto Pull Lever", Desc = nil, Default = Settings["Auto Pull Lever"] or false },
+	{ Title = "Tự kéo cần gạt", Desc = nil, Default = Settings["Auto Pull Lever"] or false },
 	function(g)
 		if g then
 			spawn(function()
@@ -32126,7 +31994,7 @@ function DetectNameMulti(g)
 end
 DropdownSelectPlayerMulti = RaceV4Section.CreateDropdown(
 	{
-		Title = "Select Players Multi",
+		Title = "Chọn người chơi",
 		List = PrepareMultiSelectList(DetectNameMulti(), Settings["Select Players Multi"]),
 		Search = true,
 		Selected = true,
@@ -32136,41 +32004,41 @@ DropdownSelectPlayerMulti = RaceV4Section.CreateDropdown(
 		SaveSettings("Select Players Multi", g, R)
 	end
 )
-RaceV4Section.CreateButton({ Title = "Refresh Player" }, function()
+RaceV4Section.CreateButton({ Title = "Làm mới danh sách người chơi" }, function()
 	DropdownSelectPlayerMulti:GetNewList(DetectNameMulti(true))
 end)
 RaceV4Section.CreateToggle(
-	{ Title = "Multi Trial", Desc = nil, Default = Settings["Multi Trial"] or false },
+	{ Title = "Multi Thử thách", Desc = nil, Default = Settings["Multi Trial"] or false },
 	function(g)
 		SaveSettings("Multi Trial", g)
 	end
 )
 RaceV4Section.CreateToggle(
-	{ Title = "Auto Reset Character", Desc = nil, Default = Settings["Auto Reset Character"] or false },
+	{ Title = "Tự hồi sinh nhân vật", Desc = nil, Default = Settings["Auto Reset Character"] or false },
 	function(g)
 		SaveSettings("Auto Reset Character", g)
 	end
 )
 ToggleAutoTrial = RaceV4Section.CreateToggle(
-	{ Title = "Auto Trial", Desc = nil, Default = Settings["Auto Trial"] or false },
+	{ Title = "Tự làm thử thách", Desc = nil, Default = Settings["Auto Trial"] or false },
 	function(g)
 		SaveSettings("Auto Trial", g)
 	end
 )
 RaceV4Section.CreateToggle(
 	{
-		Title = "Auto Turn On V3 Near Door",
-		Desc = "will auto turn on race \10if have players near door",
+		Title = "Tự bật V3 Near Door",
+		Desc = "will Tự động turn on Tộc \10if have Người chơi near door",
 		Default = Settings["Auto Turn On V3 Near Door"] or false,
 	},
 	function(g)
 		SaveSettings("Auto Turn On V3 Near Door", g)
 	end
 )
-KillTrialSection = RaceMain.CreateSection("Kill Trial")
+KillTrialSection = RaceMain.CreateSection("Đánh thử thách")
 KillTrialSection.CreateDropdown(
 	{
-		Title = "Select Weapon Attack Trial",
+		Title = "Chọn vũ khí đánh thử thách",
 		List = { "Melee", "Sword", "Blox Fruit" },
 		Search = true,
 		Selected = false,
@@ -32182,8 +32050,8 @@ KillTrialSection.CreateDropdown(
 )
 KillTrialSection.CreateToggle(
 	{
-		Title = "Kill players When complete Trial",
-		Desc = "Turn on before Start Attack and Turn on Auto Trial",
+		Title = "Diệt Người chơi When complete Thử thách",
+		Desc = "Turn on before Start Tấn công and Turn on Tự làm thử thách",
 		Default = Settings["Kill players When complete Trial"] or false,
 	},
 	function(g)
@@ -32191,14 +32059,14 @@ KillTrialSection.CreateToggle(
 	end
 )
 KillTrialSection.CreateToggle(
-	{ Title = "Use Skill when Kill Player", Desc = nil, Default = Settings["Use Skill when Kill Player"] or false },
+	{ Title = "Dùng Kỹ năng when Diệt Người chơi", Desc = nil, Default = Settings["Use Skill when Kill Player"] or false },
 	function(g)
 		SaveSettings("Use Skill when Kill Player", g)
 	end
 )
 KillTrialSection.CreateToggle(
 	{
-		Title = "Just Use Skill when Player Active Ken",
+		Title = "Just Dùng Kỹ năng when Người chơi Active Ken",
 		Desc = nil,
 		Default = Settings["Just Use Skill when Player Active Ken"] or false,
 	},
@@ -32712,29 +32580,29 @@ spawn(function()
 		end)
 	end
 end)
-GetItemsMain = Main.CreatePage({ Page_Name = "Get and Upgrade Items", Page_Title = "Get and Upgrade Items Tab" })
-GetItemsSection = GetItemsMain.CreateSection("Get Items")
+GetItemsMain = Main.CreatePage({ Page_Name = "Nhận và nâng cấp vật phẩm", Page_Title = "Get and Nâng cấp Items Tab" })
+GetItemsSection = GetItemsMain.CreateSection("Nhận vật phẩm")
 GetItemsSection.CreateToggle(
-	{ Title = "Auto Trade Bone", Desc = nil, Default = Settings["Auto Trade Bone"] or false },
+	{ Title = "Tự đổi xương", Desc = nil, Default = Settings["Auto Trade Bone"] or false },
 	function(g)
 		SaveSettings("Auto Trade Bone", g)
 	end
 )
 GetItemsSection.CreateToggle(
-	{ Title = "Auto Buy Legendary Sword", Desc = nil, Default = Settings["Auto Buy Legendary Sword"] or false },
+	{ Title = "Tự mua kiếm Huyền Thoại", Desc = nil, Default = Settings["Auto Buy Legendary Sword"] or false },
 	function(g)
 		SaveSettings("Auto Buy Legendary Sword", g)
 	end
 )
 GetItemsSection.CreateToggle(
-	{ Title = "Auto Buy Haki Color", Desc = nil, Default = Settings["Auto Buy Haki Color"] or false },
+	{ Title = "Tự mua màu Haki", Desc = nil, Default = Settings["Auto Buy Haki Color"] or false },
 	function(g)
 		SaveSettings("Auto Buy Haki Color", g)
 	end
 )
 GetItemsSection.CreateToggle(
 	{
-		Title = "Hop Server [ Haki color or Legendary Sword]",
+		Title = "Đổi máy chủ [ Haki Màu or Legendary Kiếm]",
 		Desc = nil,
 		Default = Settings["Hop Server [ Haki color or Legendary Sword]"] or false,
 	},
@@ -32771,7 +32639,7 @@ function DetectQuestRainBowHaki(R)
 end
 function GetRainBowHaki()
 	if game.ReplicatedStorage.Remotes.CommF_:InvokeServer("HornedMan") == 1 then
-		A.CreateNoti({ Title = "Tam Notification", Desc = "Done Get Rainbow Haki", ShowTime = 5 })
+		A.CreateNoti({ Title = "Thông báo Tâm", Desc = "Done Get Rainbow Haki", ShowTime = 5 })
 		wait(5)
 		return
 	end
@@ -32800,13 +32668,13 @@ function GetRainBowHaki()
 				UsedualFlock()
 			until not IsMobAlive(g) or not Settings["Auto Get Rainbow Haki"]
 		else
-			A.CreateNoti({ Title = "Tam Notification", Desc = "Waiting Boss Spawn", ShowTime = 5 })
+			A.CreateNoti({ Title = "Thông báo Tâm", Desc = "Waiting Trùm Spawn", ShowTime = 5 })
 			wait(5)
 		end
 	end
 end
 GetItemsSection.CreateToggle(
-	{ Title = "Auto Get Rainbow Haki", Desc = nil, Default = Settings["Auto Get Rainbow Haki"] or false },
+	{ Title = "Tự lấy Haki Cầu Vồng", Desc = nil, Default = Settings["Auto Get Rainbow Haki"] or false },
 	function(g)
 		if g then
 			spawn(function()
@@ -32870,7 +32738,7 @@ function GuitarPuzzleProgress()
 			CommF:InvokeServer("gravestoneEvent", 2, true)
 			task.wait(1)
 		else
-			A.CreateNoti({ Title = "Tam Notification", Desc = "Hop Full Moon", ShowTime = 5 })
+			A.CreateNoti({ Title = "Thông báo Tâm", Desc = "Đổi máy chủ Full Moon", ShowTime = 5 })
 			SpecialHop("FullMoon")
 		end
 	else
@@ -32986,12 +32854,12 @@ function AutoSoulGuitar()
 		game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("soulGuitarBuy", true)
 		== "[You already own this item.]"
 	then
-		A.CreateNoti({ Title = "Tam Notification", Desc = "[You already own this item.]", ShowTime = 5 })
+		A.CreateNoti({ Title = "Thông báo Tâm", Desc = "[You already own this item.]", ShowTime = 5 })
 		task.wait(5)
 		return
 	end
 	if t.Data.Fragments.Value < 5000 then
-		A.CreateNoti({ Title = "Tam Notification", Desc = "Frag >= 5k", ShowTime = 5 })
+		A.CreateNoti({ Title = "Thông báo Tâm", Desc = "Frag >= 5k", ShowTime = 5 })
 		wait(5)
 		return
 	end
@@ -33161,7 +33029,7 @@ function AutoSoulGuitar()
 	end
 end
 GetItemsSection.CreateToggle(
-	{ Title = "Auto Soul Guitar", Desc = nil, Default = Settings["Auto Soul Guitar"] or false },
+	{ Title = "Tự lấy Soul Guitar", Desc = nil, Default = Settings["Auto Soul Guitar"] or false },
 	function(g)
 		if g then
 			spawn(function()
@@ -33223,8 +33091,8 @@ function QuestGood4()
 				(Settings["Select Method Hop CDK1"] or {})["Hop Raid Castle [ Delay 20s Hop Because check Raids Castle ]"]
 			then
 				A.CreateNoti({
-					Title = "Tam Notification",
-					Desc = "Waiting 20s for check raid castle if dont have will Server",
+					Title = "Thông báo Tâm",
+					Desc = "Waiting 20s for check Đột kích castle if dont have will Máy chủ",
 					ShowTime = 5,
 				})
 				local g = tick()
@@ -33235,7 +33103,7 @@ function QuestGood4()
 					SpecialHop("Raid Castle")
 				end
 			else
-				A.CreateNoti({ Title = "Tam Notification", Desc = "Waint Raid Castle", ShowTime = 5 })
+				A.CreateNoti({ Title = "Thông báo Tâm", Desc = "Waint Đột kích Castle", ShowTime = 5 })
 			end
 			wait(5)
 		end
@@ -33333,10 +33201,10 @@ function Questgood5()
 		TweenManager.CancelCurrent()
 	else
 		if Settings["Select Method Hop CDK1"] and Settings["Select Method Hop CDK1"]["Find Cake Queen"] then
-			A.CreateNoti({ Title = "Tam Notification", Desc = 'Hop Server Find Cake Queen"', ShowTime = 5 })
+			A.CreateNoti({ Title = "Thông báo Tâm", Desc = 'Đổi máy chủ Tìm Cake Queen"', ShowTime = 5 })
 			HopServer()
 		else
-			A.CreateNoti({ Title = "Tam Notification", Desc = 'Wating Cake Queen"', ShowTime = 5 })
+			A.CreateNoti({ Title = "Thông báo Tâm", Desc = 'Wating Cake Queen"', ShowTime = 5 })
 		end
 		wait(5)
 	end
@@ -33544,13 +33412,13 @@ function CheckMasterSword(g, R)
 end
 function GetCDK()
 	if not CheckItemInventory("Tushita") or not CheckItemInventory("Yama") then
-		A.CreateNoti({ Title = "Tam Notification", Desc = "Get Tushita and Yama", ShowTime = 5 })
+		A.CreateNoti({ Title = "Thông báo Tâm", Desc = "Get Tushita and Yama", ShowTime = 5 })
 		wait(5)
 		return
 	end
 	if CheckItemInventory("Tushita") and (CheckItemInventory("Yama")) then
 		if not CheckMasterSword("Yama", 350) or not CheckMasterSword("Tushita", 350) then
-			A.CreateNoti({ Title = "Tam Notification", Desc = "Mastery >= 350", ShowTime = 5 })
+			A.CreateNoti({ Title = "Thông báo Tâm", Desc = "Mastery >= 350", ShowTime = 5 })
 			wait(5)
 			return
 		end
@@ -33640,7 +33508,7 @@ end
 MethodHopCDk = { ["Find Cake Queen"] = false, ["Hop Raid Castle [ Delay 20s Hop Because check Raids Castle ]"] = false }
 GetItemsSection.CreateDropdown(
 	{
-		Title = "Select Method Hop CDK",
+		Title = "Chọn cách đổi máy chủ CDK",
 		List = PrepareMultiSelectList(MethodHopCDk, Settings["Select Method Hop CDK1"]),
 		Search = true,
 		Selected = true,
@@ -33650,7 +33518,7 @@ GetItemsSection.CreateDropdown(
 		SaveSettings("Select Method Hop CDK1", g, R)
 	end
 )
-GetItemsSection.CreateToggle({ Title = "Auto CDK", Desc = nil, Default = Settings["Auto CDK"] or false }, function(g)
+GetItemsSection.CreateToggle({ Title = "Tự làm CDK", Desc = nil, Default = Settings["Auto CDK"] or false }, function(g)
 	if g then
 		spawn(function()
 			while Settings["Auto CDK"] and (task.wait(0.1)) do
@@ -33717,7 +33585,7 @@ function GetYama()
 		end
 	end
 end
-GetItemsSection.CreateToggle({ Title = "Auto Yama", Desc = nil, Default = Settings["Auto Yama"] or false }, function(g)
+GetItemsSection.CreateToggle({ Title = "Tự lấy Yama", Desc = nil, Default = Settings["Auto Yama"] or false }, function(g)
 	if g then
 		spawn(function()
 			while Settings["Auto Yama"] and (task.wait(0.1)) do
@@ -33797,13 +33665,13 @@ function GetTushita()
 				end
 			end
 		else
-			A.CreateNoti({ Title = "Tam Notification", Desc = "Rip Indra Dont Spawn", ShowTime = 5 })
+			A.CreateNoti({ Title = "Thông báo Tâm", Desc = "Rip Indra Dont Spawn", ShowTime = 5 })
 			wait(5)
 		end
 	end
 end
 GetItemsSection.CreateToggle(
-	{ Title = "Auto Tushita", Desc = nil, Default = Settings["Auto Tushita"] or false },
+	{ Title = "Tự lấy Tushita", Desc = nil, Default = Settings["Auto Tushita"] or false },
 	function(g)
 		if g then
 			spawn(function()
@@ -33820,7 +33688,7 @@ GetItemsSection.CreateToggle(
 		SaveSettings("Auto Tushita", g)
 	end
 )
-GetItemsSection.CreateToggle({ Title = "Auto TTK", Desc = nil, Default = Settings["Auto TTK"] or false }, function(g)
+GetItemsSection.CreateToggle({ Title = "Tự lấy TTK", Desc = nil, Default = Settings["Auto TTK"] or false }, function(g)
 	if g then
 		spawn(function()
 			while Settings["Auto TTK"] and (task.wait(0.1)) do
@@ -34177,7 +34045,7 @@ function SaberSword()
 	end
 end
 GetItemsSection.CreateToggle(
-	{ Title = "Auto Saber", Desc = nil, Default = Settings["Auto Saber"] or false },
+	{ Title = "Tự lấy Saber", Desc = nil, Default = Settings["Auto Saber"] or false },
 	function(g)
 		if g then
 			spawn(function()
@@ -34193,7 +34061,7 @@ GetItemsSection.CreateToggle(
 )
 function autoCraftSharkAnchor()
 	if CheckItemInventory("Shark Anchor") then
-		A.CreateNoti({ Title = "Tam Notification", Desc = "Done Shark Anchor", ShowTime = 5 })
+		A.CreateNoti({ Title = "Thông báo Tâm", Desc = "Done Shark Anchor", ShowTime = 5 })
 		wait(5)
 		return
 	end
@@ -34231,7 +34099,7 @@ function autoCraftSharkAnchor()
 	end
 end
 GetItemsSection.CreateToggle(
-	{ Title = "Auto Craft Item Shark Anchor", Desc = nil, Default = Settings["Auto Craft Item Shark Anchor"] or false },
+	{ Title = "Tự chế tạo Shark Anchor", Desc = nil, Default = Settings["Auto Craft Item Shark Anchor"] or false },
 	function(g)
 		if g then
 			spawn(function()
@@ -34247,7 +34115,7 @@ GetItemsSection.CreateToggle(
 )
 function AutoYorumini()
 	if CheckItemInventory("Dark Dagger") then
-		A.CreateNoti({ Title = "Tam Notification", Desc = "u haved Yoru Mini", ShowTime = 5 })
+		A.CreateNoti({ Title = "Thông báo Tâm", Desc = "u haved Yoru Mini", ShowTime = 5 })
 		return
 	end
 	local g = CheckNameBoss("rip_indra True Form")
@@ -34347,8 +34215,8 @@ function AutoYorumini()
 end
 GetItemsSection.CreateToggle(
 	{
-		Title = "Auto Yoru Mini",
-		Desc = "u need have 3 haki legendary,\10it will auto chest, kill Elite Hunter Find Chalice,\10Summon And Kill Rip Indra",
+		Title = "Tự động Yoru Mini",
+		Desc = "u need have 3 haki legendary,\10it will Tự động Rương, Diệt Elite Hunter Tìm Chalice,\10Triệu hồi And Diệt Rip Indra",
 		Default = Settings["Auto Yoru Mini"] or false,
 	},
 	function(g)
@@ -34366,15 +34234,15 @@ GetItemsSection.CreateToggle(
 )
 GetItemsSection.CreateToggle(
 	{
-		Title = "Auto Yoru Mini (Hop Server)",
-		Desc = "u can change value hop chest in Tab Farming Other",
+		Title = "Tự động Yoru Mini (Đổi máy chủ)",
+		Desc = "u can Đổi value Đổi máy chủ Rương in Tab Cày tự động Other",
 		Default = Settings["Auto Yoru Mini"] or false,
 	},
 	function(g)
 		SaveSettings("Auto Yoru Mini (Hop Server)", g)
 	end
 )
-MasteryWeaponSection = GetItemsMain.CreateSection("Mastery Weapon")
+MasteryWeaponSection = GetItemsMain.CreateSection("Thông thạo vũ khí")
 BlMeleeFarmMastery = {}
 TableMelees = {
 	Superhuman = 1,
@@ -34411,7 +34279,7 @@ function CheckMasteryMelee(g)
 	end
 end
 MasteryWeaponSection.CreateToggle(
-	{ Title = "Auto Farm Mastery 600 Melees", Desc = nil, Default = Settings["Auto Farm Mastery 600 Melees"] or false },
+	{ Title = "Tự cày 600 thông thạo võ", Desc = nil, Default = Settings["Auto Farm Mastery 600 Melees"] or false },
 	function(g)
 		if g then
 			Q = true
@@ -34472,7 +34340,7 @@ function DetectSwordUnlock()
 end
 MasteryWeaponSection.CreateToggle(
 	{
-		Title = "Auto Farm Mastery 600 Sword In Inventory",
+		Title = "Tự cày 600 thông thạo kiếm trong túi",
 		Desc = nil,
 		Default = Settings["Auto Farm Mastery 600 Sword In Inventory"] or false,
 	},
@@ -34500,7 +34368,7 @@ MasteryWeaponSection.CreateToggle(
 		SaveSettings("Auto Farm Mastery 600 Sword In Inventory", g)
 	end
 )
-UpgradeWeaponSection = GetItemsMain.CreateSection("Upgrade Weapon")
+UpgradeWeaponSection = GetItemsMain.CreateSection("Nâng cấp vũ khí")
 getgenv().StatusUpgradeWP = UpgradeWeaponSection.CreateLabel({ Title = "" })
 function DetectGunUnlock()
 	local g, f, R = next, B()
@@ -34642,7 +34510,7 @@ function AutoUpgradeWeapon(R)
 	if m then
 		R = NameMaterials[m]
 		if not R then
-			A.CreateNoti({ Title = "Tam Notification", Desc = "Not Support Material" .. m .. "Sorry", ShowTime = 5 })
+			A.CreateNoti({ Title = "Thông báo Tâm", Desc = "Not Support Nguyên liệu" .. m .. "Sorry", ShowTime = 5 })
 			wait(5)
 			return
 		end
@@ -34709,7 +34577,7 @@ function AutoUpgradeWeapon(R)
 	end
 end
 UpgradeWeaponSection.CreateToggle(
-	{ Title = "Auto Upgrade Sword Inventory", Desc = nil, Default = Settings["Auto Upgrade Sword Inventory"] or false },
+	{ Title = "Tự nâng cấp kiếm trong túi", Desc = nil, Default = Settings["Auto Upgrade Sword Inventory"] or false },
 	function(g)
 		if g then
 			spawn(function()
@@ -34727,7 +34595,7 @@ UpgradeWeaponSection.CreateToggle(
 	end
 )
 UpgradeWeaponSection.CreateToggle(
-	{ Title = "Auto Upgrade Gun Inventory", Desc = nil, Default = Settings["Auto Upgrade Gun Inventory"] or false },
+	{ Title = "Tự nâng cấp súng trong túi", Desc = nil, Default = Settings["Auto Upgrade Gun Inventory"] or false },
 	function(g)
 		if g then
 			spawn(function()
@@ -34744,11 +34612,11 @@ UpgradeWeaponSection.CreateToggle(
 		SaveSettings("Auto Upgrade Gun Inventory", g)
 	end
 )
-VolcanoTab = Main.CreatePage({ Page_Name = "Volcano Event", Page_Title = "Volcano Event Tab" })
-SettingsVolcanoSection = VolcanoTab.CreateSection("Settings Volcano")
+VolcanoTab = Main.CreatePage({ Page_Name = "Sự kiện núi lửa", Page_Title = "Volcano Event Tab" })
+SettingsVolcanoSection = VolcanoTab.CreateSection("Cài đặt núi lửa")
 SettingsVolcanoSection.CreateDropdown(
 	{
-		Title = "Select Weapon Kill Golem",
+		Title = "Chọn vũ khí diệt Golem",
 		List = { "Melee", "Sword", "Blox Fruit" },
 		Search = true,
 		Selected = false,
@@ -34760,7 +34628,7 @@ SettingsVolcanoSection.CreateDropdown(
 )
 SettingsVolcanoSection.CreateDropdown(
 	{
-		Title = "Select Weapons Fix Lava",
+		Title = "Chọn vũ khí xử lý dung nham",
 		List = PrepareMultiSelectList(E, Settings["Select Weapons Fix Lava"]),
 		Search = true,
 		Selected = true,
@@ -34771,14 +34639,14 @@ SettingsVolcanoSection.CreateDropdown(
 	end
 )
 SettingsVolcanoSection.CreateToggle(
-	{ Title = "Use Skull Guitar with fix lava", Desc = nil, Default = Settings["Use Skull Guitar with fix lava"] or false },
+	{ Title = "Dùng Skull Guitar with fix lava", Desc = nil, Default = Settings["Use Skull Guitar with fix lava"] or false },
 	function(g)
 		SaveSettings("Use Skull Guitar with fix lava", g)
 	end
 )
 SettingsVolcanoSection.CreateDropdown(
 	{
-		Title = "Select Method Kill Golem",
+		Title = "Chọn cách diệt Golem",
 		List = { "Click M1", "Instant Kill [ Risk and can bug no die mob ]" },
 		Search = true,
 		Selected = false,
@@ -34788,7 +34656,7 @@ SettingsVolcanoSection.CreateDropdown(
 		SaveSettings("Select Method Kill Golem", g)
 	end
 )
-FarmingVolcanoSection = VolcanoTab.CreateSection("Farming Volcano")
+FarmingVolcanoSection = VolcanoTab.CreateSection("Cày sự kiện núi lửa")
 function AutoCraftinMagnetVol()
 	if not CheckItemInventory("Volcanic Magnet") then
 		if not CheckCountItem("Scrap Metal", 10) then
@@ -34965,12 +34833,12 @@ function AutoCraftinMagnetVol()
 			wait(2)
 		end
 	else
-		A.CreateNoti({ Title = "Tam Notification", Desc = "Done Craft Volcanic Magnet", ShowTime = 5 })
+		A.CreateNoti({ Title = "Thông báo Tâm", Desc = "Done Chế tạo Volcanic Magnet", ShowTime = 5 })
 		ToggleAutoCraftingVolcanicMagnet:SetStage(false)
 	end
 end
 ToggleAutoCraftingVolcanicMagnet = FarmingVolcanoSection.CreateToggle(
-	{ Title = "Auto Crafting Volcanic Magnet", Desc = nil, Default = Settings["Auto Crafting Volcanic Magnet"] or false },
+	{ Title = "Tự chế tạo Nam Châm Núi Lửa", Desc = nil, Default = Settings["Auto Crafting Volcanic Magnet"] or false },
 	function(g)
 		if g then
 			spawn(function()
@@ -35054,13 +34922,13 @@ function AutoFindPrehistoric()
 			getgenv().TweenBoat:Pause()
 			getgenv().TweenBoat:Cancel()
 		end
-		A.CreateNoti({ Title = "Tam Notification", Desc = "Prehistoric Island Spawned", ShowTime = 5 })
+		A.CreateNoti({ Title = "Thông báo Tâm", Desc = "Đảo Tiền Sử Spawned", ShowTime = 5 })
 		ToggleAutoFindPrehistoricIsland:SetStage(false)
 		wait(5)
 	end
 end
 ToggleAutoFindPrehistoricIsland = FarmingVolcanoSection.CreateToggle(
-	{ Title = "Auto Find Prehistoric Island", Desc = nil, Default = Settings["Auto Find Prehistoric Island"] or false },
+	{ Title = "Tự tìm đảo Tiền Sử", Desc = nil, Default = Settings["Auto Find Prehistoric Island"] or false },
 	function(g)
 		if g then
 			spawn(function()
@@ -35222,8 +35090,8 @@ function AutoAttackVolcano()
 end
 FarmingVolcanoSection.CreateToggle(
 	{
-		Title = "Auto Event Prehistoric Island",
-		Desc = "auto Start Event and Auto kill golem, Auto Fix Volcano",
+		Title = "Tự làm sự kiện đảo Tiền Sử",
+		Desc = "Tự động Start Event and Tự động Diệt golem, Tự động Fix Volcano",
 		Default = Settings["Auto Event Prehistoric Island"] or false,
 	},
 	function(g)
@@ -35250,7 +35118,7 @@ function DetectBone()
 	end
 end
 FarmingVolcanoSection.CreateToggle(
-	{ Title = "Auto Collect Bone", Desc = nil, Default = Settings["Auto Collect Bone"] or false },
+	{ Title = "Tự nhặt xương", Desc = nil, Default = Settings["Auto Collect Bone"] or false },
 	function(g)
 		if g then
 			spawn(function()
@@ -35285,7 +35153,7 @@ function DetectDragonEggs()
 	end
 end
 FarmingVolcanoSection.CreateToggle(
-	{ Title = "Auto Collect Egg", Desc = nil, Default = Settings["Auto Collect Egg"] or false },
+	{ Title = "Tự nhặt trứng", Desc = nil, Default = Settings["Auto Collect Egg"] or false },
 	function(g)
 		if g then
 			spawn(function()
@@ -35733,10 +35601,10 @@ function FullyEventVolcano()
 		end
 	end
 end
-FullyVolcanoSection = VolcanoTab.CreateSection("Fully Volcano")
+FullyVolcanoSection = VolcanoTab.CreateSection("Hoàn thành núi lửa")
 FullyVolcanoSection.CreateToggle(
 	{
-		Title = "Ignore Craft Volcanic Magnet [ Fully ]",
+		Title = "Ignore Chế tạo Volcanic Magnet [ Fully ]",
 		Desc = nil,
 		Default = Settings["Ignore Craft Volcanic Magnet"] or false,
 	},
@@ -35745,14 +35613,14 @@ FullyVolcanoSection.CreateToggle(
 	end
 )
 FullyVolcanoSection.CreateToggle(
-	{ Title = "Ignore Collect Bone [ Fully ]", Desc = nil, Default = Settings["Ignore Collect Bone"] or false },
+	{ Title = "Ignore Nhặt Xương [ Fully ]", Desc = nil, Default = Settings["Ignore Collect Bone"] or false },
 	function(b)
 		SaveSettings("Ignore Collect Bone", b)
 	end
 )
 FullyVolcanoSection.CreateToggle(
 	{
-		Title = "Fully Event Prehistoric Island",
+		Title = "Fully Event Đảo Tiền Sử",
 		Desc = nil,
 		Default = Settings["Fully Event Prehistoric Island"] or false,
 	},
@@ -35808,7 +35676,7 @@ function EspSpawnBerry()
 		end)
 	end
 end
-ESPSection.CreateToggle({ Title = "ESP Berry", Desc = nil, Default = Settings["ESP Berry"] or false }, function(b)
+ESPSection.CreateToggle({ Title = "ESP quả mọng", Desc = nil, Default = Settings["ESP Berry"] or false }, function(b)
 	if b then
 		spawn(function()
 			while Settings["ESP Berry"] and (wait(0.2)) do
@@ -35865,7 +35733,7 @@ function EspIsland()
 		end)
 	end
 end
-ESPSection.CreateToggle({ Title = "ESP Island", Desc = nil, Default = Settings["ESP Island"] or false }, function(b)
+ESPSection.CreateToggle({ Title = "ESP đảo", Desc = nil, Default = Settings["ESP Island"] or false }, function(b)
 	if b then
 		spawn(function()
 			while Settings["ESP Island"] and (wait(0.2)) do
@@ -36018,7 +35886,7 @@ function EspFruit()
 		end
 	end)
 end
-ESPSection.CreateToggle({ Title = "ESP Fruit", Desc = nil, Default = Settings["ESP Fruit"] or false }, function(b)
+ESPSection.CreateToggle({ Title = "ESP trái", Desc = nil, Default = Settings["ESP Fruit"] or false }, function(b)
 	if b then
 		spawn(function()
 			while Settings["ESP Fruit"] and (wait()) do
@@ -36081,7 +35949,7 @@ function ESPPlayer()
 		end)
 	end
 end
-ESPSection.CreateToggle({ Title = "ESP Player", Desc = nil, Default = Settings["ESP Player"] or false }, function(b)
+ESPSection.CreateToggle({ Title = "ESP người chơi", Desc = nil, Default = Settings["ESP Player"] or false }, function(b)
 	if b then
 		spawn(function()
 			while Settings["ESP Player"] and (wait()) do
@@ -36097,7 +35965,7 @@ PvpTab = Main.CreatePage({ Page_Name = "PVP", Page_Title = "PVP Tab" })
 SettingsAimbotSection = PvpTab.CreateSection("PVP")
 local b = SettingsAimbotSection.CreateDropdown(
 	{
-		Title = "Select Player PVP",
+		Title = "Chọn người chơi PVP",
 		List = DetectNamePlayer(),
 		Search = true,
 		Selected = false,
@@ -36109,7 +35977,7 @@ local b = SettingsAimbotSection.CreateDropdown(
 )
 SettingsAimbotSection.CreateDropdown(
 	{
-		Title = "Select Method Aimbot",
+		Title = "Chọn kiểu ngắm tự động",
 		List = { "Select Player", "Target nearest Player" },
 		Search = true,
 		Selected = false,
@@ -36119,7 +35987,7 @@ SettingsAimbotSection.CreateDropdown(
 		SaveSettings("Select Method Aimbot", s)
 	end
 )
-SettingsAimbotSection.CreateButton({ Title = "Refresh Player" }, function()
+SettingsAimbotSection.CreateButton({ Title = "Làm mới danh sách người chơi" }, function()
 	b:GetNewList(DetectNamePlayer())
 end)
 function TeleportPlayer()
@@ -36130,7 +35998,7 @@ function TeleportPlayer()
 	end
 end
 SettingsAimbotSection.CreateToggle(
-	{ Title = "Teleport Player", Desc = nil, Default = Settings["Teleport Player"] or false },
+	{ Title = "Dịch chuyển đến người chơi", Desc = nil, Default = Settings["Teleport Player"] or false },
 	function(b)
 		if b then
 			spawn(function()
@@ -36166,7 +36034,7 @@ function ClosestPartaimbot()
 	return s
 end
 SettingsAimbotSection.CreateToggle(
-	{ Title = "Auto Aimbot", Desc = nil, Default = Settings["Auto Aimbot"] or false },
+	{ Title = "Tự ngắm mục tiêu", Desc = nil, Default = Settings["Auto Aimbot"] or false },
 	function(b)
 		if b then
 			spawn(function()
@@ -36198,7 +36066,7 @@ SettingsAimbotSection.CreateToggle(
 	end
 )
 SettingsAimbotSection.CreateToggle(
-	{ Title = "Auto Aimbot Gun", Desc = nil, Default = Settings["Auto Aimbot Gun"] or false },
+	{ Title = "Tự ngắm bằng súng", Desc = nil, Default = Settings["Auto Aimbot Gun"] or false },
 	function(b)
 		SaveSettings("Auto Aimbot Gun", b)
 	end
@@ -36213,33 +36081,33 @@ require(game:GetService("ReplicatedStorage").Modules.CombatUtil).GetTargetPositi
 	end
 	return b(s, X, g, f, R)
 end
-MISCPVPSection = PvpTab.CreateSection("MISC PVP")
+MISCPVPSection = PvpTab.CreateSection("PVP khác")
 MISCPVPSection.CreateSlider(
-	{ Title = "Input WalkSpeed", Min = 0, Max = 500, Default = Settings["Input WalkSpeed"] or 168, Precise = true },
+	{ Title = "Nhập tốc độ chạy", Min = 0, Max = 500, Default = Settings["Input WalkSpeed"] or 168, Precise = true },
 	function(b)
 		SaveSettings("Input WalkSpeed", b)
 	end
 )
 MISCPVPSection.CreateSlider(
-	{ Title = "Input JumpPower", Min = 0, Max = 500, Default = Settings["Input JumpPower"] or 200, Precise = true },
+	{ Title = "Nhập lực nhảy", Min = 0, Max = 500, Default = Settings["Input JumpPower"] or 200, Precise = true },
 	function(b)
 		SaveSettings("Input JumpPower", b)
 	end
 )
 MISCPVPSection.CreateToggle(
-	{ Title = "Change JumpPower", Desc = nil, Default = Settings["Change JumpPower"] or false },
+	{ Title = "Đổi lực nhảy", Desc = nil, Default = Settings["Change JumpPower"] or false },
 	function(b)
 		SaveSettings("Change JumpPower", b)
 	end
 )
 MISCPVPSection.CreateToggle(
-	{ Title = "Change WalkSpeed", Desc = nil, Default = Settings["Change WalkSpeed"] or false },
+	{ Title = "Đổi tốc độ chạy", Desc = nil, Default = Settings["Change WalkSpeed"] or false },
 	function(b)
 		SaveSettings("Change WalkSpeed", b)
 	end
 )
 MISCPVPSection.CreateToggle(
-	{ Title = "Walk On Water", Desc = nil, Default = Settings["Walk On Water "] or true },
+	{ Title = "Đi trên mặt nước", Desc = nil, Default = Settings["Walk On Water "] or true },
 	function(b)
 		if b then
 			if not game.Workspace:FindFirstChild("WaterWalk") then
@@ -36280,11 +36148,11 @@ MISCPVPSection.CreateToggle(
 		SaveSettings("Walk On Water ", b)
 	end
 )
-TabWebhook = Main.CreatePage({ Page_Name = "Tab Webhook", Page_Title = "Tab Webhook" })
-SectionWebhook = TabWebhook.CreateSection("Webhook")
+TabWebhook = Main.CreatePage({ Page_Name = "Tab Webhook", Page_Title = "Tab Thông báo Webhook" })
+SectionWebhook = TabWebhook.CreateSection("Thông báo Webhook")
 SectionWebhook.CreateBox(
 	{
-		Title = "Input Url Webhook",
+		Title = "Nhập đường dẫn Webhook",
 		Placeholder = "Type here",
 		Number = false,
 		Default = Settings["Input Url Webhook"] or nil,
@@ -36295,7 +36163,7 @@ SectionWebhook.CreateBox(
 )
 SectionWebhook.CreateBox(
 	{
-		Title = "Input Discord Ping (Everyone/ID)",
+		Title = "Nhập Discord Ping (Mọi người/ID)",
 		Placeholder = "Type here",
 		Number = false,
 		Default = Settings["Input Discord Ping"] or nil,
@@ -36305,7 +36173,7 @@ SectionWebhook.CreateBox(
 	end
 )
 SectionWebhook.CreateToggle(
-	{ Title = "Ping Everyone/Id Discord", Desc = nil, Default = Settings["Ping Discord"] or false },
+	{ Title = "Ping mọi người/ID Discord", Desc = nil, Default = Settings["Ping Discord"] or false },
 	function(b)
 		SaveSettings("Ping Discord", b)
 	end
@@ -36617,7 +36485,7 @@ function Webhookprofile()
 	end)
 end
 SectionWebhook.CreateToggle(
-	{ Title = "Noti Profile", Desc = nil, Default = Settings["Noti Profile"] or false },
+	{ Title = "Thông báo hồ sơ", Desc = nil, Default = Settings["Noti Profile"] or false },
 	function(b)
 		if b then
 			spawn(function()
@@ -36635,7 +36503,7 @@ SectionWebhook.CreateToggle(
 TableRarityFruit = { Mythical = false, Legendary = false, Rare = false, Uncommon = false, Common = false }
 SectionWebhook.CreateDropdown(
 	{
-		Title = "Select Rarity Fruit",
+		Title = "Chọn Rarity Trái",
 		List = PrepareMultiSelectList(TableRarityFruit, Settings["Select Rarity Fruit"]),
 		Search = true,
 		Selected = true,
@@ -36646,14 +36514,14 @@ SectionWebhook.CreateDropdown(
 	end
 )
 SectionWebhook.CreateToggle(
-	{ Title = "Webhook Store Fruit", Desc = nil, Default = Settings["Webhook Store Fruit"] or false },
+	{ Title = "Webhook khi cất trái", Desc = nil, Default = Settings["Webhook Store Fruit"] or false },
 	function(b)
 		SaveSettings("Webhook Store Fruit", b)
 	end
 )
 SectionWebhook.CreateToggle(
 	{
-		Title = "Webhook Find Prehistoric Island",
+		Title = "Thông báo Webhook Tìm Đảo Tiền Sử",
 		Desc = nil,
 		Default = Settings["Webhook Find Prehistoric Island"] or false,
 	},
@@ -36662,26 +36530,26 @@ SectionWebhook.CreateToggle(
 	end
 )
 SectionWebhook.CreateToggle(
-	{ Title = "Webhook Find Leviathan", Desc = nil, Default = Settings["Webhook Find Leviathan"] or false },
+	{ Title = "Thông báo Webhook Tìm Leviathan", Desc = nil, Default = Settings["Webhook Find Leviathan"] or false },
 	function(b)
 		SaveSettings("Webhook Find Leviathan", b)
 	end
 )
 SectionWebhook.CreateToggle(
-	{ Title = "Webhook Destroy IDK", Desc = nil, Default = Settings["Webhook Destroy IDK"] or false },
+	{ Title = "Thông báo Webhook Destroy IDK", Desc = nil, Default = Settings["Webhook Destroy IDK"] or false },
 	function(b)
 		SaveSettings("Webhook Destroy IDK", b)
 	end
 )
 SectionWebhook.CreateToggle(
-	{ Title = "Webhook Find Mirage", Desc = nil, Default = Settings["Webhook Find Mirage"] or false },
+	{ Title = "Thông báo Webhook Tìm Mirage", Desc = nil, Default = Settings["Webhook Find Mirage"] or false },
 	function(b)
 		SaveSettings("Webhook Find Mirage", b)
 	end
 )
-SettingPage = Main.CreatePage({ Page_Name = "Setting", Page_Title = "Setting Tab" })
-a = SettingPage.CreateSection("Settings")
-a.CreateToggle({ Title = "White Screen", Desc = nil, Default = Settings["White Screen"] or false }, function(b)
+SettingPage = Main.CreatePage({ Page_Name = "Cài đặt", Page_Title = "Cài đặt Tab" })
+a = SettingPage.CreateSection("Cài đặt")
+a.CreateToggle({ Title = "Màn hình trắng", Desc = nil, Default = Settings["White Screen"] or false }, function(b)
 	if not b then
 		game:GetService("RunService"):Set3dRenderingEnabled(true)
 	else
@@ -36689,7 +36557,7 @@ a.CreateToggle({ Title = "White Screen", Desc = nil, Default = Settings["White S
 	end
 	SaveSettings("White Screen", b)
 end)
-a.CreateToggle({ Title = "Black Screen", Desc = nil, Default = Settings["Black Screen"] or false }, function(b)
+a.CreateToggle({ Title = "Màn hình đen", Desc = nil, Default = Settings["Black Screen"] or false }, function(b)
 	spawn(function()
 		repeat
 			wait()
@@ -36738,7 +36606,7 @@ local function b(s)
 	return "getgenv().Config = " .. ser(s, 0)
 end
 a.CreateToggle(
-	{ Title = "Remove Notifications", Desc = nil, Default = Settings["Remove Notifications"] or false },
+	{ Title = "Tắt thông báo", Desc = nil, Default = Settings["Remove Notifications"] or false },
 	function(T)
 		SaveSettings("Remove Notifications", T)
 	end
@@ -36770,15 +36638,15 @@ spawn(function()
 	end
 end)
 a.CreateToggle(
-	{ Title = "Auto rejoin Disconnect", Desc = nil, Default = Settings["Auto rejoin Disconnect"] or false },
+	{ Title = "Tự vào lại khi mất kết nối", Desc = nil, Default = Settings["Auto rejoin Disconnect"] or false },
 	function(T)
 		SaveSettings("Auto rejoin Disconnect", T)
 	end
 )
-a.CreateToggle({ Title = "Auto Load Script", Desc = nil, Default = Settings["Auto Load Script"] or false }, function(T)
+a.CreateToggle({ Title = "Tự tải script", Desc = nil, Default = Settings["Auto Load Script"] or false }, function(T)
 	SaveSettings("Auto Load Script", T)
 end)
-a.CreateToggle({ Title = "Boost Fps", Desc = nil, Default = Settings["Boost Fps"] or false }, function(T)
+a.CreateToggle({ Title = "Tăng FPS", Desc = nil, Default = Settings["Boost Fps"] or false }, function(T)
 	if T then
 		local s, X = true, game
 		local g, f = X.Workspace, X.Lighting
@@ -36905,11 +36773,11 @@ spawn(function()
 		end
 	end)
 end)
-a.CreateButton({ Title = "Copy Config" }, function()
+a.CreateButton({ Title = "Sao chép cấu hình" }, function()
 	setclipboard(b((HttpService:JSONDecode(readfile(FolderName .. "/" .. SaveFileName)))))
-	A.CreateNoti({ Title = "Tam Notification", Desc = "Successfully Copy Config", ShowTime = 5 })
+	A.CreateNoti({ Title = "Thông báo Tâm", Desc = "Successfully Sao chép cấu hình", ShowTime = 5 })
 end)
-a.CreateBind({ Title = "Toggle GUI", Key = Enum.KeyCode.LeftAlt }, function()
+a.CreateBind({ Title = "Ẩn/hiện giao diện", Key = Enum.KeyCode.LeftAlt }, function()
 	if getgenv().UIToggled == nil then
 		getgenv().UIToggled = true
 	end
@@ -37124,7 +36992,7 @@ if not getgenv().BananaCatMainLoop then
 						if b then
 							SpecialHop(b)
 						else
-							A.CreateNoti({ Title = "Tam Notification", Desc = "Full Sword Legendary", ShowTime = 5 })
+							A.CreateNoti({ Title = "Thông báo Tâm", Desc = "Full Kiếm Legendary", ShowTime = 5 })
 						end
 					end
 				end
