@@ -64363,7 +64363,8 @@ return ebgzqifrwa, lebidlyjyf
                     end
                 end
 
-                handler(Runtime.guardKey20 - 4086980879)
+                -- Chuoi Hub loading UI disabled; keep whitelist flow active.
+                sharedState2.value = true
 
                 local handler2 = function(inputValue, inputValue2)
                     if not sharedState2.value then
